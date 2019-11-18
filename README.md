@@ -8,6 +8,8 @@ Visualising the spatial distribution of Lower Layer Super Output Area (LSOA) med
 
 See [./tutorial-1-proptech/os-data-hub-api-tutorial-1-proptech.ipynb](./tutorial-1-proptech/os-data-hub-api-tutorial-1-proptech.ipynb).
 
+A Jupyter Notebook providing a data science pipeline in Python to leverage data insights through the integration of OS Data Hub APIs with other government data services from the Office for National Statistics and HM Land Registry.
+
 ## License 
 
 ### Tutorial 1 - Proptech
