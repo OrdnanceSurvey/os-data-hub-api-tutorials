@@ -1,5 +1,13 @@
 # OS Data Hub API Tutorials
 
+## Tutorials
+
+### Tutorial 1 - Proptech
+
+Visualising the spatial distribution of Lower Layer Super Output Area (LSOA) median price paid deciles for residential property sold between 1995 and 2019 for a local authority district (LAD) in England or Wales.
+
+See [./tutorial-1-proptech/os-data-hub-api-tutorial-1-proptech.ipynb](./tutorial-1-proptech/os-data-hub-api-tutorial-1-proptech.ipynb).
+
 ## License 
 
 ### Tutorial 1 - Proptech
@@ -19,14 +27,3 @@ Contains HM Land Registry data © Crown copyright and database right 2019.
 <img src="http://www.nationalarchives.gov.uk/images/infoman/ogl-symbol-41px-retina-black.png"
      alt="OGL Symbol"
      align="left" />
-
-<br>
-<br>
-
-## Tutorials
-
-### Tutorial 1 - Proptech
-
-Visualising the spatial distribution of Lower Layer Super Output Area (LSOA) median price paid deciles for residential property sold between 1995 and 2019 for a local authority district (LAD) in England or Wales.
-
-See [./tutorial-1-proptech/os-data-hub-api-tutorial-1-proptech.ipynb](./tutorial-1-proptech/os-data-hub-api-tutorial-1-proptech.ipynb).
