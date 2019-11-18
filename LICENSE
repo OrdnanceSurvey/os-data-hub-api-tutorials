@@ -1,6 +1,10 @@
+Tutorial 1 - Proptech
+
+The notebook tutorial-1-proptech/os-data-hub-api-tutorial-1-proptech.ipynb is licensed under the terms of the MIT License.
+
 MIT License
 
-Copyright (c) 2019 Ordnance Survey
+Copyright (c) 2019 Ordnance Survey Limited
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +23,14 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+The datasets sourced via the APIs in the notebook tutorial-1-proptech/os-data-hub-api-tutorial-1-proptech.ipynb are licensed under the terms of the Open Government Licence (OGL) v3.0. 
+See http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/.
+
+Contains OS data © Crown copyright and database right 2019.
+
+Contains National Statistics data © Crown copyright and database right 2019.
+
+Contains HM Land Registry data © Crown copyright and database right 2019.
+
+---------------------------------------------------------------------------------------------------
