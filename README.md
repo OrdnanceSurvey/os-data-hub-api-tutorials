@@ -24,11 +24,11 @@ The notebook [./tutorial-01-proptech/os-data-hub-api-tutorial-01-proptech.ipynb]
 
 The datasets sourced via the APIs in the notebook [./tutorial-01-proptech/os-data-hub-api-tutorial-01-proptech.ipynb](./tutorial-01-proptech/os-data-hub-api-tutorial-01-proptech.ipynb), all of which are set out below, are licensed under the terms of the [Open Government Licence (OGL) v3.0](http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/). 
 
-Contains OS data © Crown copyright and database right 2019.
+Contains OS data © Crown copyright and database right 2020.
 
-Contains National Statistics data © Crown copyright and database right 2019.
+Contains National Statistics data © Crown copyright and database right 2020.
 
-Contains HM Land Registry data © Crown copyright and database right 2019.
+Contains HM Land Registry data © Crown copyright and database right 2020.
 
 <img src="http://www.nationalarchives.gov.uk/images/infoman/ogl-symbol-41px-retina-black.png"
      alt="OGL Symbol"
