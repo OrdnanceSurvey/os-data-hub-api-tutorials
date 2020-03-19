@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OSEL Framework Template</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link rel="icon" type="image/x-icon" href="../assets/img/favicon.ico" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,200i,300,300i,400,400i,600,600i,700,700i,900,900i" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.2/leaflet.css" />
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.1/rangeslider.min.css" /> -->
+    <link rel="stylesheet" href="./assets/css/style.css" />
+    <link rel="stylesheet" href="./assets/css/vendor.css" />
+    <style>
+        .scroller-no-tabs {
+            padding: 24px;
+            right: 0px!important;
+        }
+
+        .scroller-no-tabs > div {
+            margin-bottom: 15px;
+        }
+
+        .location-buttons button {
+            padding: 10px;
+            margin-left: 16px;
+        }
+
+        .button-row button {
+            width: 33%;
+            line-height: 16px!important;
+            padding: 12px 20px;
+        }
+
+
+        .osel-dropdown {
+            margin-left: 0!important;
+            width: 100%;
+        }
+
+        .osel-button.active {
+            background-color: #97bdd6!important;
+        }
+
+        button#request {
+            width: 273px;
+        }
+
+        #map.selecting {
+            cursor: crosshair; 
+        }
+        /* *:focus { border: 1px solid red !important; box-sizing: border-box; } */
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="osel-search-control">
+            <form>
+                <i class="material-icons no-select">search</i>
+                <input type="text" placeholder="Search location" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+            </form>
+        </div>
+        <div class="osel-title">OSEL Framework</div>
+        <div class="osel-logo">
+            <img src="./assets/img/os-logo.svg" />
+        </div>
+        <div class="osel-more-dropmenu-btn"><i class="material-icons" aria-label="">more_horiz</i></div>
+    </div>
+    <div class="content">
+        <div class="osel-sliding-side-panel panel-left">
+            <div class="panel-toggle" tabindex="0">
+                <div class="toggle-handle" aria-label="Toggle panel"></div>
+            </div>
+            <div class="panel-content">
+                <div class="panel-header">Find My Nearest</div>
+                <div class="scroller-no-tabs">
+                    <div class="osel-dropdown">
+                        <div class="select"><span>Green space</span><i class="material-icons">keyboard_arrow_down</i></div>
+                        <div class="options hidden">
+                            <div class="selected" data-value="1"><i class="material-icons">done</i><span>Green space</span></div>
+                            <!-- <div data-value="2"><i class="material-icons"></i><span>Religious grounds</span></div>
+                            <div data-value="3"><i class="material-icons"></i><span>Playing field</span></div>
+                            <div data-value="4"><i class="material-icons"></i><span>Golf course</span></div>
+                            <div data-value="5"><i class="material-icons"></i><span>Cemetery</span></div>
+                            <div data-value="6"><i class="material-icons"></i><span>Public park or garden</span></div> -->
+
+                        </div>
+                    </div>
+                    <div class="button-row">
+                        <button class="osel-button osel-secondary-button" disabled>Use my location.</button>
+                        <button id="select-location" class="osel-button osel-secondary-button">Select on map.</button>
+                    </div>
+                    <div>
+                        <button id="request" class="osel-button big osel-primary-button">Find!</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="osel-sliding-side-panel panel-right">
+            <div class="panel-close"><i class="material-icons" aria-label="Close panel">close</i></div>
+            <div class="panel-header">Properties</div>
+            <div class="scroller-no-tabs">
+                <div class="osel-feature-properties"></div>
+            </div>
+        </div>
+        <div id="map" class="osel-map" tabindex="0">
+            <div class="osel-map-crosshair hidden"></div>
+            <div class="osel-control-container container-top container-right">
+                <div class="zoom-control">
+                    <div class="zoom-in no-select" aria-label="Zoom in" tabindex="0"><i class="material-icons">add</i></div>
+                    <div class="zoom-out no-select" aria-label="Zoom out" tabindex="0"><i class="material-icons">remove</i></div>
+                </div>
+            </div>
+            <div class="osel-control-container container-bottom container-right">
+                <div class="center-control">
+                    <div class="action-button"></div>
+                    <div class="panel coords-box">
+                        <div class="title">Centre position</div>
+                        <div class="main">
+                            <div class="navigate-prev no-select"><i class="material-icons">arrow_drop_down</i></div>
+                            <div class="coord-value"></div>
+                            <div class="navigate-next no-select"><i class="material-icons">arrow_drop_up</i></div>
+                        </div>
+                        <div class="navigation">
+                            <span class="dot active"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="basemap-control">
+                    <div class="action-button"></div>
+                    <div class="panel list-select">
+                        <!-- <div class="list-item">
+                            <img class="os-maps leisure" src="../assets/img/transparent.gif" />
+                            <div data-style="Leisure">Leisure</div>
+                        </div> -->
+                        <div class="list-item">
+                            <img class="os-maps outdoor" src="./assets/img/transparent.gif" />
+                            <div data-style="Outdoor">Outdoor</div>
+                        </div>
+                        <div class="list-item">
+                            <img class="os-maps road" src="./assets/img/transparent.gif" />
+                            <div data-style="Road">Road</div>
+                        </div>
+                        <div class="list-item">
+                            <img class="os-maps light" src="./assets/img/transparent.gif" />
+                            <div data-style="Light">Light</div>
+                        </div>
+                        <div class="list-item">
+                            <img class="os-maps night" src="./assets/img/transparent.gif" />
+                            <div data-style="Night">Night</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="osel-more-dropmenu hidden">
+        <div class="title">OSEL Framework</div>
+        <hr>
+        <div class="label logo">
+            <img src="./assets/img/os-logo.svg" />
+        </div>
+    </div>
+    <div class="osel-overflow-menu">
+        <div class="layer-overflow" data-parent-id="mapLayer01">
+            <div class="label interactive" data-function="extent">Zoom to extent</div>
+            <div class="label inactive" data-function="delete">Delete layer</div>
+            <hr>
+            <div class="label">Opacity</div>
+            <div class="slider-range">
+                <input type="range" min="0" max="100" value="100" data-rangeslider />
+                <output></output>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.7/jquery.autocomplete.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.2/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-omnivore/0.3.4/leaflet-omnivore.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.5.0/proj4.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4leaflet/1.0.2/proj4leaflet.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.1/rangeslider.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slideReveal/1.1.2/jquery.slidereveal.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/add-clear@2.0.7/addclear.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/5.1.5/turf.min.js"></script>
+    <script src="./assets/js/init.js"></script>
+    <script src="./assets/js/coordinates.js"></script>
+    <script src="./assets/js/opacity.js"></script>
+    <script src="./assets/js/popup.js"></script>
+    <script src="./assets/js/search.js"></script>
+    <script src="./js/config.js"></script>
+    <script src="./js/apikey.js"></script>
+    <script src="./assets/js/main.js"></script>
+    <script src="./js/find-nearest.js"></script>
+    <script src="./js/events.js"></script>
+
+</body>
+</html>
