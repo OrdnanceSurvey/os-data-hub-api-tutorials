@@ -10,12 +10,15 @@ var wfsServiceUrl = 'https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1',
 tileServiceUrl = 'https://osdatahubapi.os.uk/OSMapsAPI/zxy/v1';
 
 // Initialize the map.
+    // @TIM I'd like to not make it load zoomed in on London as it is a GB-wide service. 
+    // But the map tiles don't extend much beyond the bounds of the UK. 
+    // Have you dealt with this in the past? Ideas? 
 var mapOptions = {
-minZoom: 7,
-maxZoom: 20,
-center: [ 51.502, -0.126 ],
-zoom: 15,
-attributionControl: false
+    minZoom: 7,
+    maxZoom: 20,
+    center: [ 51.502, -0.126 ],
+    zoom: 15,
+    attributionControl: false
 };
 
 var map = L.map('map', mapOptions);
@@ -441,9 +444,9 @@ function toggleClickCoordsListener() {
         $('#map').addClass('selecting');
 
         map.on('click', function (event) {
-            coordsToFind = selectLocationOnMap(event);
+            let coords = selectLocationOnMap(event);
             $('#select-location').removeClass('active')
-            updateCoordsToFindLayer(coordsToFind);
+            updateCoordsToFindLayer(coords);
 
             map.flyTo(coordsToFind)
         });
@@ -469,7 +472,7 @@ function selectLocationOnMap(event) {
 function updateCoordsToFindLayer(coords) {
 
     coordsToFindGroup.clearLayers();
-
+    coordsToFind = coords;
     L.marker(coords.reverse())
         .addTo(coordsToFindGroup);
     
@@ -483,18 +486,24 @@ function setUseMyLocation() {
     if ("geolocation" in navigator) {
         // check if geolocation is supported/enabled on current browser
         navigator.geolocation.getCurrentPosition(
-        function success(position) {
-        // for when getting location is a success
-        console.log('latitude', position.coords.latitude, 
-                    'longitude', position.coords.longitude);
-        },
-        function error(error_message) {
-        // for when getting location results in an error
-        console.error('An error has occured while retrieving location', error_message)
-        });
+            function success(position) {
+                // for when getting location is a success
+                let coords = [
+                    position.coords.longitude,
+                    position.coords.latitude
+                ]
+                updateCoordsToFindLayer(coords) 
+                console.log('latitude:', position.coords.latitude, 
+                            'longitude:', position.coords.longitude);
+            },
+            function error(error_message) {
+                // for when getting location results in an error
+                console.error('An error has occured while retrieving location', error_message)
+            }
+        );
     } else {
         // geolocation is not supported
-        console.log('geolocation is not enabled on this browser');
+        alert('Geolocation is not enabled on this browser. Please select on map.');
         // Alert modal?
     }
 }
