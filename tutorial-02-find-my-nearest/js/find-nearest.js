@@ -1,4 +1,3 @@
-$.fn.reverse = [].reverse;
 
 var initLoad = true;
 
@@ -6,30 +5,32 @@ var apiKey = 'FtAS7OR45lE3AR78KxrdGpfYq8uAAV6K';
 
 var coordsToFind = null;
 
-var wfsServiceUrl = 'https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1',
-tileServiceUrl = 'https://osdatahubapi.os.uk/OSMapsAPI/zxy/v1';
-
 // Initialize the map.
     // @TIM I'd like to not make it load zoomed in on London as it is a GB-wide service. 
     // But the map tiles don't extend much beyond the bounds of the UK. 
     // Have you dealt with this in the past? Ideas? 
 var mapOptions = {
-    minZoom: 7,
-    maxZoom: 20,
+    // minZoom: 7,
+    // maxZoom: 20,
     center: [ 51.502, -0.126 ],
     zoom: 15,
     attributionControl: false
 };
 
-var map = L.map('map', mapOptions);
+var map = new L.map('map', mapOptions);
 
 // Add scale control to the map.
 var ctrlScale = L.control.scale({ position: 'bottomright' }).addTo(map);
 
+
+var tileServiceUrl = 'https://osdatahubapi.os.uk/OSMapsAPI/zxy/v1',
+wfsServiceUrl = 'https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1';
+
 // Load and display ZXY tile layer on the map.
-var basemap = L.tileLayer(tileServiceUrl + '/Light_3857/{z}/{x}/{y}.png?key=' + apiKey, {
-maxZoom: 20
-}).addTo(map);
+var basemap = L.tileLayer(
+        tileServiceUrl + '/Light_3857/{z}/{x}/{y}.png?key=' + apiKey, 
+        { maxZoom: 20 }
+    ).addTo(map);
 
 
 // Define the layer styles.
@@ -65,7 +66,12 @@ var coordsToFindGroup = new L.FeatureGroup().addTo(map);
 
 
 // Add an event listener to handle when the user clicks the 'Find Greenspace' button.
-document.getElementById('request').addEventListener('click', function(e) {
+document.getElementById('request').addEventListener('click', function (e) {
+    fetchNearestFeatures(e);
+});
+
+
+function fetchNearestFeatures(e) {
     
     addSpinner();
     // Remove all the layers from the layer group.
@@ -80,7 +86,8 @@ document.getElementById('request').addEventListener('click', function(e) {
 
     
 
-    // {Turf.js} Create a point form the centre position.
+    // {Turf.js} Create a point from the centre position.
+
     var pointToFind = turf.point(coordsToFind);
 
     // {Turf.js} Takes the centre point coordinates and calculates a circular polygon
@@ -141,6 +148,7 @@ document.getElementById('request').addEventListener('click', function(e) {
     // the query have been returned, and there is no need to request further pages.
     function fetchWhile(resultsRemain) {
         if ( resultsRemain ) {
+            console.log(JSON.stringify(getUrl(wfsParams)))
             fetch(getUrl(wfsParams))
                 .then(response => response.json())
                 .then((data) => {
@@ -169,7 +177,9 @@ document.getElementById('request').addEventListener('click', function(e) {
     fetchWhile(resultsRemain);
 
     
-});
+}
+
+
 
 /**
  * Creates a GeoJSON layer.
@@ -234,6 +244,8 @@ function getUrl(params) {
 // }
 
 function findNearestN(point, featurecollection, n, typeName) {
+
+    console.log(point, featurecollection);
 
     // Calculate distances, add to properties of feature collection
     var polygons = featurecollection.features
@@ -455,9 +467,8 @@ function toggleClickCoordsListener() {
         $('#map').addClass('selecting');
 
         map.on('click', function (event) {
-            let coords = selectLocationOnMap(event);
+            selectLocationOnMap(event);
             $('#select-location').removeClass('active')
-            updateCoordsToFind(coords);
 
         });
     } else {
@@ -476,19 +487,22 @@ function selectLocationOnMap(event) {
     var lat = coord[0].split('(');
     var lng = coord[1].split(')');
 
-    return [Number(lng[0]), Number(lat[1])];
+    let coords = [Number(lng[0]), Number(lat[1])];
+
+    updateCoordsToFind(coords);
+
 }
 
 function updateCoordsToFind(coords) {
+    console.log(coords);
+    coordsToFind = coords;
 
     coordsToFindGroup.clearLayers();
-    coordsToFind = coords;
-    L.marker(coords.reverse())
+    L.marker([coordsToFind[1], coordsToFind[0]])
         .addTo(coordsToFindGroup);
     
-    map.flyTo(coordsToFind)
+    map.flyTo([coordsToFind[1], coordsToFind[0]])
 
-    // center map on pin? 
 }
 
 function setUseMyLocation() {
@@ -519,3 +533,5 @@ function setUseMyLocation() {
         // Alert modal?
     }
 }
+
+$.fn.reverse = [].reverse;
