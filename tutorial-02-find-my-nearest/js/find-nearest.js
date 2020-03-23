@@ -68,7 +68,7 @@ var coordsToFindGroup = new L.FeatureGroup().addTo(map);
 document.getElementById('request').addEventListener('click', function(e) {
     
     // Remove all the layers from the layer group.
-    foundFeaturesGroup.SpLayers();
+    foundFeaturesGroup.clearLayers();
 
     // Get the centre point of the map window.
     if (!coordsToFind) {
