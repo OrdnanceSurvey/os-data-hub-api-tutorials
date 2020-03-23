@@ -68,7 +68,7 @@ var coordsToFindGroup = new L.FeatureGroup().addTo(map);
 document.getElementById('request').addEventListener('click', function(e) {
     
     // Remove all the layers from the layer group.
-    foundFeaturesGroup.clearLayers();
+    foundFeaturesGroup.SpLayers();
 
     // Get the centre point of the map window.
     if (!coordsToFind) {
@@ -150,7 +150,6 @@ document.getElementById('request').addEventListener('click', function(e) {
                 });
         }
         else {
-            clearSpinner();
             if( geojson.features.length ) {
                 return findNearestN(pointToFind, geojson, 20, typeName);
             } else {
