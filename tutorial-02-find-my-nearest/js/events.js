@@ -9,3 +9,9 @@ $('#select-location').on('click', function (e) {
     toggleClickCoordsListener();
 
 })
+
+$('#use-my-location').on('click', function (e) {
+    e.preventDefault();
+
+    setUseMyLocation();
+});

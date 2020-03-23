@@ -149,7 +149,8 @@
                         <div class="options hidden">
                             <div class="selected" data-value="1"><i class="material-icons">done</i><span>Green space (OS MasterMap Topo)</span></div>
                             <div data-value="6"><i class="material-icons"></i><span>Green space (Open Zoomstack)</span></div>
-                            <div data-value="2"><i class="material-icons"></i><span>National park</span></div>
+                            <!-- <div data-value="2"><i class="material-icons"></i><span>National park</span></div> -->
+                            <!-- ^^ National parks are too far away to efficiently find using the hardcoded parameters we use ...  -->
                             <div data-value="4"><i class="material-icons"></i><span>Woodland</span></div>
                             <div data-value="5"><i class="material-icons"></i><span>Building</span></div>
 
@@ -157,7 +158,7 @@
                         </div>
                     </div>
                     <div class="button-row">
-                        <button class="osel-button osel-secondary-button" disabled>Use my location.</button>
+                        <button id="use-my-location" class="osel-button osel-secondary-button">Use my location.</button>
                         <button id="select-location" class="osel-button osel-secondary-button">Select on map.</button>
                     </div>
                     <div>
