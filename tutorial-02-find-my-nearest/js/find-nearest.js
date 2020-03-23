@@ -31,10 +31,23 @@ maxZoom: 20
 
 // Define the layer styles.
 var styles = {
-    'greenspace': {
+    'Zoomstack_Greenspace': {
         color: '#0c0',
-        fillOpacity: 1
+        fillOpacity: 0.5
+    },
+    "Zoomstack_NationalParks": {
+        color: 'brown',
+        fillOpacity: 0.5
+    },
+    "Zoomstack_Woodland": {
+        color: 'green',
+        fillOpacity: 0.5
+    }, 
+    "Zoomstack_LocalBuildings": {
+        color: 'grey',
+        fillOpacity: 0.5
     }
+
 };
 
 // Create an empty GeoJSON FeatureCollection.
@@ -44,12 +57,14 @@ var geojson = {
 };
 
 // Add layer group to make it easier to add or remove layers from the map.
-var foundFeaturesGroup = new L.layerGroup().addTo(map);
-var coordsToFindGroup = new L.layerGroup().addTo(map);
+var foundFeaturesGroup = new L.FeatureGroup().addTo(map);
+var coordsToFindGroup = new L.FeatureGroup().addTo(map);
 
 
 // Add an event listener to handle when the user clicks the 'Find Greenspace' button.
-document.getElementById('request').addEventListener('click', function() {
+document.getElementById('request').addEventListener('click', function(e) {
+    
+    addSpinner();
     // Remove all the layers from the layer group.
     foundFeaturesGroup.clearLayers();
 
@@ -57,6 +72,8 @@ document.getElementById('request').addEventListener('click', function() {
     if (!coordsToFind) {
         var coordsToFind = [ map.getCenter().lng, map.getCenter().lat ];
     }
+
+    
 
     // {Turf.js} Create a point form the centre position.
     var pointToFind = turf.point(coordsToFind);
@@ -84,13 +101,17 @@ document.getElementById('request').addEventListener('click', function() {
     xml += '</ogc:Intersects>';
     xml += '</ogc:Filter>';
 
+    var featureTypeToFind = $('#feature-type-select span').text();
+    let typeName = getFeatureTypeToFind(featureTypeToFind);
+    // @TIM Do we want to demonstrate a local filter as well? Within Green space - Cemeteries vs Public parks etc? 
+
     // Define parameters object.
     var wfsParams = {
         key: apiKey,
         service: 'WFS',
         request: 'GetFeature',
         version: '2.0.0',
-        typeNames: 'Zoomstack_Greenspace',
+        typeNames: typeName,
         outputFormat: 'GEOJSON',
         srsName: 'urn:ogc:def:crs:EPSG::4326',
         filter: xml,
@@ -127,10 +148,11 @@ document.getElementById('request').addEventListener('click', function() {
                 });
         }
         else {
+            clearSpinner();
             if( geojson.features.length ) {
-                return findNearestN(pointToFind, geojson, 20);
+                return findNearestN(pointToFind, geojson, 20, typeName);
             } else {
-                pass;
+                console.log("No features found");
             }
                 // document.getElementById('message').style.display = 'block';
         }
@@ -164,46 +186,46 @@ function getUrl(params) {
     return wfsServiceUrl + '?' + encodedParameters;
 }
 
-/**
- * Determines the nearest feature in a GeoJSON object.
- * @param {object} point - GeoJSON point centroid.
- * @param {object} features - GeoJSON greenspace FeatureCollection.
- */
-function findNearest(point, features) {
-    var nearestFeature, nearestDistance = 1;
+// /**
+//  * Determines the nearest feature in a GeoJSON object.
+//  * @param {object} point - GeoJSON point centroid.
+//  * @param {object} features - GeoJSON greenspace FeatureCollection.
+//  */
+// function findNearest(point, features) {
+//     var nearestFeature, nearestDistance = 1;
 
-    // {Turf.js} Iterate over features in greenspace FeatureCollection.
-    turf.featureEach(features, function(currentFeature, featureIndex) {
-        if( featureIndex === 0 )
-            nearestFeature = currentFeature;
+//     // {Turf.js} Iterate over features in greenspace FeatureCollection.
+//     turf.featureEach(features, function(currentFeature, featureIndex) {
+//         if( featureIndex === 0 )
+//             nearestFeature = currentFeature;
 
-        // {Turf.js} Test if point centroid is within the current greenspace feature.
-        if( turf.booleanWithin(point, currentFeature) ) {
-            nearestFeature = currentFeature;
-            nearestDistance = 0;
-            return;
-        }
+//         // {Turf.js} Test if point centroid is within the current greenspace feature.
+//         if( turf.booleanWithin(point, currentFeature) ) {
+//             nearestFeature = currentFeature;
+//             nearestDistance = 0;
+//             return;
+//         }
 
-        // {Turf.js} Iterate over coordinates in current greenspace feature.
-        turf.coordEach(currentFeature, function(currentCoord, coordIndex, featureIndex, multiFeatureIndex, geometryIndex) {
-            // {Turf.js} Calculates the distance between two points in kilometres.
-            var distance = turf.distance(point, turf.point(currentCoord));
+//         // {Turf.js} Iterate over coordinates in current greenspace feature.
+//         turf.coordEach(currentFeature, function(currentCoord, coordIndex, featureIndex, multiFeatureIndex, geometryIndex) {
+//             // {Turf.js} Calculates the distance between two points in kilometres.
+//             var distance = turf.distance(point, turf.point(currentCoord));
 
-            // If the distance is less than that whch has previously been calculated
-            // replace the nearest values with those from the current index.
-            if( distance <= nearestDistance ) {
-                nearestFeature = currentFeature;
-                nearestDistance = distance;
-                return;
-            }
-        });
-    });
+//             // If the distance is less than that whch has previously been calculated
+//             // replace the nearest values with those from the current index.
+//             if( distance <= nearestDistance ) {
+//                 nearestFeature = currentFeature;
+//                 nearestDistance = distance;
+//                 return;
+//             }
+//         });
+//     });
 
-    foundFeaturesGroup.addLayer(createGeoJSONLayer(nearestFeature, 'greenspace'));
-    // document.getElementById('distance').innerHTML = (nearestDistance * 1000).toFixed(1) + 'm';
-}
+//     foundFeaturesGroup.addLayer(createGeoJSONLayer(nearestFeature, 'greenspace'));
+//     // document.getElementById('distance').innerHTML = (nearestDistance * 1000).toFixed(1) + 'm';
+// }
 
-function findNearestN(point, featurecollection, n) {
+function findNearestN(point, featurecollection, n, typeName) {
 
     // Calculate distances, add to properties of feature collection
     var polygons = featurecollection.features
@@ -222,8 +244,10 @@ function findNearestN(point, featurecollection, n) {
         features: polygons.slice(0, n)
     }
 
-    foundFeaturesGroup.addLayer(createGeoJSONLayer(nearestFeatures, 'greenspace'));
+    console.log(nearestFeatures);
+    foundFeaturesGroup.addLayer(createGeoJSONLayer(nearestFeatures, typeName));
     
+    map.fitBounds(foundFeaturesGroup.getBounds());
 
 }
 
@@ -380,7 +404,35 @@ function getTileServer(style = defaults.basemapStyle) {
     return 'https://osdatahubapi.os.uk/OSMapsAPI/zxy/v1/Light_3857/{z}/{x}/{y}.png?key=' + config.apikey;
 }
 
+function addSpinner() {
+    $('#request');
+}
 
+function addSpinner() {
+    
+}
+
+function getFeatureTypeToFind(featureTypeToFind) {
+    
+    switch(featureTypeToFind) {
+        case "Green space (OS MasterMap Topo)":
+            return "Greenspace_GreenspaceArea";
+            break;
+        case "Green space (Open Zoomstack)":
+            return "Zoomstack_Greenspace";
+            break;
+        case "National park":
+            return "Zoomstack_NationalParks";
+            break;
+        case "Woodland":
+            return "Zoomstack_Woodland";
+            break;
+        case "Building":
+            return "Zoomstack_LocalBuildings";
+            break;
+    }
+
+}
 
 
 function toggleClickCoordsListener() {
