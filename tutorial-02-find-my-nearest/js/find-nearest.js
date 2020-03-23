@@ -67,7 +67,6 @@ var coordsToFindGroup = new L.FeatureGroup().addTo(map);
 // Add an event listener to handle when the user clicks the 'Find Greenspace' button.
 document.getElementById('request').addEventListener('click', function(e) {
     
-    addSpinner();
     // Remove all the layers from the layer group.
     foundFeaturesGroup.clearLayers();
 
