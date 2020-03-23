@@ -248,7 +248,7 @@ $(".osel-sliding-side-panel.panel-left .layer .layer-element[data-type='radio']"
 
         parent.children('.layer-element[data-type="checkbox"]').attr('data-state', checked);
 
-        filterLayer(elem);
+        // filterLayer(elem);
     }
 
     // overflow menu handler
@@ -372,7 +372,7 @@ $(".osel-dropdown .options div").click(function() {
     select.children('span').text(txt);
     select.children('i').text('keyboard_arrow_down');
 
-    filterLayer(val);
+    // filterLayer(val);
 });
 
 

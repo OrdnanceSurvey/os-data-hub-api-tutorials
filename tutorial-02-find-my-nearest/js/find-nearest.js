@@ -24,7 +24,7 @@ var mapOptions = {
 var map = L.map('map', mapOptions);
 
 // Add scale control to the map.
-var ctrlScale = L.control.scale({ position: 'bottomleft' }).addTo(map);
+var ctrlScale = L.control.scale({ position: 'bottomright' }).addTo(map);
 
 // Load and display ZXY tile layer on the map.
 var basemap = L.tileLayer(tileServiceUrl + '/Light_3857/{z}/{x}/{y}.png?key=' + apiKey, {
@@ -73,7 +73,9 @@ document.getElementById('request').addEventListener('click', function(e) {
 
     // Get the centre point of the map window.
     if (!coordsToFind) {
-        var coordsToFind = [ map.getCenter().lng, map.getCenter().lat ];
+
+        updateCoordsToFind([ map.getCenter().lng, map.getCenter().lat ]);
+
     }
 
     
@@ -106,7 +108,9 @@ document.getElementById('request').addEventListener('click', function(e) {
 
     var featureTypeToFind = $('#feature-type-select span').text();
     let typeName = getFeatureTypeToFind(featureTypeToFind);
-    // @TIM Do we want to demonstrate a local filter as well? Within Green space - Cemeteries vs Public parks etc? 
+    // @TIM Do we want to demonstrate an in-client filter as well? Within Green space - Cemeteries vs Public parks etc? 
+
+    console.log(typeName);
 
     // Define parameters object.
     var wfsParams = {
@@ -140,7 +144,7 @@ document.getElementById('request').addEventListener('click', function(e) {
             fetch(getUrl(wfsParams))
                 .then(response => response.json())
                 .then((data) => {
-                    // console.log(data);
+                    console.log(data);
                     wfsParams.startIndex += wfsParams.count;
 
                     geojson.features.push.apply(geojson.features, data.features);
@@ -148,10 +152,11 @@ document.getElementById('request').addEventListener('click', function(e) {
                     resultsRemain = data.features.length < wfsParams.count ? false : true;
 
                     fetchWhile(resultsRemain);
-                });
+                })
+                .catch((err) => {console.error(err); });
         }
         else {
-            clearSpinner();
+            removeSpinner();
             if( geojson.features.length ) {
                 return findNearestN(pointToFind, geojson, 20, typeName);
             } else {
@@ -186,7 +191,7 @@ function getUrl(params) {
         .map(paramName => paramName + '=' + encodeURI(params[paramName]))
         .join('&');
 
-    return wfsServiceUrl + '?' + encodedParameters;
+        return wfsServiceUrl + '?' + encodedParameters;
 }
 
 // /**
@@ -247,7 +252,6 @@ function findNearestN(point, featurecollection, n, typeName) {
         features: polygons.slice(0, n)
     }
 
-    console.log(nearestFeatures);
     foundFeaturesGroup.addLayer(createGeoJSONLayer(nearestFeatures, typeName));
     
     map.fitBounds(foundFeaturesGroup.getBounds());
@@ -408,20 +412,27 @@ function getTileServer(style = defaults.basemapStyle) {
 }
 
 function addSpinner() {
-    $('#request');
+
+
+    $('#request .find').hide();
+    $('#request .fetching').show();
+
 }
 
-function addSpinner() {
-    
+function removeSpinner() {
+
+    $('#request .find').show();
+    $('#request .fetching').hide();
+
 }
 
 function getFeatureTypeToFind(featureTypeToFind) {
     
     switch(featureTypeToFind) {
-        case "Green space (OS MasterMap Topo)":
-            return "Greenspace_GreenspaceArea";
-            break;
-        case "Green space (Open Zoomstack)":
+        // case "Green space (OS MasterMap Topo)":
+        //     return "Greenspace_GreenspaceArea";
+        //     break;
+        case "Green space":
             return "Zoomstack_Greenspace";
             break;
         case "National park":
@@ -446,7 +457,7 @@ function toggleClickCoordsListener() {
         map.on('click', function (event) {
             let coords = selectLocationOnMap(event);
             $('#select-location').removeClass('active')
-            updateCoordsToFindLayer(coords);
+            updateCoordsToFind(coords);
 
         });
     } else {
@@ -468,7 +479,7 @@ function selectLocationOnMap(event) {
     return [Number(lng[0]), Number(lat[1])];
 }
 
-function updateCoordsToFindLayer(coords) {
+function updateCoordsToFind(coords) {
 
     coordsToFindGroup.clearLayers();
     coordsToFind = coords;
@@ -493,7 +504,7 @@ function setUseMyLocation() {
                     position.coords.longitude,
                     position.coords.latitude
                 ]
-                updateCoordsToFindLayer(coords) 
+                updateCoordsToFind(coords) 
                 console.log('latitude:', position.coords.latitude, 
                             'longitude:', position.coords.longitude);
             },

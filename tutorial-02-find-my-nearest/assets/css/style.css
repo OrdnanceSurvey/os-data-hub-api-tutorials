@@ -640,7 +640,7 @@ input[type=text]::-ms-clear {
 .osel-logo {
   position: absolute;
   top: 20px;
-  right: 24px;
+  left: 24px;
   width: 100px;
 }
 .osel-logo img {
