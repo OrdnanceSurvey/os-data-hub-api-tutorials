@@ -448,7 +448,6 @@ function toggleClickCoordsListener() {
             $('#select-location').removeClass('active')
             updateCoordsToFindLayer(coords);
 
-            map.flyTo(coordsToFind)
         });
     } else {
 
@@ -476,6 +475,8 @@ function updateCoordsToFindLayer(coords) {
     L.marker(coords.reverse())
         .addTo(coordsToFindGroup);
     
+    map.flyTo(coordsToFind)
+
     // center map on pin? 
 }
 
