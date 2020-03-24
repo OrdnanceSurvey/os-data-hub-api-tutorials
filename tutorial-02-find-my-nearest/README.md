@@ -1,15 +1,4 @@
-# Find My Nearest ...
-
-Steps to completion
-
-- Develop code
-    - Comment!!
-- Write tutorial
-- Get Kimberly and Tim to review
-- Edit and go live.
-
-
-# Tutorial
+# OS Tutorial | Find My Nearest 
 
 Maps that update based on user interaction can be incredibly useful. The Find My Nearest web app showcases a few APIs and web mapping capabilities of the OS Data Hub APIs. 
 
