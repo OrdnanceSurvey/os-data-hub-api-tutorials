@@ -54,11 +54,7 @@ var styles = {
 
 };
 
-// Create an empty GeoJSON FeatureCollection.
-var geojson = {
-    "type": "FeatureCollection",
-    "features": []
-};
+
 
 // Add layer group to make it easier to add or remove layers from the map.
 var foundFeaturesGroup = new L.FeatureGroup().addTo(map);
@@ -79,15 +75,15 @@ function fetchNearestFeatures(e) {
 
     // Get the centre point of the map window.
     if (!coordsToFind) {
-
         updateCoordsToFind([ map.getCenter().lng, map.getCenter().lat ]);
-
     }
 
+    let featureTypeToFind = $('#feature-type-select span').text();
+    let typeName = getFeatureTypeToFind(featureTypeToFind);
+    // @TIM Do we want to demonstrate an in-client filter as well? Within Green space - Cemeteries vs Public parks etc? 
+
     
-
     // {Turf.js} Create a point from the centre position.
-
     var pointToFind = turf.point(coordsToFind);
 
     // {Turf.js} Takes the centre point coordinates and calculates a circular polygon
@@ -113,14 +109,9 @@ function fetchNearestFeatures(e) {
     xml += '</ogc:Intersects>';
     xml += '</ogc:Filter>';
 
-    var featureTypeToFind = $('#feature-type-select span').text();
-    let typeName = getFeatureTypeToFind(featureTypeToFind);
-    // @TIM Do we want to demonstrate an in-client filter as well? Within Green space - Cemeteries vs Public parks etc? 
-
-    console.log(typeName);
-
+    
     // Define parameters object.
-    var wfsParams = {
+    let wfsParams = {
         key: apiKey,
         service: 'WFS',
         request: 'GetFeature',
@@ -133,10 +124,17 @@ function fetchNearestFeatures(e) {
         startIndex: 0
     };
 
+    
+    // Create an empty GeoJSON FeatureCollection.
+    var geojson = {
+        "type": "FeatureCollection",
+        "features": []
+    };
+    geojson.features.length = 0;
+    
     var resultsRemain = true;
 
-    geojson.features.length = 0;
-
+    fetchWhile(resultsRemain);
 
     // Use fetch() method to request GeoJSON data from the OS Features API.
     //
@@ -152,7 +150,7 @@ function fetchNearestFeatures(e) {
             fetch(getUrl(wfsParams))
                 .then(response => response.json())
                 .then((data) => {
-                    console.log(data);
+
                     wfsParams.startIndex += wfsParams.count;
 
                     geojson.features.push.apply(geojson.features, data.features);
@@ -166,7 +164,8 @@ function fetchNearestFeatures(e) {
         else {
             removeSpinner();
             if( geojson.features.length ) {
-                return findNearestN(pointToFind, geojson, 20, typeName);
+                findNearestN(pointToFind, geojson, 20, typeName);
+                return;
             } else {
                 console.log("No features found");
             }
@@ -174,7 +173,6 @@ function fetchNearestFeatures(e) {
         }
     }
 
-    fetchWhile(resultsRemain);
 
     
 }
@@ -201,6 +199,7 @@ function getUrl(params) {
         .map(paramName => paramName + '=' + encodeURI(params[paramName]))
         .join('&');
 
+        console.log(wfsServiceUrl + '?' + encodedParameters)
         return wfsServiceUrl + '?' + encodedParameters;
 }
 
@@ -425,7 +424,6 @@ function getTileServer(style = defaults.basemapStyle) {
 
 function addSpinner() {
 
-
     $('#request .find').hide();
     $('#request .fetching').show();
 
@@ -447,9 +445,6 @@ function getFeatureTypeToFind(featureTypeToFind) {
         case "Green space":
             return "Zoomstack_Greenspace";
             break;
-        case "National park":
-            return "Zoomstack_NationalParks";
-            break;
         case "Woodland":
             return "Zoomstack_Woodland";
             break;
@@ -464,11 +459,14 @@ function getFeatureTypeToFind(featureTypeToFind) {
 function toggleClickCoordsListener() {
 
     if ($("#select-location").hasClass('active')) {
-        $('#map').addClass('selecting');
 
+        $('#map').addClass('selecting');
         map.on('click', function (event) {
             selectLocationOnMap(event);
             $('#select-location').removeClass('active')
+
+            $('#map').removeClass('selecting');
+            map.off('click');
 
         });
     } else {
