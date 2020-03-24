@@ -69,7 +69,6 @@ document.getElementById('request').addEventListener('click', function (e) {
 
 function fetchNearestFeatures(e) {
     
-    addSpinner();
     // Remove all the layers from the layer group.
     foundFeaturesGroup.clearLayers();
 
