@@ -9,13 +9,42 @@ var coordsToFind = null;
     // @TIM I'd like to not make it load zoomed in on London as it is a GB-wide service. 
     // But the map tiles don't extend much beyond the bounds of the UK. 
     // Have you dealt with this in the past? Ideas? 
-var mapOptions = {
-    // minZoom: 7,
-    // maxZoom: 20,
-    center: [ 51.502, -0.126 ],
-    zoom: 15,
-    attributionControl: false
+
+var serviceUrl = 'https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1';
+
+// Define parameters object.
+var params = {
+    key: apiKey,
+    service: 'WMTS',
+    request: 'GetTile',
+    version: '2.0.0',
+    height: 256,
+    width: 256,
+    outputFormat: 'image/png',
+    style: 'default',
+    layer: 'Light_3857',
+    tileMatrixSet: 'EPSG:3857',
+    tileMatrix: '{z}',
+    tileRow: '{y}',
+    tileCol: '{x}'
 };
+
+// Construct query string parameters from object.
+var queryString = Object.keys(params).map(function(key) {
+    return key + '=' + params[key];
+}).join('&');
+
+// Initialize the map.
+var mapOptions = {
+    minZoom: 7,
+    maxZoom: 20,
+    center: [ 54.425, -2.968 ],
+    zoom: 14,
+    attributionControl: false,
+    zoomControl: false
+};
+
+
 
 var map = new L.map('map', mapOptions);
 
@@ -23,12 +52,12 @@ var map = new L.map('map', mapOptions);
 var ctrlScale = L.control.scale({ position: 'bottomright' }).addTo(map);
 
 
-var tileServiceUrl = 'https://osdatahubapi.os.uk/OSMapsAPI/zxy/v1',
-wfsServiceUrl = 'https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1';
+// var tileServiceUrl = 'https://osdatahubapi.os.uk/OSMapsAPI/zxy/v1';
+var wfsServiceUrl = 'https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1';
 
 // Load and display ZXY tile layer on the map.
 var basemap = L.tileLayer(
-        tileServiceUrl + '/Light_3857/{z}/{x}/{y}.png?key=' + apiKey, 
+        serviceUrl + "?" + queryString, 
         { maxZoom: 20 }
     ).addTo(map);
 
@@ -36,20 +65,19 @@ var basemap = L.tileLayer(
 // Define the layer styles.
 var styles = {
     'Zoomstack_Greenspace': {
-        color: '#0c0',
-        fillOpacity: 0.5
-    },
-    "Zoomstack_NationalParks": {
-        color: 'brown',
-        fillOpacity: 0.5
+        color: osColours.qualitative.lookup['2'],
+        fillOpacity: 0.5,
+        weight: 1
     },
     "Zoomstack_Woodland": {
-        color: 'green',
-        fillOpacity: 0.5
+        color: osColours.qualitative.lookup['3'],
+        fillOpacity: 0.5,
+        weight: 1
     }, 
     "Zoomstack_LocalBuildings": {
-        color: 'grey',
-        fillOpacity: 0.5
+        color: osColours.qualitative.lookup['4'],
+        fillOpacity: 0.5,
+        weight: 1
     }
 
 };
@@ -166,7 +194,7 @@ function fetchNearestFeatures(e) {
                 findNearestN(pointToFind, geojson, 20, typeName);
                 return;
             } else {
-                console.log("No features found");
+                notification.show('error', "No features found");
             }
                 // document.getElementById('message').style.display = 'block';
         }
@@ -203,47 +231,13 @@ function getUrl(params) {
 }
 
 // /**
-//  * Determines the nearest feature in a GeoJSON object.
+//  * Determines the nearest n features in a GeoJSON object.
 //  * @param {object} point - GeoJSON point centroid.
-//  * @param {object} features - GeoJSON greenspace FeatureCollection.
+//  * @param {object} features - GeoJSON FeatureCollection.
+//  * @param {integer} n - max number of features to find
+//  * @param {string} typeName - name of feature type (for styling)
 //  */
-// function findNearest(point, features) {
-//     var nearestFeature, nearestDistance = 1;
-
-//     // {Turf.js} Iterate over features in greenspace FeatureCollection.
-//     turf.featureEach(features, function(currentFeature, featureIndex) {
-//         if( featureIndex === 0 )
-//             nearestFeature = currentFeature;
-
-//         // {Turf.js} Test if point centroid is within the current greenspace feature.
-//         if( turf.booleanWithin(point, currentFeature) ) {
-//             nearestFeature = currentFeature;
-//             nearestDistance = 0;
-//             return;
-//         }
-
-//         // {Turf.js} Iterate over coordinates in current greenspace feature.
-//         turf.coordEach(currentFeature, function(currentCoord, coordIndex, featureIndex, multiFeatureIndex, geometryIndex) {
-//             // {Turf.js} Calculates the distance between two points in kilometres.
-//             var distance = turf.distance(point, turf.point(currentCoord));
-
-//             // If the distance is less than that whch has previously been calculated
-//             // replace the nearest values with those from the current index.
-//             if( distance <= nearestDistance ) {
-//                 nearestFeature = currentFeature;
-//                 nearestDistance = distance;
-//                 return;
-//             }
-//         });
-//     });
-
-//     foundFeaturesGroup.addLayer(createGeoJSONLayer(nearestFeature, 'greenspace'));
-//     // document.getElementById('distance').innerHTML = (nearestDistance * 1000).toFixed(1) + 'm';
-// }
-
 function findNearestN(point, featurecollection, n, typeName) {
-
-    console.log(point, featurecollection);
 
     // Calculate distances, add to properties of feature collection
     var polygons = featurecollection.features
@@ -252,8 +246,6 @@ function findNearestN(point, featurecollection, n, typeName) {
     }
 
     // Sort by distance property
-        // They appear to be sorted ...
-        // ... but if not, would this work? Not exactly I think ...
     polygons = polygons.sort((a,b) => a.properties.distanceToPoint - b.properties.distanceToPoint);
     
     // create FeatureCollection of 0-n features.
@@ -263,8 +255,9 @@ function findNearestN(point, featurecollection, n, typeName) {
     }
 
     foundFeaturesGroup.addLayer(createGeoJSONLayer(nearestFeatures, typeName));
-    
-    map.fitBounds(foundFeaturesGroup.getBounds());
+
+    notification.show('success', nearestFeatures.features.length + ' nearest features found!')
+    map.fitBounds(foundFeaturesGroup.getBounds(), {maxZoom: 16});
 
 }
 
@@ -273,7 +266,8 @@ function addDistanceFromPointToPolygon(point, polygon) {
     var nearestDistance = 100;
 
     if( turf.booleanWithin(point, polygon) ) {
-        return 0;
+        polygon.properties.distanceToPoint = 0;
+        return polygon;
     }
 
      // {Turf.js} Iterate over coordinates in current greenspace feature.
