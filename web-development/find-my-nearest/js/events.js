@@ -15,3 +15,4 @@ $('#use-my-location').on('click', function (e) {
 
     setUseMyLocation();
 });
+

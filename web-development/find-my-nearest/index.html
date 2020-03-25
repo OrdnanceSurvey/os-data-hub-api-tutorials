@@ -32,6 +32,11 @@
             margin-bottom: 15px;
         }
 
+        .form-input-heading {
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
         .location-buttons button {
             padding: 10px;
             margin-left: 16px;
@@ -46,6 +51,7 @@
 
         .osel-dropdown {
             margin-left: 0!important;
+            margin-top: 0!important;
             width: 100%;
         }
 
@@ -63,13 +69,21 @@
             bottom: 15px;
             position: relative;
         }
+        div.find-button {
+            margin-top: 15px;
+        }
 
-        button#request {
+        #request {
             width: 273px;
         }
 
         #map.selecting {
             cursor: crosshair; 
+        }
+
+        .osel-toast-notification {
+            width: 100%!important;
+            max-width: 600px!important;
         }
         /* *:focus { border: 1px solid red !important; box-sizing: border-box; } */
     </style>
@@ -97,12 +111,11 @@
     </div>
     <div class="content">
         <div class="osel-sliding-side-panel panel-left">
-            <div class="panel-toggle" tabindex="0">
-                <div class="toggle-handle" aria-label="Toggle panel"></div>
-            </div>
+            
             <div class="panel-content">
                 <div class="panel-header">Find My Nearest</div>
                 <div class="scroller-no-tabs">
+                    <p class='form-input-heading'>Select feature type</p>
                     <div class="osel-dropdown">
                         <div id='feature-type-select' class="select"><span>Green space</span><i class="material-icons">keyboard_arrow_down</i></div>
                         <div class="options hidden">
@@ -116,9 +129,10 @@
 
                         </div>
                     </div>
+                    <p class='form-input-heading'>Select location to find</p>
                     <div class="button-row">
-                        <button id="select-location" class="osel-button osel-secondary-button">Select on map.</button>
-                        <button id="use-my-location" class="osel-button osel-secondary-button">Use my location.</button>
+                        <button id="select-location" class="osel-button osel-secondary-button">Select on map</button>
+                        <button id="use-my-location" class="osel-button osel-secondary-button">Use my location</button>
                     </div>
                     <div>
                         <button id="request" class="osel-button big osel-primary-button">
@@ -136,6 +150,7 @@
                             </div>
                         </button>
                     </div>
+                    <div class='osel-notification-holder'></div>
                     
                 </div>
             </div>
@@ -156,22 +171,7 @@
                 </div>
             </div>
             <div class="osel-control-container container-bottom container-right">
-                <div class="center-control">
-                    <div class="action-button"></div>
-                    <div class="panel coords-box">
-                        <div class="title">Centre position</div>
-                        <div class="main">
-                            <div class="navigate-prev no-select"><i class="material-icons">arrow_drop_down</i></div>
-                            <div class="coord-value"></div>
-                            <div class="navigate-next no-select"><i class="material-icons">arrow_drop_up</i></div>
-                        </div>
-                        <div class="navigation">
-                            <span class="dot active"></span>
-                            <span class="dot"></span>
-                            <span class="dot"></span>
-                        </div>
-                    </div>
-                </div>
+                
                 <div class="basemap-control">
                     <div class="action-button"></div>
                     <div class="panel list-select">
@@ -200,25 +200,7 @@
             </div>
         </div>
     </div>
-    <div class="osel-more-dropmenu hidden">
-        <div class="title">OSEL Framework</div>
-        <hr>
-        <div class="label logo">
-            <img src="./assets/img/os-logo.svg" />
-        </div>
-    </div>
-    <div class="osel-overflow-menu">
-        <div class="layer-overflow" data-parent-id="mapLayer01">
-            <div class="label interactive" data-function="extent">Zoom to extent</div>
-            <div class="label inactive" data-function="delete">Delete layer</div>
-            <hr>
-            <div class="label">Opacity</div>
-            <div class="slider-range">
-                <input type="range" min="0" max="100" value="100" data-rangeslider />
-                <output></output>
-            </div>
-        </div>
-    </div>
+    
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -240,6 +222,7 @@
     <script src="./js/config.js"></script>
     <script src="./js/apikey.js"></script>
     <script src="./assets/js/main.js"></script>
+    <script src="./js/setup.js"></script>
     <script src="./js/find-nearest.js"></script>
     <script src="./js/events.js"></script>
 
