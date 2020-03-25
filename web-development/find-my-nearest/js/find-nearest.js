@@ -10,29 +10,8 @@ var coordsToFind = null;
     // But the map tiles don't extend much beyond the bounds of the UK. 
     // Have you dealt with this in the past? Ideas? 
 
-var serviceUrl = 'https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1';
-
-// Define parameters object.
-var params = {
-    key: apiKey,
-    service: 'WMTS',
-    request: 'GetTile',
-    version: '2.0.0',
-    height: 256,
-    width: 256,
-    outputFormat: 'image/png',
-    style: 'default',
-    layer: 'Light_3857',
-    tileMatrixSet: 'EPSG:3857',
-    tileMatrix: '{z}',
-    tileRow: '{y}',
-    tileCol: '{x}'
-};
-
-// Construct query string parameters from object.
-var queryString = Object.keys(params).map(function(key) {
-    return key + '=' + params[key];
-}).join('&');
+var wmtsServiceUrl = 'https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1';
+var wfsServiceUrl = 'https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1';
 
 // Initialize the map.
 var mapOptions = {
@@ -52,12 +31,11 @@ var map = new L.map('map', mapOptions);
 var ctrlScale = L.control.scale({ position: 'bottomright' }).addTo(map);
 
 
-// var tileServiceUrl = 'https://osdatahubapi.os.uk/OSMapsAPI/zxy/v1';
-var wfsServiceUrl = 'https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1';
+// Load and display WMTS tile layer on the map.
+var basemapQueryString = generateQueryString();
 
-// Load and display ZXY tile layer on the map.
 var basemap = L.tileLayer(
-        serviceUrl + "?" + queryString, 
+        wmtsServiceUrl + "?" + basemapQueryString, 
         { maxZoom: 20 }
     ).addTo(map);
 
@@ -88,11 +66,6 @@ var styles = {
 var foundFeaturesGroup = new L.FeatureGroup().addTo(map);
 var coordsToFindGroup = new L.FeatureGroup().addTo(map);
 
-
-// Add an event listener to handle when the user clicks the 'Find Greenspace' button.
-document.getElementById('request').addEventListener('click', function (e) {
-    fetchNearestFeatures(e);
-});
 
 
 function fetchNearestFeatures(e) {
@@ -398,9 +371,33 @@ function resetProperties() {
     map.closePopup();
     sliderRight.slideReveal("hide");
 }
+function generateQueryString(style = defaults.basemapStyle) {
 
+    // Define parameters object.
+    let params = {
+        key: apiKey,
+        service: 'WMTS',
+        request: 'GetTile',
+        version: '2.0.0',
+        height: 256,
+        width: 256,
+        outputFormat: 'image/png',
+        style: 'default',
+        layer: style + '_3857',
+        tileMatrixSet: 'EPSG:3857',
+        tileMatrix: '{z}',
+        tileRow: '{y}',
+        tileCol: '{x}'
+    };
+
+    // Construct query string parameters from object.
+    return Object.keys(params).map(function(key) {
+        return key + '=' + params[key];
+    }).join('&');
+
+}
 function switchBasemap(style) {
-    basemap.setUrl(getTileServer(style));
+    basemap.setUrl(wmtsServiceUrl + '?' + generateQueryString(style));
 }
 
 function zoomToLayerExtent(lyr) {
@@ -412,7 +409,7 @@ function setLayerOpacity(lyr, value) {
 }
 
 function getTileServer(style = defaults.basemapStyle) {   
-    return 'https://osdatahubapi.os.uk/OSMapsAPI/zxy/v1/Light_3857/{z}/{x}/{y}.png?key=' + config.apikey;
+    return wmtsServiceUrl + '/' + style + '_3857/{z}/{x}/{y}.png?key=' + config.apikey;
 }
 
 function addSpinner() {
