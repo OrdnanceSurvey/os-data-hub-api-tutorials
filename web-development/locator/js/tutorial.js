@@ -70,7 +70,9 @@ var nationalParks = {};
                                     unhighlightListElement(element);
                                 }, 
                                 'click': function () {
-                                    map.fitBounds(park.getBounds());
+                                    map.flyToBounds(park.getBounds(), {
+                                        padding: [75,75]
+                                    });
                                 }
                             });
 
@@ -84,7 +86,9 @@ var nationalParks = {};
         $(element).on('click', function (e) {
 
             e.preventDefault();
-            map.fitBounds(park.getBounds());
+            map.flyToBounds(park.getBounds(), {
+                padding: [75, 75]
+            });
 
         });
 
