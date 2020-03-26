@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>OS Tutorial : Find My Nearest</title>
+    <title>OS Tutorial | Find My Nearest</title>
     <meta charset="utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
@@ -114,16 +114,25 @@
         <div class="osel-more-dropmenu-btn"><i class="material-icons" aria-label="">more_horiz</i></div>
     </div>
     <div class="content">
+        <div class="osel-more-dropmenu hidden">
+            <div class="title">TITLE GOES HERE</div>
+             <hr>
+             <div class="label logo">
+                 <img src="../assets/img/os-logo.svg" />
+             </div>
+         </div>
         <div class="osel-sliding-side-panel panel-left">
-            
+            <!-- <div class="panel-toggle">
+                <div class="toggle-handle" aria-label="Toggle panel"></div>
+            </div> -->
             <div class="panel-content">
                 <div class="panel-header">Find My Nearest</div>
                 <div class="scroller-no-tabs">
                     <p class='form-input-heading'>Select feature type</p>
                     <div class="osel-dropdown">
-                        <div id='feature-type-select' class="select"><span>Green space</span><i class="material-icons">keyboard_arrow_down</i></div>
+                        <div id='feature-type-select' class="select"><span>Greenspace</span><i class="material-icons">keyboard_arrow_down</i></div>
                         <div class="options hidden">
-                            <div class="selected" data-value="1"><i class="material-icons">done</i><span>Green space</span></div>
+                            <div class="selected" data-value="1"><i class="material-icons">done</i><span>Greenspace</span></div>
                             <!-- <div data-value="6"><i class="material-icons"></i><span>Green space (Open Zoomstack)</span></div> -->
                             <!-- <div data-value="2"><i class="material-icons"></i><span>National park</span></div> -->
                             <!-- ^^ National parks are too far away to efficiently find using the hardcoded parameters we use ...  -->
@@ -215,6 +224,10 @@
     <script src="https://cdn.jsdelivr.net/npm/add-clear@2.0.7/addclear.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/5.1.5/turf.min.js"></script>
     <script src="./assets/js/init.js"></script>
+    <script>
+        if( $(window).width() <= defaults.fixedPopupMinimumWidth )
+            $(document.body).html($('.content').html());
+    </script>
     <script src="./assets/js/coordinates.js"></script>
     <script src="./assets/js/opacity.js"></script>
     <script src="./assets/js/popup.js"></script>
