@@ -12,9 +12,36 @@
     <link rel="stylesheet" href="./assets/css/style.css" />
     <link rel="stylesheet" href="./assets/css/vendor.css" />
     <style>
+
+        .panel-header {
+            height: 100px!important;
+            line-height: unset;
+        }
+        .osel-sliding-side-panel .scroller-no-tabs {
+            top: 100px!important;
+        }
+
+        .np-arrow-green {
+            height: 25px;
+            margin-bottom: -5px;
+            margin-right: 10px;
+            padding-left: 10px;
+        }
+
+        .highlight .np-arrow-green {
+            transform: rotate(23deg);
+        }
+
+        .np-logo-main {
+            height: 70px;
+            margin: 15px 0;
+        }
+
         li.highlight {
             background-color: lightgrey;
         }
+
+
     </style>
 </head>
 <body style="background:#ddd;">
@@ -23,9 +50,12 @@
             <div class="toggle-handle" aria-label="Toggle panel"></div>
         </div>
         <div class="panel-content">
-            <div class="panel-header">UK National Parks</div>
+            <div class="panel-header">
+                <img class='np-logo-main' src='./assets/img/NP-logo-wt.png' />
+            </div>
             <div class="scroller-no-tabs">
                 <ul class="layers">
+                    
                 </ul>
             </div>
         </div>
@@ -40,6 +70,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.2/leaflet.js"></script>
     <script src="./assets/js/init.js"></script>
     <script src="./assets/js/main.js"></script>
+    <script src="./assets/lib/os-colour.js"></script>
     <script src="./js/defaults.js"></script>
     <script src="./js/tutorial.js"></script>
     <script>

@@ -43,19 +43,24 @@ var nationalParks = {};
     nationalParks.forEach(function (nationalPark, i) {
         console.log(i);
         // First create the HTML element that will represent the park
-        let element =  `<li class="layer" data-np-id=${nationalPark.properties.OBJECTID}>
-                        <div class="layer-element icon" data-type="list-item" data-id="">
-                            <div class="label"><i class="material-icons">near_me</i>${nationalPark.properties.name ? nationalPark.properties.name : nationalPark.properties.OBJECTID}</div>
+      
+        let element =    `<li class="layer" data-np-id="1">
+                        <div class="layer-element icon" data-type="list-item" data-id="${nationalPark.properties.OBJECTID}">
+                            <div class="label">
+                                <img class='np-arrow-green' src='./assets/img/np-arrow-green.png' />
+                                <span class='np-name'>${nationalPark.properties.name ? nationalPark.properties.name : nationalPark.properties.OBJECTID}</span>
+                            
+                            </div>
                         </div>
-                    </li>`;
+                    </li>`
         
         element = $.parseHTML(element);
 
         // then create the leaflet geojson layer 
         let park = L.geoJSON(nationalPark, {
                         style: {
-                            fillColor: "green",
-                            color: "green",
+                            fillColor: osGreen[3],
+                            color: osGreen[6],
                             fillOpacity: 0.3,
                             weight: 1
                         },
@@ -94,10 +99,12 @@ var nationalParks = {};
 
         $(element).on('mouseenter', function () {
             highlightGeojson(park)
+            highlightListElement(element)
         });
         
         $(element).on('mouseleave', function () {
             unhighlightGeojson(park)
+            unhighlightListElement(element)
         });
 
 
@@ -125,6 +132,7 @@ function unhighlightGeojson (geojson) {
 function highlightListElement(html) {
     
     $(html).addClass('highlight')
+
 
 }
 
