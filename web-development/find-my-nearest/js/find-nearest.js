@@ -80,7 +80,7 @@ function fetchNearestFeatures(e) {
 
     let featureTypeToFind = $('#feature-type-select span').text();
     let typeName = getFeatureTypeToFind(featureTypeToFind);
-    // @TIM Do we want to demonstrate an in-client filter as well? Within Green space - Cemeteries vs Public parks etc? 
+
 
     
     // {Turf.js} Create a point from the centre position.
@@ -146,7 +146,6 @@ function fetchNearestFeatures(e) {
     // the query have been returned, and there is no need to request further pages.
     function fetchWhile(resultsRemain) {
         if ( resultsRemain ) {
-            console.log(JSON.stringify(getUrl(wfsParams)))
             fetch(getUrl(wfsParams))
                 .then(response => response.json())
                 .then((data) => {
@@ -199,7 +198,6 @@ function getUrl(params) {
         .map(paramName => paramName + '=' + encodeURI(params[paramName]))
         .join('&');
 
-        console.log(wfsServiceUrl + '?' + encodedParameters)
         return wfsServiceUrl + '?' + encodedParameters;
 }
 
@@ -230,7 +228,10 @@ function findNearestN(point, featurecollection, n, typeName) {
     foundFeaturesGroup.addLayer(createGeoJSONLayer(nearestFeatures, typeName));
 
     notification.show('success', nearestFeatures.features.length + ' nearest features found!')
-    map.fitBounds(foundFeaturesGroup.getBounds(), {maxZoom: 16});
+    map.flyToBounds(foundFeaturesGroup.getBounds(), {
+        padding: [50,50],
+        maxZoom: 16
+    });
 
 }
 
@@ -371,6 +372,7 @@ function resetProperties() {
     map.closePopup();
     sliderRight.slideReveal("hide");
 }
+
 function generateQueryString(style = defaults.basemapStyle) {
 
     // Define parameters object.
@@ -401,7 +403,9 @@ function switchBasemap(style) {
 }
 
 function zoomToLayerExtent(lyr) {
-    map.fitBounds(window[lyr].getBounds());
+    map.flyToBounds(window[lyr].getBounds(), {
+        padding: [50,50]
+    });
 }
 
 function setLayerOpacity(lyr, value) {
@@ -432,7 +436,7 @@ function getFeatureTypeToFind(featureTypeToFind) {
         // case "Green space (OS MasterMap Topo)":
         //     return "Greenspace_GreenspaceArea";
         //     break;
-        case "Green space":
+        case "Greenspace":
             return "Zoomstack_Greenspace";
             break;
         case "Woodland":
@@ -482,10 +486,10 @@ function selectLocationOnMap(event) {
 }
 
 function updateCoordsToFind(coords) {
-    console.log(coords);
-    coordsToFind = coords;
-
+    
     coordsToFindGroup.clearLayers();
+
+    coordsToFind = coords;    
     L.marker([coordsToFind[1], coordsToFind[0]])
         .addTo(coordsToFindGroup);
     
