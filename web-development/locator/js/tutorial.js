@@ -6,8 +6,8 @@
 
 // Set up map
 var apiKey = 'FtAS7OR45lE3AR78KxrdGpfYq8uAAV6K';
-var wmtsServiceUrl = 'https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1';
 
+// Define map options including where the map loads and zoom constraints
 var mapOptions = {
     minZoom: 7,
     maxZoom: 20,
@@ -17,92 +17,107 @@ var mapOptions = {
     zoomControl: false
 };
 
+// Instantiate a new L.map object
 var map = new L.map('map', mapOptions);
 
 // Add scale control to the map.
 var ctrlScale = L.control.scale({ position: 'bottomright' }).addTo(map);
 
 // Load and display WMTS tile layer on the map.
-var basemapQueryString = generateWMTSQueryString();
+
+var wmtsServiceUrl = 'https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1';
+
+// Define parameters object.
+var wmtsParams = {
+    key: apiKey,
+    service: 'WMTS',
+    request: 'GetTile',
+    version: '2.0.0',
+    height: 256,
+    width: 256,
+    outputFormat: 'image/png',
+    style: 'default',
+    layer: 'Outdoor_3857',
+    tileMatrixSet: 'EPSG:3857',
+    tileMatrix: '{z}',
+    tileRow: '{y}',
+    tileCol: '{x}'
+};
+
+var basemapQueryString = Object.keys(wmtsParams).map(
+    function(key) {
+            return key + '=' + wmtsParams[key];
+        }).join('&');
 
 var basemap = L.tileLayer(
         wmtsServiceUrl + "?" + basemapQueryString, 
         { maxZoom: 20 }
     ).addTo(map);
 
-
 // Fetch geojson data to display
-var nationalParks = {};
+var nationalParks;
 
 // This is an immediately-invoked function expression. 
 // Necessary because we can't use await outside of an async function. 
 (async function () {
-    nationalParks = await fetch('./data/np-simplified.json');
+    nationalParks = await fetch('./data/national-parks.json');
     nationalParks = await nationalParks.json();
 
-    nationalParks.forEach(function (nationalPark, i) {
-        console.log(i);
+    // then create the leaflet geojson layer 
+    let park = L.geoJSON(nationalParks, {
+            style: {
+                fillColor: osGreen[3],
+                color: osGreen[6],
+                fillOpacity: 0.3,
+                weight: 1
+            },
+            onEachFeature: function (feature, layer) {
+                layer.on({
+                    'mouseover': function (e) {
+                        highlightGeojson(feature.properties.id);
+                        highlightListElement(feature.properties.id);                                    
+                        
+                    },
+                    'mouseout': function (e) {
+                        unhighlightGeojson(feature.properties.id);
+                        unhighlightListElement(feature.properties.id);
+                    }, 
+                    'click': function (e) {
+                        flyToBoundsOffset(feature.properties.id, '.osel-sliding-side-panel')
+                    }
+                });
+
+            }
+    });
+
+    park.addTo(map);
+
+    // Do we want a popUp? 
+
+    nationalParks.features.forEach(function (nationalPark, i) {
         // First create the HTML element that will represent the park
       
-        let element =    `<li class="layer" data-np-id="1">
-                        <div class="layer-element icon" data-type="list-item" data-id="${nationalPark.properties.OBJECTID}">
-                            <div class="label">
-                                <img class='np-arrow-green' src='./assets/img/np-arrow-green.png' />
-                                <span class='np-name'>${
-                                    nationalPark.properties.name ? 
-                                        nationalPark.properties.name : 
-                                        nationalPark.properties.OBJECTID
-                                    }
-                                    </span>
-                                    <a href="${nationalPark.properties.url}" 
-                                        
-                                        target="_blank">
-                                        <i class="material-icons" onClick="this.href='${nationalPark.properties.url}'" aria-label="">launch</i>
-                                    </a>
+        let element =   `<li class="layer" data-np-id="${nationalPark.properties.id}">
+                            <div class="layer-element icon" data-type="list-item" data-id="${nationalPark.properties.id}">
+                                <div class="label">
+                                    <img class='np-arrow-green' src='./assets/img/np-arrow-green.png' />
+                                    <span class='np-name'>${ nationalPark.properties.name }
+                                        </span>
+                                        <a href="${ nationalPark.properties.url }" target="_blank">
+                                            <i class="material-icons" onClick="this.href='${ nationalPark.properties.url }'" aria-label="">launch</i>
+                                        </a>
+                                </div>
                             </div>
-                        </div>
-                    </li>`
+                        </li>`
         
         element = $.parseHTML(element);
 
-        // then create the leaflet geojson layer 
-        let park = L.geoJSON(nationalPark, {
-                        style: {
-                            fillColor: osGreen[3],
-                            color: osGreen[6],
-                            fillOpacity: 0.3,
-                            weight: 1
-                        },
-                        onEachFeature: function (feature, layer) {
-                            layer.on({
-                                'mouseover': function () {
-                                    highlightGeojson(park);
-                                    highlightListElement(element);                                    $(element).addClass('highlight')
-                                },
-                                'mouseout': function () {
-                                    unhighlightGeojson(park);
-                                    unhighlightListElement(element);
-                                }, 
-                                'click': function () {
-                                    // map.flyToBounds(park.getBounds(), {
-                                    //     padding: [75,75]
-                                    // });
 
-                                    flyToOffset(park, '.osel-sliding-side-panel')
-                                }
-                            });
-
-                        }
-                });
-        // Do we want a popUp? 
-
-
-        
 
         $(element).find('span').on('click', function (e) {
 
             e.preventDefault();
-            flyToOffset(park, '.osel-sliding-side-panel')
+            flyToBoundsOffset(nationalPark.properties.id, '.osel-sliding-side-panel')
 
         });
 
@@ -111,54 +126,72 @@ var nationalParks = {};
         // })
 
         $(element).on('mouseenter', function () {
-            highlightGeojson(park)
-            highlightListElement(element)
+            highlightGeojson(nationalPark.properties.id)
+            highlightListElement(nationalPark.properties.id)
         });
         
         $(element).on('mouseleave', function () {
-            unhighlightGeojson(park)
-            unhighlightListElement(element)
+            unhighlightGeojson(nationalPark.properties.id)
+            unhighlightListElement(nationalPark.properties.id)
         });
 
 
         $('.layers').append(element);
-        park.addTo(map);
 
     });
     
 })()
 
-function highlightGeojson( geojson) {
+function getFeatureById(dataId) {
+    
+    let filtered = Object.values(map._layers).filter((l) => {
+        if ('feature' in l) {
+            return l.feature.properties.id == dataId;
+        }
+    });
+
+    return filtered[0];
+}
+
+function highlightGeojson( dataId) {
+
+    let geojson = getFeatureById(dataId);
+
     geojson.setStyle({
         fillOpacity: 0.6,
         weight: 3
     })
 }
 
-function unhighlightGeojson (geojson) {
+function unhighlightGeojson (dataId) {
+
+    let geojson = getFeatureById(dataId);
     geojson.setStyle({
         fillOpacity: 0.3,
         weight: 1
     })
 };
 
-function highlightListElement(html) {
-    
-    $(html).addClass('highlight')
+function highlightListElement(dataId) {
 
-
+    $('[data-np-id="' + String(dataId) + '"]')
+        .addClass('highlight');
 }
 
-function unhighlightListElement(html) {
-    $(html).removeClass('highlight')
+function unhighlightListElement(dataId) {
+
+    $('[data-np-id="' + String(dataId) + '"]')
+        .removeClass('highlight')
 }
 
-function flyToOffset(Lgeojson, offsetElSelector, elPosition='left') {
+function flyToBoundsOffset(dataId, offsetElSelector, elPosition='left') {
 
     let offset = $(offsetElSelector).width();
 
-    let paddingOptions = {}
-    console.log(elPosition)
+    let geojson = getFeatureById(dataId);
+
+    let paddingOptions;
+
     if (elPosition == "left") {
         paddingOptions = {
             paddingTopLeft: [offset, 50],
@@ -171,6 +204,6 @@ function flyToOffset(Lgeojson, offsetElSelector, elPosition='left') {
         }
     }
 
-    map.flyToBounds(Lgeojson.getBounds(), paddingOptions)
+    map.flyToBounds(geojson.getBounds(), paddingOptions)
 
 }
