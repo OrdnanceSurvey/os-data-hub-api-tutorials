@@ -273,44 +273,44 @@ To make our list we loop through the array of features in the GeoJSON FeatureCol
 ```javascript
 // Again - still in the async function! This is because we need to be sure that nationalParks has the fetched data before we loop through it.
         
-nationalParks.features.forEach(function (nationalPark, i) {
-    // First we will create the <li> element that will represent the park. This will go inside the <ul class="layers"> element defined in index.html
-    let element = `<li class="layer" data-np-id="${nationalPark.properties.id}">
-        <div class="layer-element icon" data-type="list-item" data-id="${nationalPark.properties.id}">
-        <div class="label">
-        <img class='np-arrow-green' src='./assets/img/np-arrow-green.png' />
-        <span class='np-name'>${ nationalPark.properties.name }</span>
-        <a href="${ nationalPark.properties.url }" target="_blank">
-        <i class="material-icons" onClick="this.href='${ nationalPark.properties.url }'" aria-label="">launch</i>
-        </a>
-        </div>
-        </div>
-    </li>`
-    
-    element = $.parseHTML(element);
+    nationalParks.features.forEach(function (nationalPark, i) {
+        // First we will create the <li> element that will represent the park. This will go inside the <ul class="layers"> element defined in index.html
+        let element = `<li class="layer" data-np-id="${nationalPark.properties.id}">
+            <div class="layer-element icon" data-type="list-item" data-id="${nationalPark.properties.id}">
+            <div class="label">
+            <img class='np-arrow-green' src='./assets/img/np-arrow-green.png' />
+            <span class='np-name'>${ nationalPark.properties.name }</span>
+            <a href="${ nationalPark.properties.url }" target="_blank">
+            <i class="material-icons" onClick="this.href='${ nationalPark.properties.url }'" aria-label="">launch</i>
+            </a>
+            </div>
+            </div>
+        </li>`
+        
+        element = $.parseHTML(element);
 
-    // Then, attach event handlers to the element
-    $(element).find('span').on('click', function (e) {
+        // Then, attach event handlers to the element
+        $(element).find('span').on('click', function (e) {
 
-        e.preventDefault();
-        flyToBoundsOffset(nationalPark.properties.id, '.osel-sliding-side-panel')
-    });
+            e.preventDefault();
+            flyToBoundsOffset(nationalPark.properties.id, '.osel-sliding-side-panel')
+        });
 
-    $(element).on('mouseenter', function () {
+        $(element).on('mouseenter', function () {
 
-        highlightGeojson(nationalPark.properties.id)
-        highlightListElement(nationalPark.properties.id)
-    });
-    
-    $(element).on('mouseleave', function () {
+            highlightGeojson(nationalPark.properties.id)
+            highlightListElement(nationalPark.properties.id)
+        });
+        
+        $(element).on('mouseleave', function () {
 
-        unhighlightGeojson(nationalPark.properties.id)
-        unhighlightListElement(nationalPark.properties.id)
-    });
+            unhighlightGeojson(nationalPark.properties.id)
+            unhighlightListElement(nationalPark.properties.id)
+        });
 
-    // And finally append it to the <li class="layers"> element
-    $('.layers').append(element);
-}); // <- close the forEach loop
+        // And finally append it to the <li class="layers"> element
+        $('.layers').append(element);
+    }); // <- close the forEach loop
 })() // <- and close the function expression - then invoke it!
 ```
 
