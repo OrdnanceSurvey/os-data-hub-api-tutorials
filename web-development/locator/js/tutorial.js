@@ -156,9 +156,21 @@ function unhighlightListElement(html) {
 function flyToOffset(Lgeojson, offsetElSelector, elPosition='left') {
 
     let offset = $(offsetElSelector).width();
-    console.log("Fly To Offset", offset, elPosition)
-    map.flyToBounds(Lgeojson.getBounds(), {
-        paddingTopLeft: [offset, 50],
-    })
+
+    let paddingOptions = {}
+    console.log(elPosition)
+    if (elPosition == "left") {
+        paddingOptions = {
+            paddingTopLeft: [offset, 50],
+            paddingBottomRight: [50,50]
+        }
+    } else if (elPosition == "right") {
+        paddingOptions = {
+            paddingTopLeft: [50, 50],
+            paddingBottomRight: [offset,50]
+        }
+    }
+
+    map.flyToBounds(Lgeojson.getBounds(), paddingOptions)
 
 }
