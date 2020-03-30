@@ -29,7 +29,13 @@
         }
 
         .highlight .np-arrow-green {
+            transition: transform 200ms;
             transform: rotate(23deg);
+        }
+
+        .np-arrow-green {
+            transition: transform 200ms;
+            transform: unset;
         }
 
         .np-logo-main {
@@ -46,8 +52,17 @@
         }
 
         li.highlight {
-            background-color: lightgrey;
+            transition: background-color 200ms;
+            background-color: #f5f5f5;
         }
+
+        
+
+        li:not(.highlight) {
+            transition: background-color 200ms;
+            background-color: unset;
+        }
+
 
         .osel-sliding-side-panel ul.layers 
         .layer .layer-element[data-type="list-item"] 
@@ -62,16 +77,21 @@
             right: 20px;
             opacity: 0.1;
             font-size: 18px;
+            transition: opacity 200ms;
         }
 
         .highlight i {
             opacity: 0.5;
+            transition: opacity 200ms;
+
         }
 
         .highlight i:hover {
             opacity: 1;
             cursor: pointer;
             color: #228B3B!important;
+            transition: opacity 200ms;
+
         }
 
     </style>
