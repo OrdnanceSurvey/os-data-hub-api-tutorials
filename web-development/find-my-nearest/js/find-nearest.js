@@ -486,7 +486,7 @@ function selectLocationOnMap(event) {
 }
 
 function updateCoordsToFind(coords) {
-    
+        
     coordsToFindGroup.clearLayers();
 
     coordsToFind = coords;    
