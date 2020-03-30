@@ -12,7 +12,7 @@ To make things interesting we are going to connect the two representations of th
 
 We created a lightweight JSON file, [`/data/national-parks.json`](./data/national-parks.json). The file contains an GeoJSON FeatureCollection. Each Feature in the collection representsa national park. Each Feature's `property` attribute contains the `name` and a `url` for the park, plus an `id`. 
 
-```json
+```javascript
 {
     "type": "FeatureCollection",
     "features": [
