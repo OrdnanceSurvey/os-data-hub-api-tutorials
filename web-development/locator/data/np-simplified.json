@@ -1119,6 +1119,7 @@
             "properties": {
                 "OBJECTID": 1,
                 "name": "Lake District National Park",
+                "url": "https://www.lakedistrict.gov.uk/",
                 "SHAPE_Length": 280765.426129284,
                 "SHAPE_Area": 2356516290.70886
             }
@@ -2383,6 +2384,7 @@
             "properties": {
                 "OBJECTID": 2,
                 "name": "Yorkshire Dales National Park",
+                "url": "https://www.yorkshiredales.org.uk/",
                 "SHAPE_Length": 309185.348157529,
                 "SHAPE_Area": 2183457318.97014
             }
@@ -3415,6 +3417,7 @@
             "properties": {
                 "OBJECTID": 3,
                 "name": "Brecon Beacons National Park",
+                "url": "https://www.breconbeacons.org/",
                 "SHAPE_Length": 254404.254148386,
                 "SHAPE_Area": 1346042171.5
             }
@@ -5115,6 +5118,7 @@
             "properties": {
                 "OBJECTID": 4,
                 "name": "Cairngorms National Park",
+                "url": "https://cairngorms.co.uk/",
                 "SHAPE_Length": 400086.960582007,
                 "SHAPE_Area": 4527217333
             }
@@ -5783,6 +5787,7 @@
             "properties": {
                 "OBJECTID": 5,
                 "name": "Dartmoor National Park",
+                "url": "https://www.dartmoor.gov.uk/",
                 "SHAPE_Length": 155743.738412852,
                 "SHAPE_Area": 954994090.5
             }
@@ -6403,6 +6408,7 @@
             "properties": {
                 "OBJECTID": 6,
                 "name": "Exmoor National Park",
+                "url": "https://www.exmoor-nationalpark.gov.uk/",
                 "SHAPE_Length": 152930.39312679,
                 "SHAPE_Area": 689796776
             }
@@ -7838,7 +7844,8 @@
             },
             "properties": {
                 "OBJECTID": 7,
-                "name": "Loch Lomond & The Trossachs National Park",
+                "name": "Loch Lomond & The Trossachs",
+                "url": "https://www.lochlomond-trossachs.org/",
                 "SHAPE_Length": 337022.08090891,
                 "SHAPE_Area": 1862367991.5
             }
@@ -8541,6 +8548,7 @@
             "properties": {
                 "OBJECTID": 8,
                 "name": "New Forest National Park",
+                "url": "https://www.newforestnpa.gov.uk/",
                 "SHAPE_Length": 171191.621459907,
                 "SHAPE_Area": 567869334
             }
@@ -9585,6 +9593,7 @@
             "properties": {
                 "OBJECTID": 9,
                 "name": "North York Moors National Park",
+                "url": "https://www.northyorkmoors.org.uk/",
                 "SHAPE_Length": 261997.330145487,
                 "SHAPE_Area": 1434368126
             }
@@ -10865,6 +10874,7 @@
             "properties": {
                 "OBJECTID": 10,
                 "name": "Northumberland National Park",
+                "url": "https://www.northumberlandnationalpark.org.uk/",
                 "SHAPE_Length": 320998.492751373,
                 "SHAPE_Area": 1053024431.5
             }
@@ -12189,6 +12199,7 @@
             "properties": {
                 "OBJECTID": 11,
                 "name": "Peak District National Park",
+                "url": "https://www.peakdistrict.gov.uk/",
                 "SHAPE_Length": 305460.608509212,
                 "SHAPE_Area": 1434268636
             }
@@ -12196,7 +12207,8 @@
         {
             "type": "FeatureCollection",
             "properties":{
-                "name": "Pembrokeshire Coast National Park"
+                "name": "Pembrokeshire Coast",
+                "url": "https://www.pembrokeshirecoast.wales/"
             },
             "features": [
                 {
@@ -15802,6 +15814,7 @@
             "properties": {
                 "OBJECTID": 37,
                 "name": "Snowdonia National Park",
+                "url": "https://www.snowdonia.gov.wales/home",
                 "SHAPE_Length": 344657.635166203,
                 "SHAPE_Area": 2142166958.5
             }
@@ -17906,6 +17919,7 @@
             "properties": {
                 "OBJECTID": 38,
                 "name": "South Downs National Park",
+                "url": "https://www.southdowns.gov.uk/",
                 "SHAPE_Length": 534896.113363839,
                 "SHAPE_Area": 1645325475
             }
@@ -19486,6 +19500,7 @@
             "properties": {
                 "OBJECTID": 39,
                 "name": "The Broads",
+                "url": "https://www.visitthebroads.co.uk/",
                 "SHAPE_Length": 431787.348924496,
                 "SHAPE_Area": 304925925.5
             }
