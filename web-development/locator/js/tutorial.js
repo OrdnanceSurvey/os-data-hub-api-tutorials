@@ -48,8 +48,17 @@ var nationalParks = {};
                         <div class="layer-element icon" data-type="list-item" data-id="${nationalPark.properties.OBJECTID}">
                             <div class="label">
                                 <img class='np-arrow-green' src='./assets/img/np-arrow-green.png' />
-                                <span class='np-name'>${nationalPark.properties.name ? nationalPark.properties.name : nationalPark.properties.OBJECTID}</span>
-                            
+                                <span class='np-name'>${
+                                    nationalPark.properties.name ? 
+                                        nationalPark.properties.name : 
+                                        nationalPark.properties.OBJECTID
+                                    }
+                                    </span>
+                                    <a href="${nationalPark.properties.url}" 
+                                        
+                                        target="_blank">
+                                        <i class="material-icons" onClick="this.href='${nationalPark.properties.url}'" aria-label="">launch</i>
+                                    </a>
                             </div>
                         </div>
                     </li>`
@@ -75,9 +84,11 @@ var nationalParks = {};
                                     unhighlightListElement(element);
                                 }, 
                                 'click': function () {
-                                    map.flyToBounds(park.getBounds(), {
-                                        padding: [75,75]
-                                    });
+                                    // map.flyToBounds(park.getBounds(), {
+                                    //     padding: [75,75]
+                                    // });
+
+                                    flyToOffset(park, '.osel-sliding-side-panel')
                                 }
                             });
 
@@ -88,14 +99,16 @@ var nationalParks = {};
 
         
 
-        $(element).on('click', function (e) {
+        $(element).find('span').on('click', function (e) {
 
             e.preventDefault();
-            map.flyToBounds(park.getBounds(), {
-                padding: [75, 75]
-            });
+            flyToOffset(park, '.osel-sliding-side-panel')
 
         });
+
+        // $(element).children('a').on('click', function () {
+        //     console.log('link')
+        // })
 
         $(element).on('mouseenter', function () {
             highlightGeojson(park)
@@ -139,4 +152,13 @@ function highlightListElement(html) {
 function unhighlightListElement(html) {
     $(html).removeClass('highlight')
 }
-// Loop through geojson features
+
+function flyToOffset(Lgeojson, offsetElSelector, elPosition='left') {
+
+    let offset = $(offsetElSelector).width();
+    console.log("Fly To Offset", offset, elPosition)
+    map.flyToBounds(Lgeojson.getBounds(), {
+        paddingTopLeft: [offset, 50],
+    })
+
+}

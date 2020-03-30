@@ -2,6 +2,14 @@
 
 A web interface to find national parks in the UK. 
 
+## TODO:
+
+- Add links to National Parks 
+    - Get URLs and add to GeoJSON properties objects
+    - Build HTML and drop in URL into href attribute
+- Implement offset flyToBounds functionality based on left panel width
+- Use OS green colour
+
 ## 1. Get National Park boundaries
 
 We'll use the OS Features API to fetch national park boundaries. 
