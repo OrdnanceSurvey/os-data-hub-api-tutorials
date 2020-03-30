@@ -17,25 +17,19 @@
             height: 100px!important;
             line-height: unset;
         }
-        .osel-sliding-side-panel .scroller-no-tabs {
-            top: 100px!important;
-        }
 
         .np-arrow-green {
             height: 25px;
             margin-bottom: -5px;
             margin-right: 10px;
             padding-left: 10px;
+            transition: transform 200ms;
+            transform: unset;
         }
 
         .highlight .np-arrow-green {
             transition: transform 200ms;
             transform: rotate(23deg);
-        }
-
-        .np-arrow-green {
-            transition: transform 200ms;
-            transform: unset;
         }
 
         .np-logo-main {
@@ -56,20 +50,9 @@
             background-color: #f5f5f5;
         }
 
-        
-
         li:not(.highlight) {
             transition: background-color 200ms;
             background-color: unset;
-        }
-
-
-        .osel-sliding-side-panel ul.layers 
-        .layer .layer-element[data-type="list-item"] 
-        div.label {
-            margin-left: unset;
-            padding-left: 20px;
-            cursor: default;
         }
 
         .label i {
@@ -92,6 +75,18 @@
             color: #228B3B!important;
             transition: opacity 200ms;
 
+        }
+
+        .osel-sliding-side-panel ul.layers 
+        .layer .layer-element[data-type="list-item"] 
+        div.label {
+            margin-left: unset;
+            padding-left: 20px;
+            cursor: default;
+        }
+
+        .osel-sliding-side-panel .scroller-no-tabs {
+            top: 100px!important;
         }
 
     </style>
@@ -125,12 +120,5 @@
     <script src="./assets/lib/os-colour.js"></script>
     <script src="./js/defaults.js"></script>
     <script src="./js/tutorial.js"></script>
-    <script>
-        $(".osel-sliding-side-panel.panel-left .layer .layer-element[data-type='list-item']").click(function() {
-            // do something here
-        });
-
-    </script>
-
 </body>
 </html>
