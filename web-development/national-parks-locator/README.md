@@ -124,6 +124,7 @@ Looking at the code:
 ```javascript
 
 // A helper function to select the L.geoJSON Feature layer by its properties.id value. 
+// For those looking to adapt the code - this version will only work with unique properties ...
 function getFeatureById(dataId) {
     
     let filtered = Object.values(map._layers).filter((l) => {
