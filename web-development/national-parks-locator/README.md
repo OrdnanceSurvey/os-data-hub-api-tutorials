@@ -211,10 +211,11 @@ A note - `await` only works inside `async` functions - not in the top-level scop
 var nationalParks;
 
 (async function () {
+    // We will not close the function body or invoke the expression until the end!
+    
     nationalParks = await fetch('./data/national-parks.json');
     nationalParks = await nationalParks.json();
 
-// We will not close the function body and invoke it until the end!
 ```
 
 These two lines fetch the JSON file we prepared, then reads the contents as JSON. The `await` keywords tell the interpreter to wait until that step has completed before moving on to the next. 
@@ -293,15 +294,16 @@ nationalParks.features.forEach(function (nationalPark, i) {
 
         e.preventDefault();
         flyToBoundsOffset(nationalPark.properties.id, '.osel-sliding-side-panel')
-
     });
 
     $(element).on('mouseenter', function () {
+
         highlightGeojson(nationalPark.properties.id)
         highlightListElement(nationalPark.properties.id)
     });
     
     $(element).on('mouseleave', function () {
+
         unhighlightGeojson(nationalPark.properties.id)
         unhighlightListElement(nationalPark.properties.id)
     });
@@ -312,6 +314,6 @@ nationalParks.features.forEach(function (nationalPark, i) {
 })() // <- and close the function expression - then invoke it!
 ```
 
-And that's it! Our app fetches the national parks geometries, loads them on the map, adds them to a list on the left panel, and attaches event handlers to highlight and fly to the appropriate park on click. We included an external link icon so users could visit the national park's official website. The perfect launchpad for exploring Great Britain.
+And that's it! Our app fetches the national parks geometries, loads them on the map, adds them to a list on the left panel, and attaches event handlers to highlight and fly to the appropriate park on click. We included an external link icon so users could visit the national park's official website. The perfect launchpad for exploring Great Britain's amazing national parks.
 
 Feel free to adapt this code to suit your needs. If you have any questions or make anything cool with OS data - let us know! [@OrdnanceSurvey](https://twitter.com/ordnancesurvey) or [#OSDeveloper](https://twitter.com/hashtag/OSDeveloper)
