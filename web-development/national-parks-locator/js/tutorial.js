@@ -54,11 +54,9 @@ var nationalParks;
 // This is an immediately-invoked function expression. 
 // Necessary because we can't use await outside of an async function. 
 (async function () {
-    nationalParks = await fetch('./data/national-parks.json');
-    nationalParks = await nationalParks.json();
-
-    // then create the leaflet geojson layer 
-    let park = L.geoJSON(nationalParks, {
+    
+    // Set up the leaflet geojson layer 
+    let parksLayer = L.geoJSON(null, {
             style: {
                 fillColor: osGreen[3],
                 color: osGreen[6],
@@ -84,11 +82,14 @@ var nationalParks;
             }
     });
 
-    park.addTo(map);
+    // Then fetch the geojson using Leaflet Omnivore, which returns a L.geoJSON object
+    nationalParks = await omnivore.geojson('./data/national-parks.json', null, parksLayer).addTo(map)
+    console.log(nationalParks.getLayers())
+    nationalParks;
 
-    // Do we want a popUp? 
-
-    nationalParks.features.forEach(function (nationalPark, i) {
+    nationalParks.getLayers().forEach(function (nationalParkFeature, i) {
+        let nationalPark = nationalParkFeature.feature;
+        console.log(nationalPark)
         // First create the HTML element that will represent the park
       
         let element =   `<li class="layer" data-np-id="${nationalPark.properties.id}">
