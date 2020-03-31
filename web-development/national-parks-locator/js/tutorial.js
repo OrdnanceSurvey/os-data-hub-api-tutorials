@@ -84,8 +84,7 @@ var nationalParks;
 
     // Then fetch the geojson using Leaflet Omnivore, which returns a L.geoJSON object
     nationalParks = await omnivore.geojson('./data/national-parks.json', null, parksLayer).addTo(map)
-    console.log(nationalParks.getLayers())
-    nationalParks;
+    console.log(nationalParks.getLayers());
 
     nationalParks.getLayers().forEach(function (nationalParkFeature, i) {
         let nationalPark = nationalParkFeature.feature;
@@ -135,7 +134,10 @@ var nationalParks;
 
     });
     
+    
 })()
+
+setTimeout(console.log(nationalParks.getLayers()), 4000)
 
 function getFeatureById(dataId) {
     
