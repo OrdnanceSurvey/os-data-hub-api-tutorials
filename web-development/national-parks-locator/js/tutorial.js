@@ -48,96 +48,83 @@ var basemap = L.tileLayer(
         { maxZoom: 20 }
     ).addTo(map);
 
-// Fetch geojson data to display
-var nationalParks;
-
-// This is an immediately-invoked function expression. 
-// Necessary because we can't use await outside of an async function. 
-(async function () {
     
-    // Set up the leaflet geojson layer 
-    let parksLayer = L.geoJSON(null, {
-            style: {
-                fillColor: osGreen[3],
-                color: osGreen[6],
-                fillOpacity: 0.3,
-                weight: 1
-            },
-            onEachFeature: function (feature, layer) {
-                layer.on({
-                    'mouseover': function (e) {
-                        highlightGeojson(feature.properties.id);
-                        highlightListElement(feature.properties.id);                                    
-                        
-                    },
-                    'mouseout': function (e) {
-                        unhighlightGeojson(feature.properties.id);
-                        unhighlightListElement(feature.properties.id);
-                    }, 
-                    'click': function (e) {
-                        flyToBoundsOffset(feature.properties.id, '.osel-sliding-side-panel')
-                    }
-                });
+// Set up the leaflet geojson layer. 
+// We'll pass this into the omnivore.geojson() method
+var parksLayer = L.geoJSON(null, {
+        style: {
+            fillColor: osGreen[3],
+            color: osGreen[6],
+            fillOpacity: 0.3,
+            weight: 1
+        },
+        onEachFeature: function (feature, layer) {
+            layer.on({
+                'mouseover': function (e) {
+                    highlightGeojson(feature.properties.id);
+                    highlightListElement(feature.properties.id);                                    
+                    
+                },
+                'mouseout': function (e) {
+                    unhighlightGeojson(feature.properties.id);
+                    unhighlightListElement(feature.properties.id);
+                }, 
+                'click': function (e) {
+                    flyToBoundsOffset(feature.properties.id, '.osel-sliding-side-panel')
+                }
+            });
 
-            }
-    });
+        }
+});
 
-    // Then fetch the geojson using Leaflet Omnivore, which returns a L.geoJSON object
-    nationalParks = await omnivore.geojson('./data/national-parks.json', null, parksLayer).addTo(map)
-    console.log(nationalParks.getLayers());
+// Then fetch the geojson using Leaflet Omnivore, which returns a L.geoJSON object
+var nationalParks = omnivore.geojson('./data/national-parks.json', null, parksLayer)
+    .on('ready', function () { // <- this callback is executed once data is loaded
+        
+        nationalParks.getLayers().forEach(function (nationalParkFeature, i) {
 
-    nationalParks.getLayers().forEach(function (nationalParkFeature, i) {
-        let nationalPark = nationalParkFeature.feature;
-        console.log(nationalPark)
-        // First create the HTML element that will represent the park
-      
-        let element =   `<li class="layer" data-np-id="${nationalPark.properties.id}">
-                            <div class="layer-element icon" data-type="list-item" data-id="${nationalPark.properties.id}">
-                                <div class="label">
-                                    <img class='np-arrow-green' src='./assets/img/np-arrow-green.png' />
-                                    <span class='np-name'>${ nationalPark.properties.name }
-                                        </span>
-                                        <a href="${ nationalPark.properties.url }" target="_blank">
-                                            <i class="material-icons" onClick="this.href='${ nationalPark.properties.url }'" aria-label="">launch</i>
-                                        </a>
+            let nationalPark = nationalParkFeature.feature; // <- the GeoJSON Feature object
+
+            // First create the HTML element that will represent the park
+            let element =   `<li class="layer" data-np-id="${nationalPark.properties.id}">
+                                <div class="layer-element icon" data-type="list-item" data-id="${nationalPark.properties.id}">
+                                    <div class="label">
+                                        <img class='np-arrow-green' src='./assets/img/np-arrow-green.png' />
+                                        <span class='np-name'>${ nationalPark.properties.name }
+                                            </span>
+                                            <a href="${ nationalPark.properties.url }" target="_blank">
+                                                <i class="material-icons" onClick="this.href='${ nationalPark.properties.url }'" aria-label="">launch</i>
+                                            </a>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>`
-        
-        element = $.parseHTML(element);
+                            </li>`
+            
+            element = $.parseHTML(element);
 
-
-
-        $(element).find('span').on('click', function (e) {
-
-            e.preventDefault();
-            flyToBoundsOffset(nationalPark.properties.id, '.osel-sliding-side-panel')
-
-        });
-
-        // $(element).children('a').on('click', function () {
-        //     console.log('link')
-        // })
-
-        $(element).on('mouseenter', function () {
-            highlightGeojson(nationalPark.properties.id)
-            highlightListElement(nationalPark.properties.id)
-        });
-        
-        $(element).on('mouseleave', function () {
-            unhighlightGeojson(nationalPark.properties.id)
-            unhighlightListElement(nationalPark.properties.id)
-        });
-
-
-        $('.layers').append(element);
-
-    });
+            $(element).find('span').on('click', function (e) {
+                e.preventDefault();
+                flyToBoundsOffset(nationalPark.properties.id, '.osel-sliding-side-panel')
+            });
     
+            $(element).on('mouseenter', function () {
+                highlightGeojson(nationalPark.properties.id)
+                highlightListElement(nationalPark.properties.id)
+            });
+            
+            $(element).on('mouseleave', function () {
+                unhighlightGeojson(nationalPark.properties.id)
+                unhighlightListElement(nationalPark.properties.id)
+            });
     
-})()
+            $('.layers').append(element);
+        });
+    })
+    .on('error', function (err) {
+        console.error(err);
+    })
+    .addTo(map)
 
-setTimeout(console.log(nationalParks.getLayers()), 4000)
+
 
 function getFeatureById(dataId) {
     
