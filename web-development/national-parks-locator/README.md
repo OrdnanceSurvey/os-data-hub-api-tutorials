@@ -277,7 +277,9 @@ To make our list we loop through the array of features in the `L.geoJSON` object
                     <span class='np-name'>${ nationalPark.properties.name }
                         </span>
                         <a href="${ nationalPark.properties.url }" target="_blank">
-                            <i class="material-icons" onClick="this.href='${ nationalPark.properties.url }'" aria-label="">launch</i>
+                            <i class="material-icons" 
+                                onClick="this.href='${ nationalPark.properties.url }'" 
+                                aria-label="">launch</i>
                         </a>
                 </div>
             </div>
