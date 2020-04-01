@@ -198,122 +198,123 @@ function flyToBoundsOffset(dataId, offsetElSelector, elPosition='left') {
 ```
 
 
-### Fetching custom data
+### Now, the GeoJSON
 
-Because we're loading data from an external resource, we need to make sure that the data loads before we move on to subsequent lines. We could use a [promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise) for this - but for this tutorial we will write an async function. If you aren't familiar with async/await, take a quick skim of this [MDN article](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Async_await) - it makes writing asynchronous JavaScript clean and easy. 
+Because we're loading data from an external resource, we need to make sure that the data loads before we move on to subsequent lines. We will use a handy library called [leaflet-omnivore](https://github.com/mapbox/leaflet-omnivore) to fetch the GeoJSON file we've prepared. 
 
-A note - `await` only works inside `async` functions - not in the top-level scope. For this reason we will place all of our async code inside an [immediately-invoked function expression](https://developer.mozilla.org/en-US/docs/Glossary/IIFE). The pattern looks like `(async function () { /* function body */})()` - note the `()` at the end - the function is "immediately invoked".
+When the `omnivore.geojson()` method has loaded the data, it fires a `'ready'` event. We'll place the code that relies on the GeoJSON inside this event handler so we can be sure that it 
 
+#### Creating a custom L.geoJSON object
+
+Omnivore sets up and returns a Leaflet.geoJSON object. We want to customize ours, so we're going to define a custom `L.geoJSON()` object before we actually load the GeoJSON.
+
+This pattern lets us bind event listeners to each feature, using Leaflet's `onEachFeature` option. (Note: here with Leaflet `layer` refers to each Feature in the FeatureCollection.)
 
 ```javascript
+// Set up the Leaflet GeoJSON object. 
+// We'll pass this into the omnivore.geojson() method shortly
+var parksLayer = L.geoJSON(null, {
+        style: {
+            fillColor: osGreen[3],
+            color: osGreen[6],
+            fillOpacity: 0.3,
+            weight: 1
+        },
 
-// A global variable to hold the GeoJSON FeatureCollection. 
-var nationalParks;
+        // A function to be called for each Feature in the FeatureCollection
+        onEachFeature: function (feature, layer) {
+            layer.on({
+                'mouseover': function (e) {
+                    highlightGeojson(feature.properties.id);
+                    highlightListElement(feature.properties.id);                                    
+                    
+                },
+                'mouseout': function (e) {
+                    unhighlightGeojson(feature.properties.id);
+                    unhighlightListElement(feature.properties.id);
+                }, 
+                'click': function (e) {
+                    flyToBoundsOffset(feature.properties.id, '.osel-sliding-side-panel')
+                }
+            });
 
-(async function () {
-    // We will not close the function body or invoke the expression until the end!
-    
-    nationalParks = await fetch('./data/national-parks.json');
-    nationalParks = await nationalParks.json();
+        }
+});
+```
+
+#### Load and Process the GeoJSON FeatureCollection
+
+Next we use Omnivore to fetch the external resource, parse the GeoJSON and add it to the custom `L.geoJSON` object we've defined (using the `L.geoJSON().addData()` method, under the hood). Note that because this is an asynchronous operation code reliant on the layer being loaded is placed inside the `.on('ready', function () { ... })` event handler callback.
+
+Inside the callback we loop through the Features in the GeoJSON FeatureCollection, adding a `<li>` to our lefthand panel `<ul>` element with park-specific data. 
+
+After everything is said and done we take the layer we've created and `.addTo(map)`.
+
+```javascript
+// Then fetch the geojson using Leaflet Omnivore, which returns a L.geoJSON object
+var nationalParks = omnivore.geojson('./data/national-parks.json', null, parksLayer)
+    .on('ready', function () { // <- this callback is executed once data is loaded
 
 ```
 
-These two lines fetch the JSON file we prepared, then reads the contents as JSON. The `await` keywords tell the interpreter to wait until that step has completed before moving on to the next. 
+Alright, our geographic features are added to the `L.geoJSON` object with event handlers bound. Now let's set up the lefthand panel with `<li>` elements.
 
-### Parks on the map
+#### Making a `<li>` 
 
-Now that we've loaded the GeoJSON, let's add it to the map. When we do we will bind event listeners to each feature layer, using Leaflet's `onEachFeature` option. Once we've set up the `L.geoJSON` object, we'll add it to the map.
-
-Note that we'll only work with the map for now - we'll deal with the `<li>` elements later.
+To make our list we loop through the array of features in the `L.geoJSON` object. In the loop, we will be creating a `<li>` element with park-specific data to place in the left panel. Then we'll attach event listeners and append it to the `<ul class="layers">` defined in `index.html`.
 
 ```javascript
-// ... still inside the async function body!
+    // Remember that nationalParks is a L.geoJSON object - with a .getLayers() method
+    nationalParks.getLayers().forEach(function (nationalParkFeature, i) {
 
-    // Now that the GeoJSON is loaded and assigned to nationalParks, we create the Leaflet GeoJSON layer 
-    let park = L.geoJSON(nationalParks, {
-            // The default (i.e. unhighlighted) style for the layer
-            style: {
-                fillColor: osGreen[3],
-                color: osGreen[6],
-                fillOpacity: 0.3,
-                weight: 1
-            },
-            // A callback to execute for each Feature in the FeatureCollection
-            onEachFeature: function (feature, layer) {
-                // Here layer refers to the specific Feature in the collection - each individual national park. We can set multiple event handlers by pass each as an object into the .layer.on() method.
-                layer.on({
-                    'mouseover': function () {
-                        // The functions we defined above!
-                        highlightGeojson(feature.properties.id);
-                        highlightListElement(feature.properties.id);                                    
-                        
-                    },
-                    'mouseout': function () {
-                        // Note how we're passing the id into each function ...
-                        unhighlightGeojson(feature.properties.id);
-                        unhighlightListElement(feature.properties.id);
-                    }, 
-                    'click': function () {
-                        flyToBoundsOffset(feature.properties.id, '.osel-sliding-side-panel')
-                    }
-                });
-            }
-    });
+        let nationalPark = nationalParkFeature.feature; // <- the GeoJSON Feature object
 
-    // And now that the layer is built, add it to the map!
-    park.addTo(map);
-```
-
-Alright, our geographic features are added to the map with event handlers bound. Now let's set up the lefthand panel with `<li>` elements.
-
-### Making our list
-
-To make our list we loop through the array of features in the GeoJSON FeatureCollection (`nationalParks.features`). In the loop, we will be creating a `<li>` element with park-specific data to place in the left panel. Then we'll attach event listeners.
-
-```javascript
-// Again - still in the async function! This is because we need to be sure that nationalParks has the fetched data before we loop through it.
-        
-    nationalParks.features.forEach(function (nationalPark, i) {
-        // First we will create the <li> element that will represent the park. This will go inside the <ul class="layers"> element defined in index.html
-        let element = `<li class="layer" data-np-id="${nationalPark.properties.id}">
+        // First create the HTML element that will represent the park
+        let element =   `<li class="layer" data-np-id="${nationalPark.properties.id}">
             <div class="layer-element icon" data-type="list-item" data-id="${nationalPark.properties.id}">
-            <div class="label">
-            <img class='np-arrow-green' src='./assets/img/np-arrow-green.png' />
-            <span class='np-name'>${ nationalPark.properties.name }</span>
-            <a href="${ nationalPark.properties.url }" target="_blank">
-            <i class="material-icons" onClick="this.href='${ nationalPark.properties.url }'" aria-label="">launch</i>
-            </a>
-            </div>
+                <div class="label">
+                    <img class='np-arrow-green' src='./assets/img/np-arrow-green.png' />
+                    <span class='np-name'>${ nationalPark.properties.name }
+                        </span>
+                        <a href="${ nationalPark.properties.url }" target="_blank">
+                            <i class="material-icons" onClick="this.href='${ nationalPark.properties.url }'" aria-label="">launch</i>
+                        </a>
+                </div>
             </div>
         </li>`
         
         element = $.parseHTML(element);
 
-        // Then, attach event handlers to the element
+        // Set up event handlers for the <li> elements and children
         $(element).find('span').on('click', function (e) {
-
             e.preventDefault();
+            // Fly to the feature
             flyToBoundsOffset(nationalPark.properties.id, '.osel-sliding-side-panel')
         });
 
+        // Highlight on mouseenter ...
         $(element).on('mouseenter', function () {
-
             highlightGeojson(nationalPark.properties.id)
             highlightListElement(nationalPark.properties.id)
         });
         
+        // ... and unhighlight on mouseleave
         $(element).on('mouseleave', function () {
-
             unhighlightGeojson(nationalPark.properties.id)
             unhighlightListElement(nationalPark.properties.id)
         });
 
-        // And finally append it to the <li class="layers"> element
+        // Append the <li> to the <ul>
         $('.layers').append(element);
-    }); // <- close the forEach loop
-})() // <- and close the function expression - then invoke it!
+    });
+})
+.on('error', function (err) {
+    console.error(err);
+})
+.addTo(map) // <- And add the L.geoJSON object to the map
+
 ```
 
-And that's it! Our app fetches the national parks geometries, loads them on the map, adds them to a list on the left panel, and attaches event handlers to highlight and fly to the appropriate park on click. We included an external link icon so users could visit the national park's official website. The perfect launchpad for exploring Great Britain's amazing national parks.
+And that's it! Our app fetches the national parks geometries, loads them, adds them to an unordered list on the left panel, and attaches event handlers to highlight and fly to the appropriate park on click. We included an external link icon so users could visit the national park's official website. The perfect launchpad for exploring Great Britain's amazing national parks.
 
 Feel free to adapt this code to suit your needs. If you have any questions or make anything cool with OS data - let us know! [@OrdnanceSurvey](https://twitter.com/ordnancesurvey) or [#OSDeveloper](https://twitter.com/hashtag/OSDeveloper)
