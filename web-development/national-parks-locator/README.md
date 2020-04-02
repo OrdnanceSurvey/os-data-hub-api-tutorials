@@ -317,6 +317,8 @@ To make our list we loop through the array of features in the `L.geoJSON` object
 
 ```
 
+---
+
 And that's it! Our app fetches the national parks geometries, loads them, adds them to an unordered list on the left panel, and attaches event handlers to highlight and fly to the appropriate park on click. We included an external link icon so users could visit the national park's official website. The perfect launchpad for exploring Great Britain's amazing national parks.
 
 Feel free to adapt this code to suit your needs. If you have any questions or make anything cool with OS data - let us know! [@OrdnanceSurvey](https://twitter.com/ordnancesurvey) or [#OSDeveloper](https://twitter.com/hashtag/OSDeveloper)
