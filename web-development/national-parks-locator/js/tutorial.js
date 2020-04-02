@@ -172,7 +172,7 @@ function flyToBoundsOffset(dataId, offsetElSelector, elPosition='left') {
 
     let offset = $(offsetElSelector).width();
 
-    let geojson = getFeatureById(dataId);
+    let geojsonLayer = getFeatureById(dataId);
 
     let paddingOptions;
 
@@ -188,6 +188,6 @@ function flyToBoundsOffset(dataId, offsetElSelector, elPosition='left') {
         }
     }
 
-    map.flyToBounds(geojson.getBounds(), paddingOptions)
+    map.flyToBounds(geojsonLayer.getBounds(), paddingOptions)
 
 }
