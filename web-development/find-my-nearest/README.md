@@ -114,7 +114,7 @@ Let's look at each of these in order.
 
 The user is required to input the type of features to find and the location they want to search. With this information, we dynamically build a request for the OS Features API. 
 
-This is done by using Turf.js to create a 1km buffer polygon around the point to search. This polygon is used to construct an XML filter based on the Open Geospatial Consortium (OGC) standard, which is included in the HTTP GET request to the OS Features API. The server performs a spatial query and returns a GeoJSON FeatureCollection with an array of polygons intersecting (contained within? @TIM) that polygon. We'll also construct an object (`wfsParams`) containing parameters that we'll encode into the URL, which we'll use to request data. 
+This is done by using Turf.js to create a 1km buffer polygon around the point to search. This polygon is used to construct an XML filter based on the Open Geospatial Consortium (OGC) standard, which is included in the HTTP GET request to the OS Features API. The server performs a spatial query and returns a GeoJSON FeatureCollection with an array of polygons intersecting that polygon. We'll also construct an object (`wfsParams`) containing parameters that we'll encode into the URL, which we'll use to request data. 
 
 Let's look at the code. 
 
@@ -124,10 +124,9 @@ Let's look at the code.
 let featureTypeToFind = $('#feature-type-select span').text();
 let typeName = getFeatureTypeToFind(featureTypeToFind);
     // ^^ This function just returns the Features API-compliant string to search based on the natural language string the user selected
-    // *** Could convert to pull the data-featuretype attribute, which we'd need to add to the html
 
 // {Turf.js} Takes the centre point coordinates and calculates a circular polygon
-// of the given a radius in kilometers; and steps for precision.
+// of the given a radius in kilometers; and steps for precision. Returns GeoJSON Feature object.
 var circle = turf.circle(coordsToFind, 1, { steps: 24, units: 'kilometers' });
 
 // Get the circle geometry coordinates and return a new space-delimited string - required based on the OGC standard.
@@ -184,17 +183,17 @@ function getUrl(params) {
 
 ```
 
-The OS Features API returns up to 100 features per transaction. [@TIM Something about how the return values are ordered?] In some cases there may be more than 100 features within 1km of the location, meaning we need to fetch all features that match query parameters, then find the ones nearest the point we're searching for. 
+The OS Features API returns up to 100 features per transaction. In some cases there may be more than 100 features within 1km of the location to find, meaning we need to fetch all features that match query parameters, then find the ones nearest the point we're searching for in the browser. 
 
 For this, we wrote a recursive function that fetches sequential sets of results until all features have been return from the API. Once all features have been fetched, we move into the next step, finding nearest features - logic that is executed in the browser. 
 
 ```javascript
 
 // Use fetch() method to request GeoJSON data from the OS Features API.
-    //
+    
     // If successful - remove everything from the layer group; then add a new GeoJSON
     // layer (with the appended features).
-    //
+    
     // Calls will be made until the number of features returned is less than the
     // requested count, at which point it can be assumed that all features for
     // the query have been returned, and there is no need to request further pages.
@@ -213,16 +212,15 @@ For this, we wrote a recursive function that fetches sequential sets of results 
 
                     fetchWhile(resultsRemain);
                 })
-                .catch((err) => {console.error(err); });
+                .catch((err) => { console.error(err); });
         }
         else {
             removeSpinner(); // <- Visual feedback for the user
             if( geojson.features.length ) {
                 return findNearestN(pointToFind, geojson, 20, typeName);
             } else {
-                console.log("No features found");
+                notification.show('error', "No features found");
             }
-                // document.getElementById('message').style.display = 'block';
         }
     }
 
@@ -259,9 +257,37 @@ function findNearestN(point, featurecollection, n, typeName) {
     map.fitBounds(foundFeaturesGroup.getBounds());
 
 }
+
+
+// Calculates distance from point to polygon in km and adds teh value to the polygon's properties.
+function addDistanceFromPointToPolygon(point, polygon) {
+
+    var nearestDistance = 100;
+
+    if( turf.booleanWithin(point, polygon) ) {
+        polygon.properties.distanceToPoint = 0;
+        return polygon;
+    }
+
+     // {Turf.js} Iterate over coordinates in current polygon feature.
+    turf.coordEach(polygon, function(currentCoord, coordIndex, featureIndex, multiFeatureIndex, geometryIndex) {
+        // {Turf.js} Calculates the distance between two points in kilometres.
+        var distance = turf.distance(point, turf.point(currentCoord));
+
+        // If the distance is less than that whch has previously been calculated
+        // replace the nearest values with those from the current index.
+        if( distance <= nearestDistance ) {
+            nearestDistance = distance;
+        }
+    });
+
+    // After the loop completes, add the attribute to polygon.properties
+    polygon.properties.distanceToPoint = nearestDistance;
+    return polygon;
+}
 ```
 
-All we need to do is set up a few holder variables that are referenced in the functions above and we can start start the process:
+Now all we need to do is set up a few holder variables that are referenced in the functions above and we can start start the process:
 
 ```javascript 
 
@@ -279,4 +305,4 @@ fetchWhile(resultsRemain);
 
 ```
 
-Thanks for working through this tutorial. Sign up for the OS Data Hub here, and if you have any questions tweet @OrdnanceSurvey, or email [ @TIM?? ].
+Thanks for working through this tutorial. Sign up for the OS Data Hub [here](https://osdatahub.os.uk/), and if you have any questions tweet [@OrdnanceSurvey](https://twitter.com/ordnancesurvey) or tag [#OSDeveloper](https://twitter.com/hashtag/osdeveloper).
