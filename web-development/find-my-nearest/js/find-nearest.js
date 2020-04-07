@@ -245,7 +245,7 @@ function addDistanceFromPointToPolygon(point, polygon) {
     }
 
      // {Turf.js} Iterate over coordinates in current greenspace feature.
-    turf.coordEach(polygon, function(currentCoord, coordIndex, featureIndex, multiFeatureIndex, geometryIndex) {
+    turf.coordEach(polygon, function(currentCoord) {
         // {Turf.js} Calculates the distance between two points in kilometres.
         var distance = turf.distance(point, turf.point(currentCoord));
         // console.log('distance', distance)
