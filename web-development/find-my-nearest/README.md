@@ -4,13 +4,13 @@ Maps that update based on user interaction can be incredibly useful. The Find My
 
 The webpage lets users select a location on a map, a feature type to visualize, then shows features of those type near their selected location. 
 
-This tutorial will show how we used *[Leaflet](#)* and the *[OS Maps](#)* and *[OS Features](#)* APIs to create an interactive web map. We'll only focus on key functionality here, but all code can be reviewed on Github.
+This tutorial will show how we used *[Leaflet](https://leafletjs.com/)*, *[Turf.js](https://osdatahub.os.uk)*  and the *[OS Maps](https://osdatahub.os.uk/docs/wmts/overview)* and *[OS Features](https://osdatahub.os.uk/docs/wfs/overview)* APIs to create an interactive web map. We'll only focus on key functionality here, but all code can be reviewed on Github.
 
 ## Configuring the OS Maps API
 
 The Find My Nearest interface shows a large interactive map, created using Leaflet.
 
-Leaflet works by connecting to the OS Maps API, which is a [web map tile service](#). As the user pans and zooms on the map, the browser fetches and renders .png images in the appropriate position. The library provides a large suite of methods enabling interaction and visualization, detailed in the documentation. 
+Leaflet works by connecting to the OS Maps API, which is a [web map tile service](https://www.ogc.org/standards/wmts). As the user pans and zooms on the map, the browser fetches and renders .png images in the appropriate position. The library provides a large suite of methods enabling interaction and visualization, detailed in the documentation. 
 
 ### Sample raster tile, or image with tiles outlined.
 
@@ -26,14 +26,14 @@ var mapOptions = {
 };
 
 var map = new L.map('map', mapOptions); 
-                // 'map' is the id of the 
-                // <div> in the HTML document
+            /*      'map' is the id of the 
+                    <div> in the HTML document  */
 
 var ctrlScale = L.control.scale({ position: 'bottomright' }).addTo(map);
 
 ```
 
-This alone does not give the browser any map data to visualize, though. For that we need create a new `L.tileLayer` object, connect it to the OS Maps API, and add it to the map. (Note: an API key is needed, which you can get at osdatahub.os.uk.)
+This alone does not give the browser any map data to visualize, though. For that we need create a new `L.tileLayer` object, connect it to the OS Maps API, and add it to the map. (Note: an API key is needed, which you can get at [osdatahub.os.uk](https://osdatahub.os.uk).)
 
 ```javascript
 // Set API key
@@ -81,7 +81,7 @@ function selectLocationOnMap(event) {
 
 (Note: a special thanks for  [@ramiroaznar](http://bl.ocks.org/ramiroaznar/2c2793c5b3953ea68e8dd26273f5b93c) for providing the reference code for this function.)
 
-The `updateCoordsToFind()` function clears sets a global variable to the parameter passed in, clears the map of existing pins and adds a new Leaflet marker to the map at that location. Then it flies to the location so the user can see where they're going to search. 
+The `updateCoordsToFind()` function sets a global variable to the `coords` parameter passed in, clears the map of existing markers and adds a new Leaflet marker to the map at that location. Then it flies to the location so the user can see where they're going to search. 
 
 ```javascript
 function updateCoordsToFind(coords) {
@@ -98,7 +98,7 @@ function updateCoordsToFind(coords) {
 }
 ```
 
-We also let users request results from the approximate location of their IP address, based on some cool code written by [Adeyinka Adegbenro](https://medium.com/better-programming/how-to-detect-the-location-of-your-websites-visitor-using-javascript-92f9e91c095f). We won't get into how it works, but you can read the code [here](#). 
+We also let users request results from the approximate location of their IP address, based on some cool code written by [Adeyinka Adegbenro](https://medium.com/better-programming/how-to-detect-the-location-of-your-websites-visitor-using-javascript-92f9e91c095f), though we won't get into how it works here. 
 
 ### Querying the OS Features API
 
@@ -114,7 +114,7 @@ Let's look at each of these in order.
 
 The user is required to input the type of features to find and the location they want to search. With this information, we dynamically build a request for the OS Features API. 
 
-This is done by using Turf.js to create a 1km buffer polygon around the point to search. This polygon is used to construct an XML filter based on the Open Geospatial Consortium (OGC) standard, which is included in the HTTP GET request to the OS Features API. The server performs a spatial query and returns a GeoJSON FeatureCollection with an array of polygons intersecting that polygon. We'll also construct an object (`wfsParams`) containing parameters that we'll encode into the URL, which we'll use to request data. 
+This is done by using [Turf.js](https://osdatahub.os.uk) to create a 1km buffer polygon around the point to search. This polygon is used to construct an XML filter based on the Open Geospatial Consortium (OGC) standard, which is included in the HTTP GET request to the OS Features API. The server performs a spatial query and returns a GeoJSON FeatureCollection with an array of polygons intersecting that polygon. We'll also define an object literal (`wfsParams`) containing parameters that we'll encode into the URL, which we'll use to request data. 
 
 Let's look at the code. 
 
@@ -123,7 +123,8 @@ Let's look at the code.
 // First we pull the types of features to query from the dropdown input element
 let featureTypeToFind = $('#feature-type-select span').text();
 let typeName = getFeatureTypeToFind(featureTypeToFind);
-    // ^^ This function just returns the Features API-compliant string to search based on the natural language string the user selected
+    /*      ^^ This function just returns the Features API-compliant string to search        
+            based on the natural language string the user selected */
 
 // {Turf.js} Takes the centre point coordinates and calculates a circular polygon
 // of the given a radius in kilometers; and steps for precision. Returns GeoJSON Feature object.
@@ -185,14 +186,11 @@ function getUrl(params) {
 
 The OS Features API returns up to 100 features per transaction. In some cases there may be more than 100 features within 1km of the location to find, meaning we need to fetch all features that match query parameters, then find the ones nearest the point we're searching for in the browser. 
 
-For this, we wrote a recursive function that fetches sequential sets of results until all features have been return from the API. Once all features have been fetched, we move into the next step, finding nearest features - logic that is executed in the browser. 
+For this, we wrote a recursive function that fetches sequential sets of results until all features have been returned from the API. Once all features have been fetched, we move into the next step, finding nearest features - logic that is executed in the browser. 
 
 ```javascript
 
 // Use fetch() method to request GeoJSON data from the OS Features API.
-    
-    // If successful - remove everything from the layer group; then add a new GeoJSON
-    // layer (with the appended features).
     
     // Calls will be made until the number of features returned is less than the
     // requested count, at which point it can be assumed that all features for
@@ -207,6 +205,7 @@ For this, we wrote a recursive function that fetches sequential sets of results 
                     wfsParams.startIndex += wfsParams.count;
 
                     geojson.features.push.apply(geojson.features, data.features);
+                    // ^^ we'll define `geojson` before the function is called
 
                     resultsRemain = data.features.length < wfsParams.count ? false : true;
 
@@ -240,7 +239,6 @@ function findNearestN(point, featurecollection, n, typeName) {
     }
 
     // Sort ascending by distance property
-
     polygons = polygons.sort((a,b) => a.properties.distanceToPoint - b.properties.distanceToPoint);
     
     // create GeoJSON FeatureCollection of 0-n features.
@@ -250,7 +248,7 @@ function findNearestN(point, featurecollection, n, typeName) {
     }
 
     // Add the FeatureCollection 
-    foundFeaturesGroup.addLayer(createGeoJSONLayer      (nearestFeatures, typeName));
+    foundFeaturesGroup.addLayer(createGeoJSONLayer(nearestFeatures, typeName));
         // createGeoJSONLayer() returns a new L.geoJson object
     
     // Pan / zoom the map to the query result
@@ -259,7 +257,7 @@ function findNearestN(point, featurecollection, n, typeName) {
 }
 
 
-// Calculates distance from point to polygon in km and adds teh value to the polygon's properties.
+// Calculates distance from point to polygon in km and adds the value to the polygon's properties.
 function addDistanceFromPointToPolygon(point, polygon) {
 
     var nearestDistance = 100;
@@ -270,7 +268,7 @@ function addDistanceFromPointToPolygon(point, polygon) {
     }
 
      // {Turf.js} Iterate over coordinates in current polygon feature.
-    turf.coordEach(polygon, function(currentCoord, coordIndex, featureIndex, multiFeatureIndex, geometryIndex) {
+    turf.coordEach(polygon, function(currentCoord) {
         // {Turf.js} Calculates the distance between two points in kilometres.
         var distance = turf.distance(point, turf.point(currentCoord));
 
