@@ -1,0 +1,1505 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.852290269597288,
+                    58.01286106048702
+                ]
+            },
+            "properties": {
+                "OBJECTID": 1,
+                "Type": "Railway Station",
+                "Name": "Brora"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.869095199896305,
+                    58.17087290681791
+                ]
+            },
+            "properties": {
+                "OBJECTID": 2,
+                "Type": "Railway Station",
+                "Name": "Kildonan"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.941166002712664,
+                    58.25856912377399
+                ]
+            },
+            "properties": {
+                "OBJECTID": 3,
+                "Type": "Railway Station",
+                "Name": "Kinbrace"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.897403866131744,
+                    58.35681641262588
+                ]
+            },
+            "properties": {
+                "OBJECTID": 4,
+                "Type": "Railway Station",
+                "Name": "Forsinard"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.158476585336593,
+                    57.9886263454281
+                ]
+            },
+            "properties": {
+                "OBJECTID": 5,
+                "Type": "Railway Station",
+                "Name": "Rogart"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.947180379333217,
+                    57.98588433600874
+                ]
+            },
+            "properties": {
+                "OBJECTID": 6,
+                "Type": "Railway Station",
+                "Name": "Dunrobin Castle"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.40000195599337,
+                    58.00171654909509
+                ]
+            },
+            "properties": {
+                "OBJECTID": 7,
+                "Type": "Railway Station",
+                "Name": "Lairg"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.658946251782011,
+                    58.11761968145952
+                ]
+            },
+            "properties": {
+                "OBJECTID": 8,
+                "Type": "Railway Station",
+                "Name": "Helmsdale"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.706163960203456,
+                    58.38815936670568
+                ]
+            },
+            "properties": {
+                "OBJECTID": 9,
+                "Type": "Railway Station",
+                "Name": "Altnabreac"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.097114556672906,
+                    58.44144104649437
+                ]
+            },
+            "properties": {
+                "OBJECTID": 10,
+                "Type": "Railway Station",
+                "Name": "Wick"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.552150931444257,
+                    58.48286270728376
+                ]
+            },
+            "properties": {
+                "OBJECTID": 11,
+                "Type": "Railway Station",
+                "Name": "Scotscalder"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.451678982624955,
+                    58.51347112317565
+                ]
+            },
+            "properties": {
+                "OBJECTID": 12,
+                "Type": "Railway Station",
+                "Name": "Georgemas Junction"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.527712482965807,
+                    58.58998216388104
+                ]
+            },
+            "properties": {
+                "OBJECTID": 13,
+                "Type": "Railway Station",
+                "Name": "Thurso"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.713986315270656,
+                    57.27983957409982
+                ]
+            },
+            "properties": {
+                "OBJECTID": 14,
+                "Type": "Railway Station",
+                "Name": "Kyle of Lochalsh"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.691408544570033,
+                    57.31990602102861
+                ]
+            },
+            "properties": {
+                "OBJECTID": 15,
+                "Type": "Railway Station",
+                "Name": "Duirinish"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.665932768259609,
+                    57.33350994718851
+                ]
+            },
+            "properties": {
+                "OBJECTID": 16,
+                "Type": "Railway Station",
+                "Name": "Plockton"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.637179770046189,
+                    57.33692866782428
+                ]
+            },
+            "properties": {
+                "OBJECTID": 17,
+                "Type": "Railway Station",
+                "Name": "Duncraig"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.550417249994663,
+                    57.35211759710644
+                ]
+            },
+            "properties": {
+                "OBJECTID": 18,
+                "Type": "Railway Station",
+                "Name": "Stromeferry"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.455656296483773,
+                    57.39526310352427
+                ]
+            },
+            "properties": {
+                "OBJECTID": 19,
+                "Type": "Railway Station",
+                "Name": "Attadale"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.428511497017334,
+                    57.42281718764423
+                ]
+            },
+            "properties": {
+                "OBJECTID": 20,
+                "Type": "Railway Station",
+                "Name": "Strathcarron"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.249425083252278,
+                    57.69433220520265
+                ]
+            },
+            "properties": {
+                "OBJECTID": 21,
+                "Type": "Railway Station",
+                "Name": "Alness"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.222936813017167,
+                    57.48010735548616
+                ]
+            },
+            "properties": {
+                "OBJECTID": 22,
+                "Type": "Railway Station",
+                "Name": "Inverness"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.174597938561795,
+                    57.68906872107122
+                ]
+            },
+            "properties": {
+                "OBJECTID": 23,
+                "Type": "Railway Station",
+                "Name": "Invergordon"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.053158921113873,
+                    57.07780403338269
+                ]
+            },
+            "properties": {
+                "OBJECTID": 24,
+                "Type": "Railway Station",
+                "Name": "Kingussie"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.051812971417869,
+                    57.81437394927655
+                ]
+            },
+            "properties": {
+                "OBJECTID": 25,
+                "Type": "Railway Station",
+                "Name": "Tain"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.994085340028315,
+                    57.77795897673467
+                ]
+            },
+            "properties": {
+                "OBJECTID": 26,
+                "Type": "Railway Station",
+                "Name": "Fearn"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.987380861263015,
+                    57.97126833534517
+                ]
+            },
+            "properties": {
+                "OBJECTID": 27,
+                "Type": "Railway Station",
+                "Name": "Golspie"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.871972936661306,
+                    57.58017200254496
+                ]
+            },
+            "properties": {
+                "OBJECTID": 28,
+                "Type": "Railway Station",
+                "Name": "Nairn"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.828809057291611,
+                    57.18868645892951
+                ]
+            },
+            "properties": {
+                "OBJECTID": 29,
+                "Type": "Railway Station",
+                "Name": "Aviemore"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.828207853035277,
+                    57.27948278984043
+                ]
+            },
+            "properties": {
+                "OBJECTID": 30,
+                "Type": "Railway Station",
+                "Name": "Carrbridge"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.752482888340955,
+                    57.248148160513
+                ]
+            },
+            "properties": {
+                "OBJECTID": 31,
+                "Type": "Railway Station",
+                "Name": "Boat of Garten"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.667044026238399,
+                    57.2834085408636
+                ]
+            },
+            "properties": {
+                "OBJECTID": 32,
+                "Type": "Railway Station",
+                "Name": "Broomhill"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.332979866652963,
+                    57.48210004004847
+                ]
+            },
+            "properties": {
+                "OBJECTID": 33,
+                "Type": "Railway Station",
+                "Name": "Achnashellach"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.072273552316221,
+                    57.57929989613515
+                ]
+            },
+            "properties": {
+                "OBJECTID": 34,
+                "Type": "Railway Station",
+                "Name": "Achnasheen"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.91350697108772,
+                    57.60959167022968
+                ]
+            },
+            "properties": {
+                "OBJECTID": 35,
+                "Type": "Railway Station",
+                "Name": "Achanalt"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.808983348692467,
+                    57.62175773987048
+                ]
+            },
+            "properties": {
+                "OBJECTID": 36,
+                "Type": "Railway Station",
+                "Name": "Lochluichart"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.688270785340957,
+                    57.61302956079924
+                ]
+            },
+            "properties": {
+                "OBJECTID": 37,
+                "Type": "Railway Station",
+                "Name": "Garve"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.469849821732361,
+                    57.47827470859992
+                ]
+            },
+            "properties": {
+                "OBJECTID": 38,
+                "Type": "Railway Station",
+                "Name": "Beauly"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.460144874242782,
+                    57.51746163825472
+                ]
+            },
+            "properties": {
+                "OBJECTID": 39,
+                "Type": "Railway Station",
+                "Name": "Muir of Ord"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.440408042650728,
+                    57.56155750814271
+                ]
+            },
+            "properties": {
+                "OBJECTID": 40,
+                "Type": "Railway Station",
+                "Name": "Conon Bridge"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.422187055814377,
+                    57.59423743888202
+                ]
+            },
+            "properties": {
+                "OBJECTID": 41,
+                "Type": "Railway Station",
+                "Name": "Dingwall"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.404335637521304,
+                    57.91930992942175
+                ]
+            },
+            "properties": {
+                "OBJECTID": 42,
+                "Type": "Railway Station",
+                "Name": "Culrain"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.399491643339406,
+                    57.92486824275415
+                ]
+            },
+            "properties": {
+                "OBJECTID": 43,
+                "Type": "Railway Station",
+                "Name": "Invershin"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.362048022254519,
+                    57.8813896092126
+                ]
+            },
+            "properties": {
+                "OBJECTID": 44,
+                "Type": "Railway Station",
+                "Name": "Ardgay"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.625945776716737,
+                    57.60968985688741
+                ]
+            },
+            "properties": {
+                "OBJECTID": 45,
+                "Type": "Railway Station",
+                "Name": "Forres"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.31126855911297,
+                    57.64278337810115
+                ]
+            },
+            "properties": {
+                "OBJECTID": 46,
+                "Type": "Railway Station",
+                "Name": "Elgin"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.131047357011111,
+                    57.45810992594129
+                ]
+            },
+            "properties": {
+                "OBJECTID": 47,
+                "Type": "Railway Station",
+                "Name": "Dufftown"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.039020432664125,
+                    57.48430406196297
+                ]
+            },
+            "properties": {
+                "OBJECTID": 48,
+                "Type": "Railway Station",
+                "Name": "Drummuir"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -2.955796568408706,
+                    57.54355318993879
+                ]
+            },
+            "properties": {
+                "OBJECTID": 49,
+                "Type": "Railway Station",
+                "Name": "Keith Town"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -2.954153829233148,
+                    57.55145072057113
+                ]
+            },
+            "properties": {
+                "OBJECTID": 50,
+                "Type": "Railway Station",
+                "Name": "Keith"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -2.775742673822161,
+                    57.4444893299569
+                ]
+            },
+            "properties": {
+                "OBJECTID": 51,
+                "Type": "Railway Station",
+                "Name": "Huntly"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -2.69832226441722,
+                    57.2319713216427
+                ]
+            },
+            "properties": {
+                "OBJECTID": 52,
+                "Type": "Railway Station",
+                "Name": "Alford Valley Railway and Museum"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -2.617156953975456,
+                    57.33740042041561
+                ]
+            },
+            "properties": {
+                "OBJECTID": 53,
+                "Type": "Railway Station",
+                "Name": "Insch"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -2.373373259664744,
+                    57.28626968000784
+                ]
+            },
+            "properties": {
+                "OBJECTID": 54,
+                "Type": "Railway Station",
+                "Name": "Inverurie"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -2.283397200103343,
+                    57.22823265401983
+                ]
+            },
+            "properties": {
+                "OBJECTID": 55,
+                "Type": "Railway Station",
+                "Name": "Kinaldie"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -2.192731442997318,
+                    57.2057414825836
+                ]
+            },
+            "properties": {
+                "OBJECTID": 56,
+                "Type": "Railway Station",
+                "Name": "Dyce"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -2.09905092376575,
+                    57.14354063258091
+                ]
+            },
+            "properties": {
+                "OBJECTID": 57,
+                "Type": "Railway Station",
+                "Name": "Aberdeen"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.839525503076612,
+                    56.91295404795622
+                ]
+            },
+            "properties": {
+                "OBJECTID": 58,
+                "Type": "Railway Station",
+                "Name": "Arisaig"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.829676786798446,
+                    57.00598004466455
+                ]
+            },
+            "properties": {
+                "OBJECTID": 59,
+                "Type": "Railway Station",
+                "Name": "Mallaig"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.822048135987284,
+                    56.96899237995261
+                ]
+            },
+            "properties": {
+                "OBJECTID": 60,
+                "Type": "Railway Station",
+                "Name": "Morar"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.763659086845105,
+                    56.90004848812551
+                ]
+            },
+            "properties": {
+                "OBJECTID": 61,
+                "Type": "Railway Station",
+                "Name": "Beasdale"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.663414872738548,
+                    56.88131974900504
+                ]
+            },
+            "properties": {
+                "OBJECTID": 62,
+                "Type": "Railway Station",
+                "Name": "Lochailort"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.449473419432193,
+                    56.87247974726105
+                ]
+            },
+            "properties": {
+                "OBJECTID": 63,
+                "Type": "Railway Station",
+                "Name": "Glenfinnan"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.29032310606451,
+                    56.85593058049628
+                ]
+            },
+            "properties": {
+                "OBJECTID": 64,
+                "Type": "Railway Station",
+                "Name": "Locheilside"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.474176493587676,
+                    56.41239982035589
+                ]
+            },
+            "properties": {
+                "OBJECTID": 65,
+                "Type": "Railway Station",
+                "Name": "Oban"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.383411852440833,
+                    56.45240554209892
+                ]
+            },
+            "properties": {
+                "OBJECTID": 66,
+                "Type": "Railway Station",
+                "Name": "Connel Ferry"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.118978920124321,
+                    57.05905510411946
+                ]
+            },
+            "properties": {
+                "OBJECTID": 67,
+                "Type": "Railway Station",
+                "Name": "Newtonmore"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.921584725790826,
+                    56.8898839259598
+                ]
+            },
+            "properties": {
+                "OBJECTID": 68,
+                "Type": "Railway Station",
+                "Name": "Spean Bridge"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.837432115584561,
+                    56.88841517559112
+                ]
+            },
+            "properties": {
+                "OBJECTID": 69,
+                "Type": "Railway Station",
+                "Name": "Roy Bridge"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.701655258974208,
+                    56.88405782073377
+                ]
+            },
+            "properties": {
+                "OBJECTID": 70,
+                "Type": "Railway Station",
+                "Name": "Tulloch"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.246218766464984,
+                    56.93514914212791
+                ]
+            },
+            "properties": {
+                "OBJECTID": 71,
+                "Type": "Railway Station",
+                "Name": "Dalwhinnie"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.735725244267415,
+                    56.70237983578043
+                ]
+            },
+            "properties": {
+                "OBJECTID": 72,
+                "Type": "Railway Station",
+                "Name": "Pitlochry"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.690378175281662,
+                    56.75998841718428
+                ]
+            },
+            "properties": {
+                "OBJECTID": 73,
+                "Type": "Railway Station",
+                "Name": "Corrour"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.618500444954359,
+                    56.39047791099073
+                ]
+            },
+            "properties": {
+                "OBJECTID": 74,
+                "Type": "Railway Station",
+                "Name": "Crianlarich"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.576908703612949,
+                    56.6859080578647
+                ]
+            },
+            "properties": {
+                "OBJECTID": 75,
+                "Type": "Railway Station",
+                "Name": "Rannoch"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.965687980838212,
+                    56.18578497811005
+                ]
+            },
+            "properties": {
+                "OBJECTID": 76,
+                "Type": "Railway Station",
+                "Name": "Dunblane"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.849732509143819,
+                    56.76528310383468
+                ]
+            },
+            "properties": {
+                "OBJECTID": 77,
+                "Type": "Railway Station",
+                "Name": "Blair Atholl"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.73104193300536,
+                    56.27474911963422
+                ]
+            },
+            "properties": {
+                "OBJECTID": 78,
+                "Type": "Railway Station",
+                "Name": "Gleneagles"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.239416881568403,
+                    56.43086253857243
+                ]
+            },
+            "properties": {
+                "OBJECTID": 79,
+                "Type": "Railway Station",
+                "Name": "Taynuilt"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.192950552907479,
+                    56.85536378138243
+                ]
+            },
+            "properties": {
+                "OBJECTID": 80,
+                "Type": "Railway Station",
+                "Name": "Loch Eil Outward Bound"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.112686247811197,
+                    56.39403855260866
+                ]
+            },
+            "properties": {
+                "OBJECTID": 81,
+                "Type": "Railway Station",
+                "Name": "Falls of Cruachan"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.121569353475934,
+                    56.84273705575927
+                ]
+            },
+            "properties": {
+                "OBJECTID": 82,
+                "Type": "Railway Station",
+                "Name": "Corpach"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.105950843217868,
+                    56.82046647344004
+                ]
+            },
+            "properties": {
+                "OBJECTID": 83,
+                "Type": "Railway Station",
+                "Name": "Fort William"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.09596441089983,
+                    56.84382369486833
+                ]
+            },
+            "properties": {
+                "OBJECTID": 84,
+                "Type": "Railway Station",
+                "Name": "Banavie"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -5.040801220689064,
+                    56.40224979321887
+                ]
+            },
+            "properties": {
+                "OBJECTID": 85,
+                "Type": "Railway Station",
+                "Name": "Loch Awe"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.983570950529151,
+                    56.4010236227797
+                ]
+            },
+            "properties": {
+                "OBJECTID": 86,
+                "Type": "Railway Station",
+                "Name": "Dalmally"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.764446016812649,
+                    56.5167102689411
+                ]
+            },
+            "properties": {
+                "OBJECTID": 87,
+                "Type": "Railway Station",
+                "Name": "Bridge of Orchy"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.723273787926675,
+                    56.20327796923769
+                ]
+            },
+            "properties": {
+                "OBJECTID": 88,
+                "Type": "Railway Station",
+                "Name": "Arrochar and Tarbet"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.72189656231312,
+                    56.30216485739126
+                ]
+            },
+            "properties": {
+                "OBJECTID": 89,
+                "Type": "Railway Station",
+                "Name": "Ardlui"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.713772359778171,
+                    56.43369849210918
+                ]
+            },
+            "properties": {
+                "OBJECTID": 90,
+                "Type": "Railway Station",
+                "Name": "Tyndrum Lower"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -4.703817027046608,
+                    56.43465002333465
+                ]
+            },
+            "properties": {
+                "OBJECTID": 91,
+                "Type": "Railway Station",
+                "Name": "Upper Tyndrum"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -2.429053273631193,
+                    57.05638983032426
+                ]
+            },
+            "properties": {
+                "OBJECTID": 92,
+                "Type": "Railway Station",
+                "Name": "Milton of Crathes"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -2.22534722558993,
+                    56.96684232225827
+                ]
+            },
+            "properties": {
+                "OBJECTID": 93,
+                "Type": "Railway Station",
+                "Name": "Stonehaven"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -2.127900691792489,
+                    57.06148930891966
+                ]
+            },
+            "properties": {
+                "OBJECTID": 94,
+                "Type": "Railway Station",
+                "Name": "Portlethen"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.13073479573087,
+                    56.20053802960097
+                ]
+            },
+            "properties": {
+                "OBJECTID": 95,
+                "Type": "Railway Station",
+                "Name": "Markinch"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.121548272541912,
+                    56.27418989223959
+                ]
+            },
+            "properties": {
+                "OBJECTID": 96,
+                "Type": "Railway Station",
+                "Name": "Ladybank"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.05255894838415,
+                    56.29508876033335
+                ]
+            },
+            "properties": {
+                "OBJECTID": 97,
+                "Type": "Railway Station",
+                "Name": "Springfield"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.009138194450076,
+                    56.31703590862637
+                ]
+            },
+            "properties": {
+                "OBJECTID": 98,
+                "Type": "Railway Station",
+                "Name": "Cupar"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -2.893691691855862,
+                    56.37512648269298
+                ]
+            },
+            "properties": {
+                "OBJECTID": 99,
+                "Type": "Railway Station",
+                "Name": "Leuchars"
+            }
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -3.44038502541467,
+                    56.39232476870671
+                ]
+            },
+            "properties": {
+                "OBJECTID": 100,
+                "Type": "Railway Station",
+                "Name": "Perth"
+            }
+        }
+    ]
+}
