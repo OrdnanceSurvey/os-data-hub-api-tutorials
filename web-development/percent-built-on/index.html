@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>OS Tutorial | Percent Built On</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="x-ua-compatible" content="ie=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    <link rel="icon" type="image/x-icon" href="../assets/img/favicon.ico" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,200i,300,300i,400,400i,600,600i,700,700i,900,900i" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css"
+        type="text/css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/5.1.5/turf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.core.js"></script>
+    <link rel="stylesheet" href="../assets/css/style.css" />
+    <link rel="stylesheet" href="../assets/css/vendor.css" />
+    <style>
+        #percent-built {
+            font-size: 40px;
+            text-align: center;  
+        }
+
+        .osel-sliding-side-panel .scroller-no-tabs div {
+            padding: 24px;
+        }
+
+        .osel-button {
+            margin-right: 16px;
+        }
+    </style>
+</head>
+
+<body style="background:#ddd;">
+    <div id="map" class="osel-map"></div>
+    <div class="osel-sliding-side-panel panel-left">
+        <div class="panel-toggle">
+            <div class="toggle-handle" aria-label="Toggle panel"></div>
+        </div>
+        <div class="panel-content">
+            <div class="panel-header">
+                Percent Built On
+
+
+            </div>
+            <div class="scroller-no-tabs">
+                <div>
+                    <p>This tool lets you calculate what percentage of an area is covered by buildings, fetched with the
+                        OS Features API.</p>
+
+                    <p>Use the polygon tool to draw the geometry you'd like to analyse. Clicking Fetch & Calculate will:
+                        <ol>
+                            <li>Query the Features API for all buildings intersecting the polygon you drew.</li>
+                            <li>Clip the returned building polygons to the boundaries of the drawn geometry.</li>
+                            <li>Calculate the area of all buildings within the drawn geometry, and the total area of the
+                                drawn geometry</li>
+                            <li>Computes the percentage of the drawn geometry that is built on and displays it here.
+                            </li>
+                        </ol>
+                    </p>
+                </div>
+                <div class='results'>
+                    <p id='draw-prompt'>Draw a polygon to analyse!
+                    </p>
+                    <p id='percent-built' style="display:none;"><span>. . .</span>%</p>
+                </div>
+                <div>
+                    <button id="fetch-and-calculate" class="osel-button osel-primary-button" disabled>Fetch &
+                        Calculate!</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slideReveal/1.1.2/jquery.slidereveal.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js"></script>
+    <script src="../assets/js/colours.js"></script>
+    <script src="../assets/js/init.js"></script>
+    <script src="../assets/js/main.js"></script>
+    <script src="../js/tutorial.js"></script>
+
+</body>
+
+</html>
