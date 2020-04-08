@@ -64,8 +64,6 @@ map.addControl(new mapboxgl.NavigationControl({
 }));
 
 
-
-
 // mapbox-gl-draw modes to disable draggable drawn polygons
 const NewSimpleSelect = _.extend(MapboxDraw.modes.simple_select, {
     dragMove() { }
@@ -205,6 +203,8 @@ function activateFetch() {
     $('#draw-prompt').css('display', 'none')
     $('#percent-built').css('display', 'block')
     $('#fetch-and-calculate').attr('disabled', false)
+
+    // zoom to geometry with .osel-panel offset
 }
 
 function disactivateFetch() {
