@@ -205,19 +205,31 @@ function activateFetch() {
     $('#fetch-and-calculate').attr('disabled', false)
 
     // zoom to geometry with .osel-panel offset
+
 }
 
 function disactivateFetch() {
     $('#draw-prompt').css('display', 'block')
     $('#percent-built').css('display', 'none')
     $('#fetch-and-calculate').attr('disabled', true)
+
+    if (map.getLayer('buildings')) {
+        map.removeLayer('buildings');
+        map.removeLayer('intersection-outline');
+        map.removeSource('buildings-intersection');
+        map.removeSource('buildings');
+    }
+
+    $('#percent-built span').text(". . .")
+
 }
 
 
 document.getElementById('fetch-and-calculate').addEventListener('click', async function () {
 
+
+
     let geom = draw.getAll();
-    console.log(geom);
 
     let features = await getIntersectingFeatures(geom);
     console.log(features);
@@ -226,6 +238,7 @@ document.getElementById('fetch-and-calculate').addEventListener('click', async f
         type: "FeatureCollection",
         features: []
     }
+
     turf.featureEach(features, function (currentFeature) {
         intersection.features.push(turf.intersect(currentFeature, geom.features[0]))
     });
@@ -235,6 +248,15 @@ document.getElementById('fetch-and-calculate').addEventListener('click', async f
 
     $('#percent-built span').text((percent * 100).toFixed(2))
 
+    // zoom to geom with .osel-panel offset
+    map.fitBounds(turf.bbox(geom), {
+        padding: {
+            left: $('.osel-sliding-side-panel').width() + 20,
+            right: 20,
+            bottom: 20,
+            top: 20
+        }
+    })
 
 
 
@@ -275,6 +297,8 @@ document.getElementById('fetch-and-calculate').addEventListener('click', async f
         }
     });
 
+    // Add popup that shows the % of that percentage of that particular
+
     console.log(features);
 })
 
@@ -302,6 +326,10 @@ async function getIntersectingFeatures(polygon) {
     xml += '</gml:Polygon>';
     xml += '</ogc:Intersects>';
     xml += '</ogc:Filter>';
+
+
+    // Switch over to Topography_TopographicArea
+        // DescriptiveGroup = Building
 
 
     // Define parameters object.
