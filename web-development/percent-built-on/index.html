@@ -23,12 +23,19 @@
             text-align: center;  
         }
 
+        .scroller-no-tabs {
+            width: 100%;
+        }
         .osel-sliding-side-panel .scroller-no-tabs div {
             padding: 24px;
         }
 
         .osel-button {
             margin-right: 16px;
+        }
+
+        .results {
+
         }
     </style>
 </head>
@@ -47,29 +54,30 @@
             </div>
             <div class="scroller-no-tabs">
                 <div>
-                    <p>This tool lets you calculate what percentage of an area is covered by buildings, fetched with the
-                        OS Features API.</p>
+                    <p>Calculate what percentage of an area is covered by buildings. Use the polygon tool to draw the geometry you'd like to analyse. </p>
 
-                    <p>Use the polygon tool to draw the geometry you'd like to analyse. Clicking Fetch & Calculate will:
+                    <p>Clicking Fetch & Calculate will:
                         <ol>
                             <li>Query the Features API for all buildings intersecting the polygon you drew.</li>
                             <li>Clip the returned building polygons to the boundaries of the drawn geometry.</li>
                             <li>Calculate the area of all buildings within the drawn geometry, and the total area of the
                                 drawn geometry</li>
-                            <li>Computes the percentage of the drawn geometry that is built on and displays it here.
+                            <li>Compute the percentage of the drawn geometry that is built on, and display it here.
                             </li>
                         </ol>
                     </p>
-                </div>
-                <div class='results'>
                     <p id='draw-prompt'>Draw a polygon to analyse!
                     </p>
-                    <p id='percent-built' style="display:none;"><span>. . .</span>%</p>
                 </div>
                 <div>
                     <button id="fetch-and-calculate" class="osel-button osel-primary-button" disabled>Fetch &
                         Calculate!</button>
                 </div>
+                <div class='results'>
+                    
+                    <p id='percent-built' style="display:none;"><span>. . .</span>%</p>
+                </div>
+                
 
             </div>
         </div>

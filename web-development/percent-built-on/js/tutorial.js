@@ -55,6 +55,8 @@ var map = new mapboxgl.Map({
     zoom: 15.53
 });
 
+
+
 map.dragRotate.disable(); // Disable map rotation using right click + drag.
 map.touchZoomRotate.disableRotation(); // Disable map rotation using touch rotation gesture.
 
@@ -195,8 +197,23 @@ var draw = new MapboxDraw({
 
 map.addControl(draw);
 
+
 map.on('draw.create', activateFetch);
 map.on('draw.delete', disactivateFetch);
+
+map.on('style.load', function () {
+
+    map.addSource('buildings', {
+        type: 'geojson',
+        data: null
+    });
+
+    map.addSource('buildings-intersection', {
+        type: 'geojson',
+        data: null
+    });
+
+})
 
 function activateFetch() {
 
@@ -204,7 +221,7 @@ function activateFetch() {
     $('#percent-built').css('display', 'block')
     $('#fetch-and-calculate').attr('disabled', false)
 
-    // zoom to geometry with .osel-panel offset
+    fitBoundsOffset(draw.getAll());
 
 }
 
@@ -216,8 +233,7 @@ function disactivateFetch() {
     if (map.getLayer('buildings')) {
         map.removeLayer('buildings');
         map.removeLayer('intersection-outline');
-        map.removeSource('buildings-intersection');
-        map.removeSource('buildings');
+
     }
 
     $('#percent-built span').text(". . .")
@@ -227,29 +243,82 @@ function disactivateFetch() {
 
 document.getElementById('fetch-and-calculate').addEventListener('click', async function () {
 
-
+    // if (typeof map.getLayer('buildings') !== 'undefined') {
+    //     map.removeLayer('buildings');
+    //     map.removeLayer('intersection-outline');
+    // }
+   
 
     let geom = draw.getAll();
 
-    let features = await getIntersectingFeatures(geom);
-    console.log(features);
-
+    let buildings = await getIntersectingFeatures(geom);
+    console.log('buildings', buildings)
     let intersection = {
         type: "FeatureCollection",
         features: []
     }
 
-    turf.featureEach(features, function (currentFeature) {
+    turf.featureEach(buildings, function (currentFeature) {
         intersection.features.push(turf.intersect(currentFeature, geom.features[0]))
     });
 
 
-    let percent = turf.area(intersection) / turf.area(geom);
+    let percent;
+
+    if (intersection.features.length > 0) {
+        percent = turf.area(intersection) / turf.area(geom);
+
+        map.getSource('buildings').setData(buildings);
+        map.getSource('buildings-intersection').setData(intersection);
+
+        map.addLayer({
+            id: 'buildings',
+            source: 'buildings',
+            type: 'fill',
+            layout: {},
+            paint: {
+                'fill-color': colours.qualitative.lookup['2'],
+                'fill-opacity': 0.1,
+                'fill-outline-color': 'black'
+    
+            }
+        });
+    
+    
+        map.addLayer({
+            id: 'intersection-outline',
+            source: 'buildings-intersection',
+            type: 'line',
+            layout: {},
+            paint: {
+                'line-color': colours.qualitative.lookup['1'],
+                'line-width': 2
+            }
+        });
+    } else {
+        percent = 0;
+        map.getSource('buildings').setData(null)
+        map.getSource('buildings-intersection').setData(null)
+
+    }
+    
 
     $('#percent-built span').text((percent * 100).toFixed(2))
 
     // zoom to geom with .osel-panel offset
-    map.fitBounds(turf.bbox(geom), {
+    fitBoundsOffset(geom)
+
+    
+
+    // Add popup that shows the % of that percentage of that particular
+
+    console.log(buildings);
+})
+
+
+
+function fitBoundsOffset(geojson) {
+    map.fitBounds(turf.bbox(geojson), {
         padding: {
             left: $('.osel-sliding-side-panel').width() + 20,
             right: 20,
@@ -258,53 +327,7 @@ document.getElementById('fetch-and-calculate').addEventListener('click', async f
         }
     })
 
-
-
-    map.addSource('buildings', {
-        type: 'geojson',
-        data: features
-    });
-
-    map.addSource('buildings-intersection', {
-        type: 'geojson',
-        data: intersection
-    });
-
-
-
-    map.addLayer({
-        id: 'buildings',
-        source: 'buildings',
-        type: 'fill',
-        layout: {},
-        paint: {
-            'fill-color': colours.qualitative.lookup['2'],
-            'fill-opacity': 0.1,
-            'fill-outline-color': 'black'
-
-        }
-    });
-
-
-    map.addLayer({
-        id: 'intersection-outline',
-        source: 'buildings-intersection',
-        type: 'line',
-        layout: {},
-        paint: {
-            'line-color': colours.qualitative.lookup['1'],
-            'line-width': 2
-        }
-    });
-
-    // Add popup that shows the % of that percentage of that particular
-
-    console.log(features);
-})
-
-
-
-
+}
 
 async function getIntersectingFeatures(polygon) {
 
@@ -329,7 +352,7 @@ async function getIntersectingFeatures(polygon) {
 
 
     // Switch over to Topography_TopographicArea
-        // DescriptiveGroup = Building
+    // DescriptiveGroup = Building
 
 
     // Define parameters object.
@@ -361,13 +384,17 @@ async function getIntersectingFeatures(polygon) {
         await fetch(getUrl(wfsParams))
             .then(response => response.json())
             .then((data) => {
-                // console.log(data)
-                // console.log(geojson)
+
                 wfsParams.startIndex += wfsParams.count;
 
                 geojson.features.push.apply(geojson.features, data.features);
 
                 resultsRemain = data.features.length < wfsParams.count ? false : true;
+
+                if (geojson.features.length > 499) {
+                    console.log("Cutting off queries for demo.")
+                    resultsRemain = false;
+                }
 
             })
             .catch((err) => { console.error(err); });
