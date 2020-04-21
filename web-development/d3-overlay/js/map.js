@@ -12,14 +12,12 @@ var mapOptions = {
 };
 
 
-var stations;
-
-var projection, path;
 
 
 // Instantiate a new L.map object
-var map = new L.map('map', mapOptions)
-    .on('load', async function () {
+var map = new L.map('map', mapOptions);
+
+map.on('load', async function () {
         await loadOverlay()
     });
 
@@ -62,6 +60,12 @@ var basemap = L.tileLayer(
 
 
 
+var svg = d3.select(map.getPanes().overlayPane).append("svg"),
+    g = svg.append("g").attr("class", "leaflet-zoom-hide");
+
+var collection, stations;
+
+var projection, path;
 
 
 
@@ -95,7 +99,8 @@ async function loadOverlay() {
 
     // Load in boundaries we'll use to build the XML filter for the Features API call
     let camden = await d3.json('./data/camden-extra-simple.json');
-    console.log(camden)
+
+
     let coordsString = camden.features[0].coordinates[0].join(' ')
 
     let xmlFilter = `
@@ -118,10 +123,7 @@ async function loadOverlay() {
         .map(l => l.trim())
         .join('');
 
-    console.log(wfsParams);
-
     let urls = featureTypes.map((featureType) => {
-
         // Specify the name of the feature type we want to request
         wfsParams.typeNames = featureType;
         return getUrl(serviceEndpoints.wfs, wfsParams)
@@ -131,7 +133,7 @@ async function loadOverlay() {
 
     // Fetch in data - ideally a points, lines and polygons layer. features API? 
     let geodata = await Promise.all(urls.map((url) => d3.json(url)));
-
+    collection = geodata[0].features;
     // Setting up D3:
     var bbox = document.body.getBoundingClientRect();
     var center = map.getCenter();
@@ -149,36 +151,60 @@ async function loadOverlay() {
 
 
     // Set up our SVG
-    var svg = d3.select(map.getPanes().overlayPane).append("svg")
-                .attr("width", document.getElementById('map').clientWidth) 
-                .attr("height",document.getElementById('map').clientHeight);
+    svg = d3.select(map.getPanes().overlayPane).append("svg")
+        .attr("width", document.getElementById('map').clientWidth)
+        .attr("height", document.getElementById('map').clientHeight);
 
-    var g = svg.append('g')
+    g = svg.append('g')
+
+    stations = g.append('g')
         .classed('rail-stations', true);
 
-    stations = g.selectAll("circle.dot")
-        .data(geodata[0].features)
+    stations.selectAll("circle.dot")
+        .data(collection)
         .enter().append("circle").classed("dot", true)
         .attr("r", 1)
         .style('fill', "#0082a3")
         .style("fill-opacity", 0.6)
         .style('stroke', "#004d60")
-        .style("stroke-width",  1)
+        .style("stroke-width", 1)
         .attr("r", 6)
         .attr('cx', function (d) {
-            console.log(d);
-            console.log( projection(d.geometry.coordinates))
             var x = projection(d.geometry.coordinates)[0];
-            console.log(x)
             return x
         })
         .attr('cy', function (d) {
             var y = projection(d.geometry.coordinates)[1];
-            console.log(y)
             return y
-        })
+        });
+
+    map.on('viewreset', function () {
+        reset()
+    })
+
+
+    // Reposition the SVG to cover the features.
+    // From https://bost.ocks.org/mike/leaflet/
+    function reset() {
+        var bounds = path.bounds(collection),
+            topLeft = bounds[0],
+            bottomRight = bounds[1];
+
+        svg.attr("width", bottomRight[0] - topLeft[0])
+            .attr("height", bottomRight[1] - topLeft[1])
+            .style("left", topLeft[0] + "px")
+            .style("top", topLeft[1] + "px");
+
+        g.attr("transform", "translate(" + -topLeft[0] + "," + -topLeft[1] + ")");
+
+        stations.attr("d", path);
+    }
+
 
 }
+
+
+
 
 
 
