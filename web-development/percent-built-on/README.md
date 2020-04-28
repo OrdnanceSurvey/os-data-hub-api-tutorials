@@ -361,4 +361,4 @@ That's it! We've written code that let's a user draw a polygon on an OS Maps API
 
 We used Mapbox GL JS, MapboxDraw, Turf.js, and jQuery to help us with map visualisation, map interactivity, spatial analysis and DOM manipulation. 
 
-Let us know what you think - or show us what you build! Tweet @OrdnanceSurvey and tag #OSDeveloper.
+Let us know what you think - or show us what you build! Tweet [@OrdnanceSurvey](https://twitter.com/ordnancesurvey) and tag [#OSDeveloper]().
