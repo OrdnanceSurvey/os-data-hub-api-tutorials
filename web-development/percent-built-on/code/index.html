@@ -13,34 +13,14 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css"
         type="text/css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/5.1.5/turf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/5.1.5/turf.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.core.js"></script>
     <link rel="stylesheet" href="./assets/css/style.css" />
     <link rel="stylesheet" href="./assets/css/vendor.css" />
-    <style>
-        #percent-built {
-            font-size: 40px;
-            text-align: center;  
-        }
-
-        .scroller-no-tabs {
-            width: 100%;
-        }
-        .osel-sliding-side-panel .scroller-no-tabs div {
-            padding: 24px;
-        }
-
-        .osel-button {
-            margin-right: 16px;
-        }
-
-        .results {
-
-        }
-    </style>
+    <link rel="stylesheet" href="./css/tutorial.css" />
 </head>
 
-<body style="background:#ddd;">
+<body>
     <div id="map" class="osel-map"></div>
     <div class="osel-sliding-side-panel panel-left">
         <div class="panel-toggle">
@@ -53,8 +33,9 @@
 
             </div>
             <div class="scroller-no-tabs">
-                <div>
-                    <p>Calculate what percentage of an area is covered by buildings. Use the polygon tool to draw the geometry you'd like to analyse. </p>
+                <div class='contents'>
+                    <p>Calculate what percentage of an area is covered by buildings. Use the polygon tool to draw the
+                        geometry you'd like to analyse. </p>
 
                     <p>Clicking Fetch & Calculate will:
                         <ol>
@@ -69,28 +50,30 @@
                     <p id='draw-prompt'>Draw a polygon to analyse!
                     </p>
                 </div>
-                <div>
-                    <button id="fetch-and-calculate" class="osel-button osel-primary-button" disabled>Fetch &
-                        Calculate!</button>
-                </div>
                 <div class='results'>
-                    
-                    <p id='percent-built' style="display:none;"><span>. . .</span>%</p>
+                    <p id='percent-built' ><span>. . .</span>%</p>
                 </div>
-                
+                <button id="fetch-and-calculate" class="osel-button osel-primary-button" disabled>
+                    <span class="find">Fetch & Calculate!</span>
+                    
+                </button>
+
+
 
             </div>
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slideReveal/1.1.2/jquery.slidereveal.min.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js"></script>
     <script src="./assets/js/colours.js"></script>
+    <script src="./assets/js/notification.js"></script>
     <script src="./assets/js/init.js"></script>
     <script src="./assets/js/main.js"></script>
+    <script src="./js/config.js"></script>
     <script src="./js/tutorial.js"></script>
 
 </body>
