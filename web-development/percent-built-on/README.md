@@ -1,4 +1,4 @@
-# Title
+# Percent Built On
 
 In this tutorial we'll develop a web app that lets users draw a polygon, then calculates what percentage of the geometry is built on. This technique is useful for determining land cover of any number of layers - green space, buildings, road surface and so on.  
 
@@ -24,7 +24,7 @@ Have a skim through our `index.html`: you'll notice we load `mapbox-gl.css`, `ma
 
 Other than loading these assets, `index.html` includes elements for the code in `tutorial.js` to interact with, most notably a `#map` div element, a `#percent-built` p element to hold the computed result and a `#fetch-and-calculate` button element. 
 
-Alright - on to the JavaScript.
+Alright - on to the JavaScript. This is all defined in [`/code/js/tutorial.js`](./code/js/tutorial.js).
 
 ## The API Key
 
