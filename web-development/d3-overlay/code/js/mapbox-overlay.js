@@ -4,7 +4,6 @@ const endpoints = {
     features: "https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1"
 }
 
-
 // Instantiate a new mapboxgl.Map object.
 var map = new mapboxgl.Map({
     container: 'map',
@@ -19,15 +18,13 @@ var map = new mapboxgl.Map({
     }
 });
 
+// Configure map interaction controls
 map.dragRotate.disable(); // Disable map rotation using right click + drag.
 map.touchZoomRotate.disableRotation(); // Disable map rotation using touch rotation gesture.
-
 // Add navigation control (excluding compass button) to the map.
 map.addControl(new mapboxgl.NavigationControl({
     showCompass: false
 }));
-
-
 
 // Setup our svg layer that we can manipulate with d3
 const bbox = document.getElementById('map').getBoundingClientRect();
@@ -41,29 +38,31 @@ var svg = d3.select('#map')
     .style("pointer-events", "none"); // the svg shouldn't capture mouse events, so we can have pan and zoom from mapbox
 
 
+var stations = svg.append('g')
+    .classed('stations-group', true)
+    .selectAll(".station");
+
+var camdenPoly = svg.append('g')
+    .classed('camden-group', true)
+    .selectAll('.camden');
+
 //Projection function
 var transform = d3.geoTransform({ point: projectPoint });
 var path = d3.geoPath().projection(transform);
 
-var stations = svg.append('g')
-                    .classed('stations-group', true)
-                    .selectAll(".station");
+// Begin setting up the SVG overlay with d3
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
 
-var camdenPoly = svg.append('g')
-                    .classed('camden-group', true)
-                    .selectAll('.camden');
+// Every time the map changes, update the SVG paths
+map.on("viewreset", update);
+map.on("move", update);
+map.on("moveend", update);
 
 map.on('load', async function () {
 
-    var featureTypes = [
-        "Zoomstack_RailwayStations",
-        "Zoomstack_Rail",
-        "Zoomstack_Greenspace",
-    ]
-
-
-
-
+    // First, load GeoJSON
     let camden = await d3.json('./data/camden-simple.json');
 
     map.fitBounds(turf.bbox(camden.features[0]), { padding: 25 });
@@ -74,12 +73,12 @@ map.on('load', async function () {
         .style('fill', osColours.qualitative.lookup[1])
         .style('opacity', 0.2)
 
-
+    // Now, an XML filter for our Features API calls    
     let coordsString = camden.features[0].coordinates[0].join(' ')
 
     let xmlFilter = `
         <ogc:Filter>
-            <ogc:Intersects>
+            <ogc:Within>
             <ogc:PropertyName>SHAPE</ogc:PropertyName>
             <gml:Polygon srsName="urn:ogc:def:crs:EPSG::4326">
                 <gml:outerBoundaryIs>
@@ -88,11 +87,11 @@ map.on('load', async function () {
                 </gml:LinearRing>
                 </gml:outerBoundaryIs>
             </gml:Polygon>
-            </ogc:Intersects>
+            </ogc:Within>
         </ogc:Filter>`;
 
     // The parameters 
-    var wfsParams = {
+    var params = {
         key: apiKey,
         typeNames: "Zoomstack_RailwayStations",
         filter: xmlFilter,
@@ -106,54 +105,27 @@ map.on('load', async function () {
     };
 
     let resultsRemain = true;
-    fetchWhile(resultsRemain, wfsParams)
+    let geojson = { "type": "FeatureCollection", "features": [] }
 
-    update();
+    while (resultsRemain) {
 
-})
+        // Fetch the GeoJSON
+        let response = await fetch(getUrl(endpoints.features, params));
+        let data = await response.json();
 
+        // Add result features to our holder GeoJSON features array
+        geojson.features.push.apply(geojson.features, data.features);
 
-// Begin setting up the SVG overlay with d3
-var div = d3.select("body").append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 0);
+        // If we didn't receive a full set of results, we've fetched all 
+        // matching features
+        resultsRemain = data.features.length < params.count ? false : true;
 
+        // Iterate to fetch the next "page" of results
+        params.startIndex += params.count;
+    }
 
-// Every time the map changes, update the stations
-map.on("viewreset", update);
-map.on("move", update);
-map.on("moveend", update);
-map.on("style.load", function () {
-    // Remove the layer we are going to be adding the SVG overlay for
-    ["OS Open Zoomstack - Road/railway_stations/Railway Station And London Underground Station",
-    "OS Open Zoomstack - Road/railway_stations/London Underground Station",
-    "OS Open Zoomstack - Road/railway_stations/Railway Station",
-    "OS Open Zoomstack - Road/railway_stations/Light Rapid Transit Station And Railway Station",
-    "OS Open Zoomstack - Road/railway_stations/Light Rapid Transit Station And London Underground Station",
-    "OS Open Zoomstack - Road/railway_stations/Light Rapid Transit Station"].map((layer) => {
-        map.setLayoutProperty(layer, 'visibility', 'none')
-    });
-
-})
-
-
-//Project any point to map's current state
-function projectPoint(lon, lat) {
-    var point = map.project(new mapboxgl.LngLat(lon, lat));
-    this.stream.point(point.x, point.y);
-}
-    
-function update () {
-    stations.attr("d", path.pointRadius(map.getZoom() / 2));
-    camdenPoly.attr('d', path)
-}
-
-function drawStations(stationJSON) {
-    let stationFeatures = stationJSON.features;
-
-
-    console.log(stationFeatures)
-    stations = stations.data(stationFeatures)
+    // Now we can draw our station points as SVG <path> elements
+    stations = stations.data(geojson.features)
         .join("path")
         .attr("class", "station")
         .style("fill", (d) => {
@@ -189,14 +161,37 @@ function drawStations(stationJSON) {
                 .style('display', 'none')
                 .style('opacity', 0)
         })
-        .on('click', (d) => {
-        })
         .style("pointer-events", "all");
 
-    update()
+    update();
 
+})
+
+
+map.on("style.load", function () {
+    // Remove the layer we are going to be adding the SVG overlay for
+    ["OS Open Zoomstack - Road/railway_stations/Railway Station And London Underground Station",
+        "OS Open Zoomstack - Road/railway_stations/London Underground Station",
+        "OS Open Zoomstack - Road/railway_stations/Railway Station",
+        "OS Open Zoomstack - Road/railway_stations/Light Rapid Transit Station And Railway Station",
+        "OS Open Zoomstack - Road/railway_stations/Light Rapid Transit Station And London Underground Station",
+        "OS Open Zoomstack - Road/railway_stations/Light Rapid Transit Station"].map((layer) => {
+            map.setLayoutProperty(layer, 'visibility', 'none')
+        });
+
+})
+
+
+//Project any point to map's current state
+function projectPoint(lon, lat) {
+    var point = map.project(new mapboxgl.LngLat(lon, lat));
+    this.stream.point(point.x, point.y);
 }
 
+function update() {
+    stations.attr("d", path.pointRadius(map.getZoom() / 2));
+    camdenPoly.attr('d', path)
+}
 
 // Helper function
 function getUrl(serviceUrl, params) {
@@ -210,33 +205,3 @@ function getUrl(serviceUrl, params) {
     return serviceUrl + '?' + encodedParameters;
 }
 
-
-
-async function fetchWhile(resultsRemain, params, geojson = { "type": "FeatureCollection", "features": [] }) {
-
-    if (resultsRemain) {
-        console.log(getUrl(endpoints.features, params))
-        let response = await fetch(getUrl(endpoints.features, params));
-        let data = await response.json();
-
-        params.startIndex += params.count;
-
-        geojson.features.push.apply(geojson.features, data.features);
-
-        resultsRemain = data.features.length < params.count ? false : true;
-        console.log(resultsRemain)
-        fetchWhile(resultsRemain, params, geojson);
-
-    }
-    else {
-        console.log(geojson)
-        // if( geojson.features.length ) {
-        drawStations(geojson)
-        // return Promise.resolve(geojson);
-        // } else {
-        //     // Promise.reject('FAIL')
-        //     return "Fail"
-        // }
-        // document.getElementById('message').style.display = 'block';
-    }
-}
