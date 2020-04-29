@@ -265,7 +265,7 @@ input[type=text]::-ms-clear {
 .osel-toast-notification {
   position: relative;
   width: calc(100% - 24px);
-  max-width: 640px;
+  max-width: 500px;
   min-height: 48px;
   margin: 8px auto;
   padding: 12px;
