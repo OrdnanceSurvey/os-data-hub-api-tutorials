@@ -1,8 +1,6 @@
-# Percent Built On
-
 Spatial analysis is a powerful way to understand the world. The insights derived from analysis of points, lines, polygons and raster data can serve as the evidence to inform intelligent decision-making. Let's look at how to build a web interface capable of sophisticated spatial analytics.
 
-<iframe src="https://johnx25bd.github.io/os-data-hub-api-tutorials/web-development/percent-built-on/" height="600" width="800"></iframe>
+<iframe src="/public/os-data-hub-tutorials/dist/web-development/percent-built-on/" height="600" width="800"></iframe>
 
 ## The HTML
 
