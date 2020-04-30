@@ -26,3 +26,12 @@
 .results {
     padding: none;
 }
+
+.results .result-label {
+    text-align: center;
+    margin-top: -40px;
+}
+
+#fetch-and-calculate {
+    margin-bottom: 20px;
+}
