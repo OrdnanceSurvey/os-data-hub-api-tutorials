@@ -1,4 +1,4 @@
-const apiKey = "FtAS7OR45lE3AR78KxrdGpfYq8uAAV6K";
+const apiKey = "YOUR_API_KEY";
 const endpoints = {
   maps: "https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1",
   features: "https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1",
