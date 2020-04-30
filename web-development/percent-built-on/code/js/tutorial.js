@@ -1,62 +1,64 @@
-
-// const apiKey = "YOUR_API_KEY";
+const apiKey = "FtAS7OR45lE3AR78KxrdGpfYq8uAAV6K";
 const endpoints = {
-    maps: "https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1",
-    features: "https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1"
-}
+  maps: "https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1",
+  features: "https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1",
+};
 
-
-// In the next steps we'll connect 
+// In the next steps we'll connect
 // a mapboxgl.Map object to the OS Maps API:
 
 // Define parameters object.
 var params = {
-    key: apiKey,
-    service: 'WMTS',
-    request: 'GetTile',
-    version: '2.0.0',
-    height: 256,
-    width: 256,
-    outputFormat: 'image/png',
-    style: 'default',
-    layer: 'Light_3857', // <- Light style, since we're overlaying features
-    tileMatrixSet: 'EPSG:3857',
-    tileMatrix: '{z}',
-    tileRow: '{y}',
-    tileCol: '{x}'
+  key: apiKey,
+  service: "WMTS",
+  request: "GetTile",
+  version: "2.0.0",
+  height: 256,
+  width: 256,
+  outputFormat: "image/png",
+  style: "default",
+  layer: "Light_3857", // <- Light style, since we're overlaying features
+  tileMatrixSet: "EPSG:3857",
+  tileMatrix: "{z}",
+  tileRow: "{y}",
+  tileCol: "{x}",
 };
 
 // Construct query string of parameters from params object.
-var queryString = Object.keys(params).map(function (key) {
-    return key + '=' + params[key];
-}).join('&');
+var queryString = Object.keys(params)
+  .map(function (key) {
+    return key + "=" + params[key];
+  })
+  .join("&");
 
 // Create a map style object using the WMTS service.
 var style = {
-    'version': 8,
-    'sources': {
-        'raster-tiles': {
-            'type': 'raster',
-            'tiles': [endpoints.maps + '?' + queryString],
-            'tileSize': 256,
-            'maxzoom': 20
-        }
+  version: 8,
+  sources: {
+    "raster-tiles": {
+      type: "raster",
+      tiles: [endpoints.maps + "?" + queryString],
+      tileSize: 256,
+      maxzoom: 20,
     },
-    'layers': [{
-        'id': 'os-maps-wmts',
-        'type': 'raster',
-        'source': 'raster-tiles'
-    }]
+  },
+  layers: [
+    {
+      id: "os-maps-wmts",
+      type: "raster",
+      source: "raster-tiles",
+    },
+  ],
 };
 
 // Initialise the map object.
 var map = new mapboxgl.Map({
-    container: 'map',
-    minZoom: 7,
-    maxZoom: 20,
-    style: style,
-    center: { "lng": -2.2499467257034667, "lat": 53.47800737015962 },
-    zoom: 15.53
+  container: "map",
+  minZoom: 7,
+  maxZoom: 20,
+  style: style,
+  center: { lng: -2.2499467257034667, lat: 53.47800737015962 },
+  zoom: 15.53,
 });
 
 // Configure and initialise controls
@@ -64,145 +66,135 @@ map.dragRotate.disable();
 map.touchZoomRotate.disableRotation();
 
 // Add navigation control (excluding compass button) to the map.
-map.addControl(new mapboxgl.NavigationControl({
-    showCompass: false
-}));
+map.addControl(
+  new mapboxgl.NavigationControl({
+    showCompass: false,
+  })
+);
 
-
-
-// Create a new MapboxDraw instance with styles, controls and interaction modes 
+// Create a new MapboxDraw instance with styles, controls and interaction modes
 var draw = new MapboxDraw({
-    styles: mbDrawConfig.styles, // custom OS styles, defined in ./config.js
-    displayControlsDefault: false,
-    controls: {
-        polygon: true,
-        trash: true
-    },
-    modes: {
-        ...MapboxDraw.modes,
-        simple_select: NewSimpleSelect, // Interaction modes, also defined in ./config.js
-        direct_select: NewDirectSelect
-    },
-
+  styles: mbDrawConfig.styles, // custom OS styles, defined in ./config.js
+  displayControlsDefault: false,
+  controls: {
+    polygon: true,
+    trash: true,
+  },
+  modes: {
+    ...MapboxDraw.modes,
+    simple_select: NewSimpleSelect, // Interaction modes, also defined in ./config.js
+    direct_select: NewDirectSelect,
+  },
 });
 
 // Add to map and add event listeners
 map.addControl(draw);
-map.on('draw.create', activateFetch);
-map.on('draw.delete', disactivateFetch);
-
-
-
-
+map.on("draw.create", activateFetch);
+map.on("draw.delete", disactivateFetch);
 
 // Add sources to add data to once it is fetched and analysed
-map.on('style.load', function () {
+map.on("style.load", function () {
+  map.addSource("buildings", {
+    type: "geojson",
+    data: null,
+  });
 
-    map.addSource('buildings', {
-        type: 'geojson',
-        data: null
-    });
+  map.addSource("buildings-intersection", {
+    type: "geojson",
+    data: null,
+  });
+});
 
-    map.addSource('buildings-intersection', {
-        type: 'geojson',
-        data: null
-    });
-
-})
-
-
-document.getElementById('fetch-and-calculate').addEventListener('click', async function () {
+document
+  .getElementById("fetch-and-calculate")
+  .addEventListener("click", async function () {
     addSpinner();
 
     let geom = draw.getAll();
     let buildings = await getIntersectingFeatures(geom);
 
+    // Initialise a FeatureCollection with an empty features array
     let intersections = {
-        type: "FeatureCollection",
-        features: []
-    }
+      type: "FeatureCollection",
+      features: [],
+    };
 
     turf.featureEach(buildings, function (currentFeature) {
-        let intersect = turf.intersect(currentFeature, geom.features[0]);
-        if (intersect != null) {
-            intersections.features.push(intersect)
-        }
+      let intersect = turf.intersect(currentFeature, geom.features[0]);
+      if (intersect != null) {
+        intersections.features.push(intersect);
+      }
     });
 
+    // Declare a variable to hold the computed value
     let percent;
 
     if (intersections.features.length > 0) {
+      percent = turf.area(intersections) / turf.area(geom);
 
-        percent = turf.area(intersections) / turf.area(geom);
+      map.getSource("buildings").setData(buildings);
+      map.getSource("buildings-intersection").setData(intersections);
 
-        map.getSource('buildings').setData(buildings);
-        map.getSource('buildings-intersection').setData(intersections);
+      map.addLayer({
+        id: "buildings",
+        source: "buildings",
+        type: "fill",
+        layout: {},
+        paint: {
+          "fill-color": colours.qualitative.lookup["2"],
+          "fill-opacity": 0.3,
+          "fill-outline-color": "black",
+        },
+      });
 
-        map.addLayer({
-            id: 'buildings',
-            source: 'buildings',
-            type: 'fill',
-            layout: {},
-            paint: {
-                'fill-color': colours.qualitative.lookup['2'],
-                'fill-opacity': 0.3,
-                'fill-outline-color': 'black'
-
-            }
-        });
-
-
-        map.addLayer({
-            id: 'intersection-outline',
-            source: 'buildings-intersection',
-            type: 'line',
-            layout: {},
-            paint: {
-                'line-color': colours.qualitative.lookup['1'],
-                'line-width': 2
-            }
-        });
+      map.addLayer({
+        id: "intersection-outline",
+        source: "buildings-intersection",
+        type: "line",
+        layout: {},
+        paint: {
+          "line-color": colours.qualitative.lookup["1"],
+          "line-width": 2,
+        },
+      });
     } else {
-        percent = 0;
-        map.getSource('buildings').setData(null)
-        map.getSource('buildings-intersection').setData(null)
-
+      percent = 0;
+      map.getSource("buildings").setData(null);
+      map.getSource("buildings-intersection").setData(null);
     }
 
-
-    $('#percent-built span').text((percent * 100).toFixed(2))
+    $("#percent-built span").text((percent * 100).toFixed(2));
+    $(".result-label").show();
 
     // zoom to geom with .osel-panel offset
     map.fitBounds(turf.bbox(buildings), {
-        padding: {
-            left: $('.osel-sliding-side-panel').width() + 50,
-            right: 50,
-            bottom: 50,
-            top: 50
-        }
-    })
-    removeSpinner()
+      padding: {
+        left: $(".osel-sliding-side-panel").width() + 50,
+        right: 50,
+        bottom: 50,
+        top: 50,
+      },
+    });
+    removeSpinner();
 
     // Add popup that shows the % of that percentage of that particular
-
-})
+  });
 
 async function getIntersectingFeatures(polygon) {
+  // Get the circle geometry coordinates and return a new space-delimited string.
+  var coords = polygon.features[0].geometry.coordinates[0].join(" ");
 
-    // Get the circle geometry coordinates and return a new space-delimited string.
-    var coords = polygon.features[0].geometry.coordinates[0].join(' ');
-
-    // Create an OGC XML filter parameter value which will select the Greenspace
-    // features intersecting the circle polygon coordinates.
-    // *** ADD Functionality to filter by Type attribute based on dropdown input!
-    var xml = `<Filter>
+  // Create an OGC XML filter parameter value which will select the Greenspace
+  // features intersecting the circle polygon coordinates.
+  // *** ADD Functionality to filter by Type attribute based on dropdown input!
+  var xml = `<Filter>
                 <And>
                 <ogc:Intersects>
                     <ogc:PropertyName>SHAPE</ogc:PropertyName>
                     <gml:Polygon srsName="urn:ogc:def:crs:EPSG::4326">
                     <gml:outerBoundaryIs>
                         <gml:LinearRing>
-                        <gml:coordinates>${ coords}</gml:coordinates>
+                        <gml:coordinates>${coords}</gml:coordinates>
                         </gml:LinearRing>
                     </gml:outerBoundaryIs>
                     </gml:Polygon>
@@ -212,110 +204,92 @@ async function getIntersectingFeatures(polygon) {
                     <ogc:Literal>Building</ogc:Literal>
                 </ogc:PropertyIsEqualTo>
                 </And>
-                </Filter>`
+                </Filter>`;
 
-    // Define parameters object.
-    let wfsParams = {
-        key: apiKey,
-        service: 'WFS',
-        request: 'GetFeature',
-        version: '2.0.0',
-        typeNames: 'Topography_TopographicArea',
-        outputFormat: 'GEOJSON',
-        srsName: 'urn:ogc:def:crs:EPSG::4326',
-        filter: xml,
-        count: 100,
-        startIndex: 0
-    };
+  // Define parameters object.
+  let wfsParams = {
+    key: apiKey,
+    service: "WFS",
+    request: "GetFeature",
+    version: "2.0.0",
+    typeNames: "Topography_TopographicArea",
+    outputFormat: "GEOJSON",
+    srsName: "urn:ogc:def:crs:EPSG::4326",
+    filter: xml,
+    count: 100,
+    startIndex: 0,
+  };
 
-    // Create an empty GeoJSON FeatureCollection.
-    let geojson = {
-        "type": "FeatureCollection",
-        "features": []
-    };
+  // Create an empty GeoJSON FeatureCollection.
+  let geojson = {
+    type: "FeatureCollection",
+    features: [],
+  };
 
-    geojson.features.length = 0;
+  geojson.features.length = 0;
 
-    var resultsRemain = true;
+  var resultsRemain = true;
 
-    while (resultsRemain) {
-        await fetch(getUrl(wfsParams))
-            .then(response => {
-                return response.json()
-            })
-            .then((data) => {
+  while (resultsRemain) {
+    let response = await fetch(getUrl(wfsParams));
+    let data = await response.json();
 
-                wfsParams.startIndex += wfsParams.count;
+    wfsParams.startIndex += wfsParams.count;
+    geojson.features.push.apply(geojson.features, data.features);
+    resultsRemain = data.features.length < wfsParams.count ? false : true;
 
-                geojson.features.push.apply(geojson.features, data.features);
-
-                resultsRemain = data.features.length < wfsParams.count ? false : true;
-
-                if (geojson.features.length > 499) {
-                    console.log("Cutting off queries for demo.")
-                    resultsRemain = false;
-                }
-
-            })
-            .catch((err) => { console.error(err); });
+    if (geojson.features.length > 499) {
+      console.log("Cutting off queries for demo.");
+      resultsRemain = false;
     }
+  }
 
-    return geojson;
-
+  return geojson;
 }
 
-
-
-
-
 function activateFetch() {
+  $("#draw-prompt").text("What is the percent built on?");
+  $("#percent-built").css("display", "block");
+  $("#fetch-and-calculate").attr("disabled", false);
 
-    $('#draw-prompt').text('What is the percent built on?')
-    $('#percent-built').css('display', 'block')
-    $('#fetch-and-calculate').attr('disabled', false)
-
-    map.fitBounds(turf.bbox(draw.getAll()), {
-        padding: {
-            left: $('.osel-sliding-side-panel').width() + 50,
-            right: 50,
-            bottom: 50,
-            top: 50
-        }
-    })
-
+  map.fitBounds(turf.bbox(draw.getAll()), {
+    padding: {
+      left: $(".osel-sliding-side-panel").width() + 50,
+      right: 50,
+      bottom: 50,
+      top: 50,
+    },
+  });
 }
 
 function disactivateFetch() {
-    $('#draw-prompt').text('Draw a polygon to analyse.')
-    $('#percent-built').css('display', 'none')
-    $('#fetch-and-calculate').attr('disabled', true)
+  $("#draw-prompt").text("Draw a polygon to analyse.");
+  $("#percent-built").css("display", "none");
+  $("#fetch-and-calculate").attr("disabled", true);
 
-    // Clear the building and outlines layers so we can display another query if the user draws a new polygon
-    if (map.getLayer('buildings')) {
-        map.removeLayer('buildings');
-        map.removeLayer('intersection-outline');
+  // Clear the building and outlines layers so we can display another query if the user draws a new polygon
+  if (map.getLayer("buildings")) {
+    map.removeLayer("buildings");
+    map.removeLayer("intersection-outline");
+  }
 
-    }
-
-    $('#percent-built span').text(". . .")
-
+  $("#percent-built span").text(". . .");
 }
-
 
 /**
  * Return URL with encoded parameters.
  * @param {object} params - The parameters object to be encoded.
  */
 function getUrl(params) {
-    var encodedParameters = Object.keys(params)
-        .map(paramName => paramName + '=' + encodeURI(params[paramName]))
-        .join('&');
+  var encodedParameters = Object.keys(params)
+    .map((paramName) => paramName + "=" + encodeURI(params[paramName]))
+    .join("&");
 
-    return endpoints.features + '?' + encodedParameters;
+  return endpoints.features + "?" + encodedParameters;
 }
 
 function addSpinner() {
-    html = `<div class=" col-12 osel-modal-overlay fetching" style="display:none;">
+  html = `<div class=" col-12 osel-modal-overlay fetching" style="display:none;">
                 <div class="loader" id="loader">
                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="40px" height="40px"
@@ -332,29 +306,23 @@ function addSpinner() {
                 <div style="
                     margin-top: 10px;
                     margin-left: 10px;
-                ">Fetching results</div>
+                ">Fetching results and calculating percent built on ...</div>
 
             </div>`;
 
-    notification.show("info", html, false)
-    $('#fetch-and-calculate .find').hide();
-    $('.fetching').show();
-
+  notification.show("info", html, false);
+  $(".fetching").show();
 }
 
 function removeSpinner() {
+  $(".osel-toast-notification").removeClass("info");
+  $(".osel-toast-notification").addClass("success");
+  $(".osel-toast-notification").text("Success!");
 
-    $('.osel-toast-notification').removeClass('info');
-    $('.osel-toast-notification').addClass('success');
-    $('.osel-toast-notification').text('Success!')
-
-    setTimeout(function() {
-        $('.osel-toast-notification').fadeOut(function () {
-            $(this).remove();
-        })
-
-    }, 2000)
-    $('#fetch-and-calculate .find').show();
-    // $(' .fetching').hide();
-
+  setTimeout(function () {
+    $(".osel-toast-notification").fadeOut(function () {
+      $(this).remove();
+    });
+  }, 2000);
+  $("#fetch-and-calculate .find").show();
 }

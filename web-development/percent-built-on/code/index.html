@@ -34,9 +34,10 @@
             </div>
             <div class="scroller-no-tabs">
                 <div class='contents'>
-                    <p>Calculate what percentage of an area is covered by buildings. Use the polygon tool to draw the
+                    <p>Calculate what percentage of an area is covered by buildings. </p> 
+                    <p>Use the polygon tool - upper right on the map - to draw the
                         geometry you'd like to analyse. </p>
-
+<!-- 
                     <p>Clicking Fetch & Calculate will:
                         <ol>
                             <li>Query the Features API for all buildings intersecting the polygon you drew.</li>
@@ -46,12 +47,14 @@
                             <li>Compute the percentage of the drawn geometry that is built on, and display it here.
                             </li>
                         </ol>
-                    </p>
-                    <p id='draw-prompt'>Draw a polygon to analyse!
-                    </p>
+                    </p> -->
+                    <!-- <p id='draw-prompt'>raw a polygon to analyse!
+                    </p> -->
                 </div>
                 <div class='results'>
                     <p id='percent-built' ><span>. . .</span>%</p>
+                    <p class='result-label' style='display:none'><span>built on!</p>
+
                 </div>
                 <button id="fetch-and-calculate" class="osel-button osel-primary-button" disabled>
                     <span class="find">Fetch & Calculate!</span>

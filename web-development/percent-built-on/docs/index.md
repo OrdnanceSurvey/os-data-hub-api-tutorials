@@ -1,6 +1,6 @@
 Spatial analysis is a powerful way to understand the world. The insights derived from analysis of points, lines, polygons and raster data can serve as the evidence to inform intelligent decision-making. Let's look at how to build a web interface capable of sophisticated spatial analytics.
 
-<iframe src="/public/os-data-hub-tutorials/dist/web-development/percent-built-on/" height="600" width="800"></iframe>
+<iframe src="/public/os-data-hub-tutorials/dist/web-development/percent-built-on/" height="600" width="800" frameborder="0" style="border:1px solid #eee" allowfullscreen=""></iframe>
 
 ## The HTML
 
@@ -18,11 +18,10 @@ First, head to [osdatahub.os.uk](https://osdatahub.os.uk/) and copy your API key
 
 ~~~javascript
 const apiKey = "YOUR_API_KEY";
-
 const endpoints = {
-    maps: "https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1",
-    features: "https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1"
-}
+  maps: "https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1",
+  features: "https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1",
+};
 ~~~
 
 We won't go over setting up the basemap in detail here - you can find code on how to connect a `mapboxgl.Map` instance to the OS Maps API on our [Examples page](https://labs.os.uk/public/os-data-hub-examples/os-maps-api/wmts-3857-basic-map). Since we'll be overlaying features, the Light cartographic style is a good choice.
@@ -33,25 +32,23 @@ We won't go over setting up the basemap in detail here - you can find code on ho
 The [mapbox-gl-draw](https://github.com/mapbox/mapbox-gl-draw) package lets users draw polygons on a Mapbox GL basemap by clicking points. We create a new instance of `MapboxDraw` - for this app we configured the Draw tool with [OS colours](https://github.com/OrdnanceSurvey/GeoDataViz-Toolkit/tree/master/Colours) and customised user interaction modes on the drawn polygon. (We set up these options in [js/config.js](../code/js/config.js) to keep code clean.)
 
 ~~~javascript
-// Create a new MapboxDraw instance with styles, controls and interaction modes 
+// Create a new MapboxDraw instance with styles, controls and interaction modes
 var draw = new MapboxDraw({
-    styles: mbDrawConfig.styles, // custom OS styles, defined in ./config.js
-    displayControlsDefault: false,
-    controls: {
-        polygon: true,
-        trash: true
-    },
-    modes: {
-        ...MapboxDraw.modes,
-        simple_select: NewSimpleSelect, // Interaction modes, also defined in ./config.js
-        direct_select: NewDirectSelect
-    },
-
+  styles: mbDrawConfig.styles, // custom OS styles, defined in ./config.js
+  displayControlsDefault: false,
+  controls: {
+    polygon: true,
+    trash: true,
+  },
+  modes: {
+    ...MapboxDraw.modes,
+    simple_select: NewSimpleSelect, // Interaction modes, also defined in ./config.js
+    direct_select: NewDirectSelect,
+  },
 });
 
 // Add to map and add event listeners
 map.addControl(draw);
-
 ~~~
 
 ## "draw." Event Listeners
@@ -66,35 +63,32 @@ map.on('draw.delete', disactivateFetch);
 
 // Defined below 👇 and hoisted 👆
 function activateFetch() {
+  $("#draw-prompt").text("What is the percent built on?");
+  $("#percent-built").css("display", "block");
+  $("#fetch-and-calculate").attr("disabled", false);
 
-    $('#draw-prompt').css('display', 'none')
-    $('#percent-built').css('display', 'block')
-    $('#fetch-and-calculate').attr('disabled', false)
-
-    // Center map on drawing
-     map.fitBounds(turf.bbox(draw.getAll()), {
-        padding: {
-            left: $('.osel-sliding-side-panel').width() + 50,
-            right: 50,
-            bottom: 50,
-            top: 50
-        }
-    })
-
+  map.fitBounds(turf.bbox(draw.getAll()), {
+    padding: {
+      left: $(".osel-sliding-side-panel").width() + 50,
+      right: 50,
+      bottom: 50,
+      top: 50,
+    },
+  });
 }
 
 function disactivateFetch() {
-    $('#draw-prompt').css('display', 'block')
-    $('#percent-built').css('display', 'none')
-    $('#fetch-and-calculate').attr('disabled', true)
+  $("#draw-prompt").text("Draw a polygon to analyse.");
+  $("#percent-built").css("display", "none");
+  $("#fetch-and-calculate").attr("disabled", true);
 
-    // Clear the building and outlines layers so we can display another query if the user draws a new polygon
-    if (map.getLayer('buildings')) {
-        map.removeLayer('buildings');
-        map.removeLayer('intersection-outline');
-    }
+  // Clear the building and outlines layers so we can display another query if the user draws a new polygon
+  if (map.getLayer("buildings")) {
+    map.removeLayer("buildings");
+    map.removeLayer("intersection-outline");
+  }
 
-    $('#percent-built span').text(". . .")
+  $("#percent-built span").text(". . .");
 }
 ~~~
 
@@ -109,7 +103,6 @@ Until we have a query to analyse we will just add the sources to the map:
 
 ~~~javascript 
 map.on('style.load', function () {
-
     map.addSource('buildings', {
         type: 'geojson',
         data: null
@@ -119,8 +112,7 @@ map.on('style.load', function () {
         type: 'geojson',
         data: null
     });
-
-})
+});
 ~~~
 
 
@@ -140,8 +132,10 @@ We'll walk through this step by step.
 But, of course, all this code only needs to run when the user clicks "Fetch and Run", so we'll start by adding a "click" event listener to that button element. The callback function we define will be executed when the button is clicked - we'll be writing an `async` function to help us write clean code handling asynchronous API calls. 
 
 ~~~javascript
-document.getElementById('fetch-and-calculate').addEventListener('click', async function () {
-    startSpinner()
+document
+    .getElementById('fetch-and-calculate')
+    .addEventListener('click', async function () {
+        addSpinner()
     // 👇 The callback body code will go here!
 
 });
@@ -161,83 +155,71 @@ The OS Features API is a Web Features Service. Users can query the API with spat
 Let's look closely at the `getIntersectingFeatures` function:
 
 ~~~javascript
-
-// An async function so we can "await" results 
 async function getIntersectingFeatures(polygon) {
+  // Get the circle geometry coordinates and return a new space-delimited string.
+  var coords = polygon.features[0].geometry.coordinates[0].join(" ");
 
-    // Get the circle geometry coordinates and return a new space-delimited string.
-    var coords = polygon.features[0].geometry.coordinates[0].join(' ');
-
-    // Create an OGC XML filter parameter value which will select the 
-    // features intersecting the circle polygon coordinates AND with the DescriptiveGroup
-    // property equal to "Building".
-    var xml = 
-        `<Filter>
-            <And>
-                <ogc:Intersects> ${ /* the spatial intersection filter */}
+  // Create an OGC XML filter parameter value which will select the Greenspace
+  // features intersecting the circle polygon coordinates.
+  // *** ADD Functionality to filter by Type attribute based on dropdown input!
+  var xml = `<Filter>
+                <And>
+                <ogc:Intersects>
                     <ogc:PropertyName>SHAPE</ogc:PropertyName>
                     <gml:Polygon srsName="urn:ogc:def:crs:EPSG::4326">
-                        <gml:outerBoundaryIs>
-                            <gml:LinearRing>
-                                <gml:coordinates>${ coords }</gml:coordinates>
-                            </gml:LinearRing>
-                        </gml:outerBoundaryIs>
+                    <gml:outerBoundaryIs>
+                        <gml:LinearRing>
+                        <gml:coordinates>${coords}</gml:coordinates>
+                        </gml:LinearRing>
+                    </gml:outerBoundaryIs>
                     </gml:Polygon>
                 </ogc:Intersects>
-                <ogc:PropertyIsEqualTo>  ${ /* the property string match filter */}
+                <ogc:PropertyIsEqualTo>
                     <ogc:PropertyName>DescriptiveGroup</ogc:PropertyName>
                     <ogc:Literal>Building</ogc:Literal>
                 </ogc:PropertyIsEqualTo>
-            </And>
-        </Filter>`
+                </And>
+                </Filter>`;
 
-    // Define parameters object.
-    let wfsParams = {
-        key: apiKey,
-        service: 'WFS',
-        request: 'GetFeature',
-        version: '2.0.0',
-        typeNames: 'Topography_TopographicArea', // <- The feature type we want to request
-        outputFormat: 'GEOJSON',
-        srsName: 'urn:ogc:def:crs:EPSG::4326',
-        filter: xml,
-        count: 100, // <- the maximum number of features returned in a single request
-        startIndex: 0
-    };
+  // Define parameters object.
+  let wfsParams = {
+    key: apiKey,
+    service: "WFS",
+    request: "GetFeature",
+    version: "2.0.0",
+    typeNames: "Topography_TopographicArea",
+    outputFormat: "GEOJSON",
+    srsName: "urn:ogc:def:crs:EPSG::4326",
+    filter: xml,
+    count: 100,
+    startIndex: 0,
+  };
 
-    // Create an empty GeoJSON FeatureCollection.
-    let geojson = {
-        "type": "FeatureCollection",
-        "features": []
-    };
+  // Create an empty GeoJSON FeatureCollection.
+  let geojson = {
+    type: "FeatureCollection",
+    features: [],
+  };
 
-    geojson.features.length = 0;
+  geojson.features.length = 0;
 
-    let resultsRemain = true;
+  var resultsRemain = true;
 
-    // With this while loop we paginate through features until we've retrieved all that match the XML query
-    while (resultsRemain) {
-        await fetch(getUrl(wfsParams))
-            .then(response => {
-                return response.json()})
-            .then((data) => {
+  while (resultsRemain) {
+    let response = await fetch(getUrl(wfsParams));
+    let data = await response.json();
 
-                // Request the next "page" of results by incrementing the startIndex value
-                wfsParams.startIndex += wfsParams.count; 
-                geojson.features.push.apply(geojson.features, data.features);
+    wfsParams.startIndex += wfsParams.count;
+    geojson.features.push.apply(geojson.features, data.features);
+    resultsRemain = data.features.length < wfsParams.count ? false : true;
 
-                resultsRemain = data.features.length < wfsParams.count ? false : true;
-
-                if (geojson.features.length > 499) { 
-                    // As this is a premium layer we want to limit the number of calls for the demo, in case the user draws a large polygon.
-                    console.log("Cutting off queries for demo.")
-                    resultsRemain = false;
-                }
-            })
-            .catch((err) => { console.error(err); });
+    if (geojson.features.length > 499) {
+      console.log("Cutting off queries for demo.");
+      resultsRemain = false;
     }
+  }
 
-    return geojson;
+  return geojson;
 }
 ~~~
 
@@ -258,7 +240,6 @@ let intersections = {
 
 // Loop through each building feature
 turf.featureEach(buildings, function (currentFeature) {
-
     // This finds the part of the building that intersects the query geometry, `geom`.
     let intersect = turf.intersect(currentFeature, geom.features[0]);
     if (intersect != null) {
@@ -280,7 +261,6 @@ If any building intersections were detected, we calculate the percent built on a
 let percent;
 
 if (intersections.features.length > 0) {
-
     // turf.area returns the area in square metres
     percent = turf.area(intersections) / turf.area(geom);
 
@@ -289,19 +269,18 @@ if (intersections.features.length > 0) {
     map.getSource('buildings-intersection').setData(intersections);
 
     // Add layer with styling
-    
     map.addLayer({
-        id: 'buildings',
-        source: 'buildings',
-        type: 'fill',
+        id: "buildings",
+        source: "buildings",
+        type: "fill",
         layout: {},
-        paint: {  // Muted green for the entire building footprints as fetched from the OS Features API.
-            'fill-color': colours.qualitative.lookup['2'],
-            'fill-opacity': 0.3,
-            'fill-outline-color': 'black'
+        paint: {
+          "fill-color": colours.qualitative.lookup["2"],
+          "fill-opacity": 0.3,
+          "fill-outline-color": "black",
+        },
+      });
 
-        }
-    });
 
     // And strong outlines in the vivid OS magenta / pink for intersecting footprints 
     map.addLayer({
@@ -319,7 +298,6 @@ if (intersections.features.length > 0) {
     percent = 0;
     map.getSource('buildings').setData(null)
     map.getSource('buildings-intersection').setData(null)
-
 }
 ~~~
 
@@ -328,8 +306,8 @@ if (intersections.features.length > 0) {
 Last but not least, show the answer by updating the righthand panel with the float value of the percentage built on. We'll also fit map bounds to the target area.
 
 ~~~javascript
-removeSpinner()
 $('#percent-built span').text((percent * 100).toFixed(2))
+$(".result-label").show();
 
 map.fitBounds(turf.bbox(geojson), {
     padding: {
@@ -338,7 +316,8 @@ map.fitBounds(turf.bbox(geojson), {
         bottom: 50,
         top: 50
     }
-})
+});
+removeSpinner()
 ~~~
 
 ## Wrapping Up
