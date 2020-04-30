@@ -16,13 +16,13 @@ In this tutorial, we'll learn how to use D3.js to add an overlay of geographic f
 
 ## The HTML
 
-Our `index.html` file for this project is very, very simple: we load libraries and place a single `<div id="map">` element within the `<body>` tag.
+Our `index.html` file for this project is very, very simple: we load libraries and place a single `<div id="map">` element within the `<body>` tag. All other elements will be added programmatically in `js/tutorial.js`.
 
 ## A vector tile basemap
 
-With Mapbox GL JS, first we'll create a basemap connected to the OS Vector Tile API. Since our focus is on the D3 overlay, we won't go into this code in depth - you can find it on our [Examples page](https://labs.os.uk/public/os-data-hub-examples/os-vector-tile-api/vts-3857-basic-map).
+With Mapbox GL JS, first we'll create a basemap with vector tiles served from the OS Vector Tile API. Since our focus is on the D3 overlay, we won't go into this code in depth - you can find it on our [Examples page](https://labs.os.uk/public/os-data-hub-examples/os-vector-tile-api/vts-3857-basic-map).
 
-One adjustment thought: we want our basemap in greyscale, so we can distinguish the overlaid features more easily. The ability to customise style is a major advantage of vector tiles. So, when we instantiate a new `mapboxgl.Map` object, we include a [custom style](https://labs.os.uk/public/os-data-hub-examples/dist/os-vector-tile-api/styles/greyscale.json):
+One adjustment though: we want our basemap in greyscale, so we can distinguish the overlaid features more easily. The ability to customise style is a major advantage of vector tiles. So, when we instantiate a new `mapboxgl.Map` object, we include a [custom style](https://labs.os.uk/public/os-data-hub-examples/dist/os-vector-tile-api/styles/greyscale.json):
 
 ~~~javascript
 // Instantiate a new mapboxgl.Map object.
@@ -125,6 +125,8 @@ We're only interested in fetching point data from the `Zoomstack_RailwayStations
 
 We downloaded the border of the borough from [Camden's Open Data website](https://opendata.camden.gov.uk/Maps/Camden-Ward-Boundary/yqyi-6agf), then simplified it using the Visvalingam weighted area method on [mapshaper.org](https://mapshaper.org/). This polygon will be used in our XML spatial filter - for now we place the file (`camden-simplified.json`) in the `data` directory. 
 
+// GIF of simplifying geometry
+
 Once the basemap is loaded, we call an asynchronous function that loads this GeoJSON, draws the polygon as an SVG `<path>`. Let's see this code before looking at fetching results from the OS Features API.
 
 ~~~javascript
@@ -132,7 +134,7 @@ Once the basemap is loaded, we call an asynchronous function that loads this Geo
 
 map.on('load', async function () {
 
-    let camden = await d3.json('./data/camden-simple.json');
+    let camden = await d3.json('./data/camden-simplified.json');
 
     // Zoom the map to show the full borough geometry
     map.fitBounds(turf.bbox(camden.features[0]), { padding: 25 });
