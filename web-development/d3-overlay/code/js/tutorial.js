@@ -63,7 +63,7 @@ map.on("moveend", update);
 map.on('load', async function () {
 
     // First, load GeoJSON
-    let camden = await d3.json('./data/camden-simple.json');
+    let camden = await d3.json('./data/camden-simplified.json');
 
     map.fitBounds(turf.bbox(camden.features[0]), { padding: 25 });
 
