@@ -45,8 +45,9 @@ var wmtsServiceUrl = 'https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1';
 wfsServiceUrl = 'https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1';
 
 // Load and display ZXY tile layer on the map.
+
 var basemap = L.tileLayer(
-        tileServiceUrl + '/Light_3857/{z}/{x}/{y}.png?key=' + apiKey, 
+        wmtsServiceUrl + "?" + basemapQueryString, 
         { maxZoom: 20 }
     ).addTo(map);
 ```
