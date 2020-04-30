@@ -1,12 +1,12 @@
 # Title
 
-Brief description of the tutorial contents. This markdown file is optimized for Github.
+In this tutorial, we'll learn how to use D3.js to add an overlay of geographic features to an interactive Mapbox GL map. Our goal is to create a smooth-panning and zooming user experience, and to gain access to the amazing capabilities of D3. 
 
 **Image of what we're going for!**
 
 ## Tools and APIs
 
-The languages, libraries, APIs and external data sources we'll use to complete this tutorial.
+We'll use the OS Vector Tile and Features APIs, as well as [D3.js](https://d3js.org/), [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/) and [Turf.js](https://turfjs.org/).
 
 ## D3 Overlay
 

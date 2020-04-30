@@ -1,7 +1,7 @@
 
 var initLoad = true;
 
-var apiKey = 'FtAS7OR45lE3AR78KxrdGpfYq8uAAV6K';
+const apiKey = 'FtAS7OR45lE3AR78KxrdGpfYq8uAAV6K';
 
 var coordsToFind = null;
 

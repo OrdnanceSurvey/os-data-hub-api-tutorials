@@ -21,8 +21,9 @@ var mapOptions = {
     minZoom: 7,
     maxZoom: 20,
     center: [ 51.502, -0.126 ],
-    zoom: 15,
-    attributionControl: false
+    zoom: 14,
+    attributionControl: false,
+    zoomControl: false
 };
 
 var map = new L.map('map', mapOptions); 
@@ -37,10 +38,10 @@ This alone does not give the browser any map data to visualize, though. For that
 
 ```javascript
 // Set API key
-var apiKey = "API_KEY_HERE";
+const apiKey = "API_KEY_HERE";
 
 // Define URLs of API endpoints
-var tileServiceUrl = 'https://osdatahubapi.os.uk/OSMapsAPI/zxy/v1',
+var wmtsServiceUrl = 'https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1';
 wfsServiceUrl = 'https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1';
 
 // Load and display ZXY tile layer on the map.
