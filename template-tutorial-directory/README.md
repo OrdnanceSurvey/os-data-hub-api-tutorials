@@ -4,9 +4,9 @@ Brief description of the tutorial contents. This markdown file is optimized for 
 
 **Image of what we're going for!**
 
-## Dependencies
+## Tools and APIs
 
-The APIs and external data sources we'll use to complete this tutorial.
+The languages, libraries, APIs and external data sources we'll use to complete this tutorial.
 
 ## Tutorial
 

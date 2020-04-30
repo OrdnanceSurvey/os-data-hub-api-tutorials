@@ -149,6 +149,18 @@ The OS Features API is a Web Features Service. Users can query the API with spat
 
 ~~~javascript
     let geom = draw.getAll();
+
+    // For this demo we will cap query geometry size to limit the number of API calls
+    let area = turf.area(geom.features[0].geometry),
+    rounded_area = Math.round(area * 100) / 100;
+    
+    if( rounded_area > 100000 ) {
+      notification.show("warning", 'Drawn polygon exceeds maximum size limit of 0.1 square km. Please try again.');
+      $("#loader").css({ visibility: "hidden" });
+      draw.deleteAll()
+      return; // <- break out of the callback
+    }
+
     let buildings = await getIntersectingFeatures(geom);
 ~~~
 
