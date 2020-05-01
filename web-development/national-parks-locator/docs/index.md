@@ -1,14 +1,9 @@
-# National Parks Locator
 
 Maps help people work out where they are. In this tutorial, we'll build an interactive locator, to help users find features on a map. At Ordnance Survey we love helping people explore the natural beauty of Great Britain, so this project will help users location national parks - but it could just as easily be built to locate stores, offices, railway stations, hospitals and so on. 
 
-![National Parks Locator interface](./media/national-parks-locator.png)
+<iframe src="/public/os-data-hub-tutorials/dist/web-development/national-parks-locator/" height="600" width="800" style="border:1px solid #eee"></iframe>
 
-## Tools and APIs
-
-We use data the *[OS Maps](https://osdatahub.os.uk/docs/wmts/overview)* and *[OS Features](https://osdatahub.os.uk/docs/wfs/overview)* APIs , as well as *[Leaflet](https://leafletjs.com/)*, *[leaflet-omnivore](https://github.com/mapbox/leaflet-omnivore)* and *[jQuery](https://jquery.com/)* to build this interactive web interface. 
-
-## Tutorial
+## A quick overview
 
 Our locator app will have two main areas of the interface: a list of features to locate in a panel, and a map with those features displayed. 
 
