@@ -306,4 +306,4 @@ fetchWhile(resultsRemain);
 
 ```
 
-Thanks for working through this tutorial. Sign up for the OS Data Hub [here](https://osdatahub.os.uk/), and if you have any questions tweet [@OrdnanceSurvey](https://twitter.com/ordnancesurvey) or tag [#OSDeveloper](https://twitter.com/hashtag/osdeveloper).
+Thanks for working through this tutorial. 

@@ -2,7 +2,7 @@
 
 In this tutorial we learn how to create a web application that will let users find nearby parks, woodland areas or buildings represented in our OS  Open Zoomstack layer. 
 
-**Image of what we're going for!**
+![The Find My Nearest web interface](./media/find-my-nearest.png)
 
 ## Tools and APIs
 
@@ -15,8 +15,6 @@ Maps that update based on user interaction can be incredibly useful. The Find My
 The webpage lets users select a location on a map, a feature type to visualize, then shows features of those type near their selected location. 
 
 This tutorial will show how we used *[Leaflet](https://leafletjs.com/)*, *[Turf.js](https://osdatahub.os.uk)*  and the *[OS Maps](https://osdatahub.os.uk/docs/wmts/overview)* and *[OS Features](https://osdatahub.os.uk/docs/wfs/overview)* APIs to create an interactive web map. We'll only focus on key functionality here, but all code can be reviewed on Github.
-
-![The Find My Nearest web interface](/media/find-my-nearest.png)
 
 ## Configuring the OS Maps API
 
