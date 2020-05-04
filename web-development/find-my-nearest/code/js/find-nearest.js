@@ -23,8 +23,6 @@ var mapOptions = {
     zoomControl: false
 };
 
-
-
 var map = new L.map('map', mapOptions);
 
 // Add scale control to the map.

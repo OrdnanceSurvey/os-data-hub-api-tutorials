@@ -6,7 +6,7 @@ In this tutorial we learn how to create a web application that will let users fi
 
 ## Tools and APIs
 
-We'll use the *[OS Maps](https://osdatahub.os.uk/docs/wmts/overview)* and *[OS Features](https://osdatahub.os.uk/docs/wfs/overview)* APIs , as well as *[Leaflet](https://leafletjs.com/)*, *[Turf.js](https://osdatahub.os.uk)* and *[jQuery](https://jquery.com/)* to build this interactive web interface. 
+We'll use the *[OS Maps](https://osdatahub.os.uk/docs/wmts/overview)* and *[OS Features](https://osdatahub.os.uk/docs/wfs/overview)* APIs , as well as *[Leaflet](https://leafletjs.com/)*, *[Turf.js](https://github.com/Turfjs/turf)* and *[jQuery](https://jquery.com/)* to build this interactive web interface. 
 
 ## Tutorial
 
