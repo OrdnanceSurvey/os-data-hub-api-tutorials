@@ -1,3 +1,6 @@
+# directories
+working_data/
+
 # Logs
 logs
 *.log
@@ -113,3 +116,5 @@ dist
 .yarn/unplugged
 .yarn/build-state.yml
 .pnp.*
+
+.DS_Store
