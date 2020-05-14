@@ -4,149 +4,159 @@ var config = {
     showMarkers: false,
     theme: 'light',
     alignment: 'right',
-    title: '',
-    subtitle: '',
+    title: 'Ben Nevis in October',
+    subtitle: 'Climbing Britain\'s highest peak in Autumn 2017.',
     byline: '',
     footer: '',
     chapters: [
         {
-            id: 'phl',
-            title: 'Philadelphia Bicycle Infrastructure',
-            image: '',
-            description: 'Getting around Philadelphia on two wheels is fast, fun, and cheap. As a typical East Coast large city, the urban core is dense, so there is a lot within reach of a 15 minute ride... even mountain bike trails. Paired with the public transit infrastructure, cycling can be more efficient and much less expensive than driving (and parking) a car.',
+            id: 'scotland',
+            title: 'Scotland in October.',
+            image: [''],
+            description: `A 4,413-foot tall collapsed volcano, Ben Nevis is Great Britain\'s highest peak 
+                            (<a href="https://en.wikipedia.org/wiki/Ben_Nevis" target="_blank">Wikipedia</a>). 
+                            The mountain is near the town of Fort William, at the mouth of the Rivers Lochy and Nevis`,
             location: {
-                center: [-75.13080, 39.97790],
-                zoom: 9.83,
-                pitch: 0.00,
+                center: [-4.80831, 56.35052],
+                zoom: 7.92,
+                pitch: 9.50,
                 bearing: 0.00
             },
             onChapterEnter: [
-                {
-                    layer: 'phl-city-limits',
-                    opacity: .45
-                }
+                { layer: "route", opacity: 0 },
+                { layer: 'marker', opacity: 0 },
+                { layer: 'shelter', opacity: 0 }
             ],
             onChapterExit: [
                 {
-                    layer: 'phl-city-limits',
+                    layer: 'shelter',
                     opacity: 0
                 }
             ]
         },
         {
-            id: 'bike-lanes',
-            title: 'Bike Lanes',
-            image: '',
+            id: 'fort-william',
+            title: 'Fort William',
+            image: ['https://upload.wikimedia.org/wikipedia/commons/0/09/BenNevis2005.jpg'],
             description: 'Philadelphia has XX miles of bike lanes, XX miles of which are protected. Drivers are getting more used to sharing the road, but ride defensively.',
             location: {
-                center: [-75.13901, 39.97085],
-                zoom: 11.62,
-                pitch: 55.50,
-                bearing: -7.20
+                center: [-4.94756, 56.80384],
+                zoom: 10.64,
+                pitch: 0.00,
+                bearing: -0.18
             },
             onChapterEnter: [
-                {
-                    layer: 'phl-bike-network',
-                    opacity: 1
-                }
+                { layer: 'marker', opacity: 1 },
+                { layer: 'route', opacity: 0 }
+
             ],
             onChapterExit: []
         },
         {
-            id: 'indego',
-            title: 'Indego Bike Share',
-            image: '',
+            id: 'ascending',
+            title: 'Ascending',
+            image: ['./assets/ascending.jpg'],
             description: 'Indego has been operating in Philadelphia since 20XX. The system initally was focused on Center City, but has expanded service to neighboring areas to support equitable mobility options to the city\'s residents.',
             location: {
-                center: [-75.16468, 39.94503],
-                zoom: 13.15,
-                pitch: 60.00,
-                bearing: -16.80
+                center: [-5.04203, 56.78770],
+                zoom: 12.73,
+                pitch: 0.00,
+                bearing: 103.46
             },
             onChapterEnter: [
                 {
-                    layer: 'indego-stations',
-                    opacity: 0.8
+                    layer: 'route',
+                    opacity: 1
                 }
+
             ],
             onChapterExit: [
                 {
-                    layer: 'indego-stations',
-                    opacity: 0
+                    layer: 'route',
+                    opacity: 0.3
                 }
             ]
         },
         {
             id: 'belmont',
-            title: 'Belmont Plateau Trails',
-            image: '',
+            title: 'The summit',
+            image: ['./assets/summit-hut.jpg', './assets/backpacks.jpg'],
             description: 'A short ride along the Schuylkill River Trail from the Art Museum, Belmont is a twisty, log-ridden rollercoaster of a trail network. It is easy to get turned around, the underbrush is at times impenetrable, and short steep sections come out of nowhere. In other words, it\'s really fun',
             location: {
-                center: [-75.20325, 39.99574],
-                zoom: 14.99,
-                pitch: 44.00,
-                bearing: -40.00
+                center: [-5.00469, 56.79638],
+                zoom: 18.11,
+                pitch: 59.50,
+                bearing: 94.40
             },
             onChapterEnter: [
                 {
-                    layer: 'belmont',
-                    opacity: 1
+                    layer: 'shelter',
+                    opacity: 0.6
                 }
             ],
             onChapterExit: [
                 {
-                    layer: 'belmont',
+                    layer: 'shelter',
                     opacity: 0
                 }
             ]
         },
         {
-            id: 'wiss',
-            title: 'Wissahickon Park Trails',
-            image: '',
-            description: 'This steep, rocky gorge can be surprisingly technical. Follow the orange and yellow trails to repeatedly climb and descend through the schist hillsides (careful of the cliffs), or stick to the gravel Forbidden Drive for a relaxing ride along the creek. You\'ll forget you\'re in a city.',
+            id: 'descent',
+            title: 'A long descent',
+            image: ['./assets/descending.jpg'],
+            description: 'A short ride along the Schuylkill River Trail from the Art Museum, Belmont is a twisty, log-ridden rollercoaster of a trail network. It is easy to get turned around, the underbrush is at times impenetrable, and short steep sections come out of nowhere. In other words, it\'s really fun',
             location: {
-                center: [-75.21223, 40.05028],
-                zoom: 13.08,
-                pitch: 47.50,
-                bearing: 32.80
+                center: [-5.03447, 56.80461],
+                zoom: 15.04,
+                pitch: 70.00,
+                bearing: 305.80
             },
             onChapterEnter: [
                 {
-                    layer: 'wissahickon',
+                    layer: 'shelter',
+                    opacity: 1
+                },
+                {
+                    layer: 'route',
                     opacity: 1
                 }
             ],
             onChapterExit: [
                 {
-                    layer: 'wissahickon',
+                    layer: 'shelter',
                     opacity: 0
                 }
             ]
         },
         {
-            id: 'pennypack',
-            title: 'Pennypack Park Trails',
-            image: '',
-            description: 'Pennypack is a great introduction trail system. Not too steep and not too technical, the beautiful wooded park also provides a great escape from urban life. The south side trails are originally bridle trails, so be nice to equestrians and dismount when you approach them.',
+            id: 'success',
+            title: 'A long descent',
+            image: ['./assets/summit-marker.jpg', './assets/Ben-Nevis-3D.png'],
+            description: 'A short ride along the Schuylkill River Trail from the Art Museum, Belmont is a twisty, log-ridden rollercoaster of a trail network. It is easy to get turned around, the underbrush is at times impenetrable, and short steep sections come out of nowhere. In other words, it\'s really fun',
             location: {
-                center: [-75.05685, 40.06839],
-                zoom: 13.73,
-                pitch: 43.50,
-                bearing: 96.80
+                center: [-5.00362, 56.79767],
+                zoom: 13.0,
+                pitch: 0.00,
+                bearing: 0.00
             },
             onChapterEnter: [
                 {
-                    layer: 'pennypack',
+                    layer: 'shelter',
+                    opacity: 1
+                },
+                {
+                    layer: 'route',
                     opacity: 1
                 }
             ],
             onChapterExit: [
                 {
-                    layer: 'pennypack',
+                    layer: 'shelter',
                     opacity: 0
                 }
             ]
         }
+
     ]
 };
