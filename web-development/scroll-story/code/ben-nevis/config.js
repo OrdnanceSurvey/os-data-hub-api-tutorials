@@ -1,11 +1,11 @@
 var config = {
-    style: 'mapbox://styles/branigan/cjzsvonse027m1co4nkxp13b3',
-    accessToken: 'pk.eyJ1IjoibWJ4c29sdXRpb25zIiwiYSI6ImNrMm01aG9hdTBlZGwzbXQ1ZXVrNHNmejAifQ.QHQA0N6XPWddCXtvoODHZg',
+    // style: 'mapbox://styles/branigan/cjzsvonse027m1co4nkxp13b3',
+    // accessToken: 'pk.eyJ1IjoibWJ4c29sdXRpb25zIiwiYSI6ImNrMm01aG9hdTBlZGwzbXQ1ZXVrNHNmejAifQ.QHQA0N6XPWddCXtvoODHZg',
     showMarkers: false,
     theme: 'light',
     alignment: 'right',
     title: 'Ben Nevis in October',
-    subtitle: 'Climbing Britain\'s highest peak in Autumn 2017.',
+    subtitle: 'Climbing Britain\'s highest peak in Autumn 2017',
     byline: '',
     footer: '',
     chapters: [
@@ -15,7 +15,9 @@ var config = {
             image: [''],
             description: `A 4,413-foot tall collapsed volcano, Ben Nevis is Great Britain\'s highest peak 
                             (<a href="https://en.wikipedia.org/wiki/Ben_Nevis" target="_blank">Wikipedia</a>). 
-                            The mountain is near the town of Fort William, at the mouth of the Rivers Lochy and Nevis`,
+                            The mountain is near the town of Fort William, at the mouth of the Rivers Lochy and Nevis. 
+                            On October 23, 2017 we woke up before dawn in Edinburgh and make the drive to the base of
+                            the mountain.`,
             location: {
                 center: [-4.80831, 56.35052],
                 zoom: 7.92,
@@ -36,9 +38,12 @@ var config = {
         },
         {
             id: 'fort-william',
-            title: 'Fort William',
+            title: 'The Area',
             image: ['https://upload.wikimedia.org/wikipedia/commons/0/09/BenNevis2005.jpg'],
-            description: 'Philadelphia has XX miles of bike lanes, XX miles of which are protected. Drivers are getting more used to sharing the road, but ride defensively.',
+            description: `Ben Nevis sits between Fort William and the Scottish Highlands, its western 
+                        flank descending steeply to sea level over just a few miles. This photo was taken
+                        from the north on a clear day - on this October day we would ascend from the 
+                        southwest into the clouds.`,
             location: {
                 center: [-4.94756, 56.80384],
                 zoom: 10.64,
@@ -56,7 +61,10 @@ var config = {
             id: 'ascending',
             title: 'Ascending',
             image: ['./assets/ascending.jpg'],
-            description: 'Indego has been operating in Philadelphia since 20XX. The system initally was focused on Center City, but has expanded service to neighboring areas to support equitable mobility options to the city\'s residents.',
+            description: `We began the long hike, starting to ascend almost immediately.
+                            The route started heading east before wrapping around the flank 
+                            of Meall an t-Suidhe, the 700m mountain next door. We hiked past Loch 
+                            Meall an t-Suidhe, perched on the saddle below the flank of the main objective.`,
             location: {
                 center: [-5.04203, 56.78770],
                 zoom: 12.73,
@@ -78,10 +86,12 @@ var config = {
             ]
         },
         {
-            id: 'belmont',
+            id: 'summit',
             title: 'The summit',
             image: ['./assets/summit-hut.jpg', './assets/backpacks.jpg'],
-            description: 'A short ride along the Schuylkill River Trail from the Art Museum, Belmont is a twisty, log-ridden rollercoaster of a trail network. It is easy to get turned around, the underbrush is at times impenetrable, and short steep sections come out of nowhere. In other words, it\'s really fun',
+            description: `After another 700m of climbing - up into the frigid clouds - we reached the 
+                            summit of Britain's highest peak. The metal hut gave us some respite from the 
+                            cold and wind, enough to steel ourselves for the descent.`,
             location: {
                 center: [-5.00469, 56.79638],
                 zoom: 18.11,
@@ -105,7 +115,9 @@ var config = {
             id: 'descent',
             title: 'A long descent',
             image: ['./assets/descending.jpg'],
-            description: 'A short ride along the Schuylkill River Trail from the Art Museum, Belmont is a twisty, log-ridden rollercoaster of a trail network. It is easy to get turned around, the underbrush is at times impenetrable, and short steep sections come out of nowhere. In other words, it\'s really fun',
+            description: `Down, down, down, the way we came up, through the floor of the cloud
+                            layer, the sea suddenly visible hundreds of metres below. 
+                            A well-maintained trail meant the strain was minimised - but still a major descent.`,
             location: {
                 center: [-5.03447, 56.80461],
                 zoom: 15.04,
@@ -131,9 +143,10 @@ var config = {
         },
         {
             id: 'success',
-            title: 'A long descent',
+            title: 'Safe returns',
             image: ['./assets/summit-marker.jpg', './assets/Ben-Nevis-3D.png'],
-            description: 'A short ride along the Schuylkill River Trail from the Art Museum, Belmont is a twisty, log-ridden rollercoaster of a trail network. It is easy to get turned around, the underbrush is at times impenetrable, and short steep sections come out of nowhere. In other words, it\'s really fun',
+            description: `Back to the car by 3pm, we set off to finish the drive to the Isle of Skye. We'd explored Ben Nevis, 
+                            but the mountain remained, unconquered, towering above the Scottish Highlands.`,
             location: {
                 center: [-5.00362, 56.79767],
                 zoom: 13.0,
