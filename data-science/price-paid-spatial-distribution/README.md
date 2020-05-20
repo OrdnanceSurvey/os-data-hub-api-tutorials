@@ -7,13 +7,11 @@
 
 A Jupyter Notebook providing a data science pipeline in Python to leverage data insights through the integration of OS Data Hub APIs with other government data services from the Office for National Statistics and HM Land Registry.
 
-<img width="700"
-     src="./media/southampton-local-authority-district-median-price-paid-deciles.png"
-     alt="Southampton Local Authority District Median Price Paid Deciles"
-     align="centre" />
+<p align="center">
+  <img width="700" src="./media/southampton-local-authority-district-median-price-paid-deciles.png" alt="Southampton Local Authority District Median Price Paid Deciles">
+</p>
 
 ## Tools and APIs
----
 
 This tutorial sources data from data services (APIs) only. In addition to the APIs made available by Ordnance Survey (OS) through the OS Data Hub, data is sourced from APIs published by HM Land Registry (LR) and the Office for National Statistics (ONS).
 
@@ -62,7 +60,6 @@ Please refer to the section **Via the API** within **How to query the dataset** 
 * If using the [conda](https://www.anaconda.com/) package manager to create and configure your Python envionment, the libraries **GeoPandas**, **descartes** and **mapclassify** and their dependencies can be installed via: `conda install -n <environment-name> -c conda-forge geopandas descartes mapclassify`
 
 ## License
----
 
 This notebook is licensed under the terms of the [MIT License](../LICENSE). 
 
@@ -82,7 +79,6 @@ Contains HM Land Registry data © Crown copyright and database right 2020.
 <br>
 
 ## Tutorial
----
 
 * Step 1 ~ Import Python Libraries
 * Step 2 ~ Request LAD boundary from the ONS Open Geography Portal WFS
@@ -107,9 +103,6 @@ Contains HM Land Registry data © Crown copyright and database right 2020.
 
 ## Step 1 ~ Import Python Libraries
 
----
-
-
 ```python
 import fiona
 import folium
@@ -129,8 +122,6 @@ print('=> Imported libraries')
 
 
 ## Step 2 ~ Request LAD boundary from the ONS Open Geography Portal WFS
-
----
 
 The example below returns the polygon geometry for a LAD boundary from the ONS Open Geography Portal - Administrative Boundaries - Local Authority Districts open data product. The request is made against the ONS WFS using the OGC WFS filter encoding specification. The Government Statistcal Service (GSS) code for the Southampton boundary **E06000045** is used below. This pipeline can be run for any LAD in England or Wales by changing the GSS code referenced in the filter object.
 
@@ -223,12 +214,10 @@ print('=> Transformed ONS WFS GeoJSON payload into a GeoDataFrame')
 
 
 
-![png](./media/output_7_1.png)
+![png](./media/notebook-cell-outputs/step-2-output.png)
 
 
 ## Step 3 ~ Construct a URL path for the OS Maps API
-
----
 
 The OS Data Hub API base path is **https://osdatahubapi.os.uk**
 
@@ -291,19 +280,15 @@ print('=> Constructed OS Maps API URL: {}'.format(wmts_path))
 
 ## Step 4 ~ Plot LAD boundary returned by the ONS Open Geography Portal WFS on an OS Maps API backed slippy map
 
----
-
 The example below overlays the LAD boundary GeoJSON feature returned by the ONS Open Geography Portal WFS ontop of a Leaflet slippy map using Folium and OS base mapping returned via the OS Data Hub WMTS. The map is centred on the feature using the x and y coordinates of the LAD boundary centroid point geometry. [Folium](https://python-visualization.github.io/folium/#) provides a Python wrapper around the Javascript web mapping library Leaflet.js.
 
 Further WMTS examples can be found at https://labs.os.uk/public/os-data-hub-examples/
 
 <br>
 
-<img width="700"
-     src="./media/os-data-hub-os-maps-api-1.png"
-     alt="OS Maps API Image 1"
-     align="centre" />
-
+<p align="center">
+  <img width="700" src="./media/os-data-hub-os-maps-api-1.png" alt="OS Maps API Image 1">
+</p>
 
 ```python
 # Obtain current date-time
@@ -363,8 +348,6 @@ m
 
 ## Step 5 ~ Download the OS Open Data product Code-Point Open using the OS Downloads API
 
----
-
 The example below downloads the OS open data product **Code-Point Open** for **Great Britain (GB)** in **GeoPackage** format to the current working directory. Code-Point Open data provides all the current postcodes in GB with the easting and northing coordinates of the postcode centroid point geometry. 
 
 We will subsequently:
@@ -414,8 +397,6 @@ print('=> Downloaded Code-Point Open zipfile using the OS Data Hub OS Downloads 
 
 ## Step 6 ~ Extract the Code-Point Open GPKG from the zipped download 
 
----
-
 
 ```python
 # Extract GPKG from zipfile to working directory
@@ -444,9 +425,6 @@ print('\n=> Extracted GeoPackage in data directory from Code-Point Open zipfile'
 
 ## Step 7 ~ Obtain the data layer name from the Code-Point Open GPKG
 
----
-
-
 ```python
 # Recursively list the working directory
 !du -a code-point-open
@@ -470,9 +448,6 @@ for layername in fiona.listlayers('code-point-open/data/codepo_gb.gpkg'):
 
 ## Step 8 ~ Load Code-Point Open layer from GPKG into a GeoDataFrame and reproject from British National Grid to WGS-84
 
----
-
-
 ```python
 # Load GPKG layer code_point_open into a GeoPandas GeoDataFrame
 gdf_pcd = gpd.read_file('code-point-open/data/codepo_gb.gpkg', layer='code_point_open')
@@ -492,19 +467,6 @@ gdf_pcd.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -589,8 +551,6 @@ gdf_pcd.head()
 
 ## Step 9 ~ Obtain ESRI JSON geometry representation of LAD boundary to pass to ONS Open Geography Portal ESRI ArcGIS REST API
 
----
-
 The [ESRI JSON geometry specifcation](https://developers.arcgis.com/documentation/common-data-types/geometry-objects.htm) outlines how to represent a polygon geometry to pass to the ESRI ArcGIS REST API.
 
 Here we simplify the LAD boundary, reducing its complexity so that it is lighter weight and easier to pass to the API. The coordinate precision of the LAD boundary is also reduced to 3 decimal places.
@@ -624,8 +584,6 @@ print(esri_json_geom)
 
 ## Step 10 ~ Request LSOA Boundaries from the ONS Open Geography Portal ArcGIS REST API
 
----
-
 The example below returns the polygon geometries for the generalised LSOA boundaries contained within the LAD boundary. The request parameters below look to return the features representing the LSOA boundaries in **GeoJSON** format using the **WGS-84 (EPSG: 4326)** coordinate reference system. The LAD boundary represented according to the ESRI JSON geometry specification is buffered by 50 metres prior to the spatial containment query.
 
 
@@ -633,9 +591,9 @@ The example below returns the polygon geometries for the generalised LSOA bounda
 # ONS Open Geography Portal API base path: https://ons-inspire.esriuk.com
 # ONS Lower Layer Super Output Area (LSOA) ArcGIS REST API endpoint path: 
 # /arcgis/rest/services
-# /Census_Boundaries/Lower_Super_./media/output_Areas_December_2011_Boundaries/MapServer/2/query?
+# /Census_Boundaries/Lower_Super_Output_Areas_December_2011_Boundaries/MapServer/2/query?
 ons_endpoint = ('https://ons-inspire.esriuk.com/arcgis/rest/services'
-                '/Census_Boundaries/Lower_Super_./media/output_Areas_December_2011_Boundaries/MapServer/2/query?')
+                '/Census_Boundaries/Lower_Super_Output_Areas_December_2011_Boundaries/MapServer/2/query?')
 
 # Define ONS ESRI ArcGIS REST API parameters
 f = 'geojson'
@@ -757,7 +715,7 @@ gdf_lsoa.head()
 
 
 
-![png](./media/output_24_2.png)
+![png](./media/notebook-cell-outputs/step-10-output.png)
 
 
 ## Step 11 ~ Plot LSOA boundaries returned by the ONS Open Geography Portal ESRI ArcGIS REST API on an OS Maps API backed slippy map
@@ -768,11 +726,9 @@ The example below overlays the GeoJSON feature(s) returned by the ONS ESRI ArcGI
 
 <br>
 
-<img width="700"
-     src="./media/os-data-hub-os-maps-api-2.png"
-     alt="OS Maps API Image 1"
-     align="centre" />
-
+<p align="center">
+  <img width="700" src="./media/os-data-hub-os-maps-api-2.png" alt="OS Maps API Image 2">
+</p>
 
 ```python
 # Create a new Folium map
@@ -852,19 +808,6 @@ gdf_lsoa_pcd.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -962,8 +905,6 @@ gdf_lsoa_pcd['Postcode'].head()
 
 ## Step 14 ~ Request the historical HM LR Price Paid Data for the LAD boundary using the transformed postcode strings associated with the postcode geometries returned from the containment query
 
----
-
 The example below querys the HM LR Linked Data API to return the historical Price Paid Data for all the postcodes represented in the psotcode-LSOA DataFrame. The Price Paid Data is returned on a postcode-by-postcode basis. 
 
 Each page of the HM LR Price Paid Data API returns a maximum of 10 transaction records per postcode. Therefore, in order to obtain all the historical transactions for a given postcode we need to page through the results using the `_page` parameter. The example assumes a that a single postcode has had no more than 500 transactions since 1995.
@@ -1048,19 +989,6 @@ df_ppd.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1115,9 +1043,6 @@ df_ppd.head()
 
 ## Step 15 ~ Join Price Paid and postcode-LSOA DataFrames and compute median price paid by LSOA by 6 year time windows
 
----
-
-
 ```python
 # Join LSOA-postocde and postcode-ppd DataFrames together on postcode fields
 df_lsoa_ppd = pd.merge(gdf_lsoa_pcd, 
@@ -1152,19 +1077,6 @@ df_lsoa_ppd_yg.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1207,8 +1119,6 @@ df_lsoa_ppd_yg.head()
 
 
 ## Step 16 ~ Request OS Open ZoomStack district building geometires from the OS Features API for the LAD boundary BBOX
-
----
 
 The example below returns the polygon geometries for district building features from the OS open data product OS Open ZoomStack. The request is made against the OS Data Hub WFS using the `bbox` parameter. A bounding box value needs to adhere to the following structure: *bottom-left x, bottom-left y, top-right x, top-right y*.
 
@@ -1298,13 +1208,10 @@ print('=> Transformed OS Data Hub WFS GeoJSON payload into a GeoDataFrame')
 
 
 
-![png](./media/output_36_1.png)
+![png](./media/notebook-cell-outputs/step-16-output.png)
 
 
 ## Step 17 ~ Spatially join and compute the intersection between building polygon geometries and LSOA polygon geometries and, dissolve the resultant buidling features by LSOA code to form an aggregate building geometry per LSOA
-
----
-
 
 ```python
 # Compute the intersection (shared area) between building geometries and LSOA geometries
@@ -1332,19 +1239,6 @@ gdf_build_lsoa_diss.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1385,9 +1279,6 @@ gdf_build_lsoa_diss.head()
 
 ## Step 18 ~ Join buidling-LSOA and LSOA-median price paid by 6 year time window DataFrames together on LSOA code
 
----
-
-
 ```python
 # Join median price paid by LSOA by year group and dissolved buildings by LSOA DataFrames together on LSOA code
 df_lsoa_ppd_yg_build = pd.merge(df_lsoa_ppd_yg,
@@ -1413,19 +1304,6 @@ gdf_lsoa_ppd_yg_build.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1480,8 +1358,6 @@ gdf_lsoa_ppd_yg_build.head()
 
 ## Step 19 ~ Visualise the spatial distribution in LSOA median price paid decile by 6 year time window
 
----
-
 The [matplotlib colour map](https://matplotlib.org/examples/color/colormaps_reference.html) used to visualise the spatial distribution in LSOA median price paid decile assigns the bottom decile (lowest median price paid values) to a transparent red colour and the top decile (highest median price paid values) to a purple colour.
 
 
@@ -1528,7 +1404,7 @@ plt.suptitle('LSOA Median Price Paid Decile by Six Year Windows', fontsize=20)
 
 
 
-![png](./media/output_42_1.png)
+![png](./media/notebook-cell-outputs/step-19-output.png)
 
 
 ## Step 20 ~ Visualise the change in LSOA median price paid decile between 1995 - 2001 and 2013 - 2019 for LSOAs where the decile position has increased or decreased by two or more places
@@ -1598,5 +1474,5 @@ base.set_title('Change in LSOA Median Price Paid Decile 1995 - 2001 vs 2013 - 20
 
 
 
-![png](./media/output_44_1.png)
+![png](./media/notebook-cell-outputs/step-20-output.png)
 
