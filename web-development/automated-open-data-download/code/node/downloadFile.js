@@ -25,7 +25,7 @@ Download File
 
 /downloadFiles.js
 ============================================================ */
-async function downloadAllGB(url, targetdir) {
+async function downloadFile(url, targetdir) {
     try {
         
         // Giving user ongoing feedback in the terminal:
@@ -37,7 +37,7 @@ async function downloadAllGB(url, targetdir) {
 
         // Complete!
         clearInterval(interval);
-        console.log(`Downloaded file ${download.area}`)
+        console.log(`Downloaded file`)
 
         console.log('Completed downloading files')
     } catch (error) {
@@ -45,4 +45,4 @@ async function downloadAllGB(url, targetdir) {
     }
 }
 
-module.exports = downloadAllGB;
+module.exports = downloadFile;
