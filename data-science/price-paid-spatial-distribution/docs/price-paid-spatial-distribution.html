@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>os-data-hub-api-tutorial-01-proptech</title>
+<title>proptech</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13017,6 +13017,45 @@ ul.typeahead-list  > li > a.pull-right {
 .highlight .vm { color: #19177C } /* Name.Variable.Magic */
 .highlight .il { color: #666666 } /* Literal.Number.Integer.Long */
     </style>
+<style type="text/css">
+    
+/* Temporary definitions which will become obsolete with Notebook release 5.0 */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-bold { font-weight: bold; }
+
+    </style>
 
 
 <style type="text/css">
@@ -13077,8 +13116,13 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="OS-Data-Hub-API-Tutorial-01---PropTech">OS Data Hub API Tutorial 01 - PropTech<a class="anchor-link" href="#OS-Data-Hub-API-Tutorial-01---PropTech">&#182;</a></h1><p><em>Visualising the spatial distribution of Lower Layer Super Output Area (LSOA) median price paid deciles for residential property sold between 1995 and 2019 for a local authority district (LAD) in England or Wales.</em></p>
+<h1 id="Price-Paid-Spatial-Distribution">Price Paid Spatial Distribution<a class="anchor-link" href="#Price-Paid-Spatial-Distribution">&#182;</a></h1><p><em>Visualising the spatial distribution of Lower Layer Super Output Area (LSOA) median price paid deciles for residential property sold between 1995 and 2019 for a local authority district (LAD) in England or Wales.</em></p>
 <hr>
+<p>A Jupyter Notebook providing a data science pipeline in Python to leverage data insights through the integration of OS Data Hub APIs with other government data services from the Office for National Statistics and HM Land Registry.</p>
+<p><img width="700"
+     src="../media/southampton-local-authority-district-median-price-paid-deciles.png"
+     alt="Southampton Local Authority District Median Price Paid Deciles"
+     align="centre" /></p>
 
 </div>
 </div>
@@ -13086,27 +13130,9 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="License">License<a class="anchor-link" href="#License">&#182;</a></h2><p>This notebook is licensed under the terms of the <a href="https://github.com/OrdnanceSurvey/os-data-hub-api-tutorials/blob/master/LICENSE">MIT License</a>.</p>
-<p>The datasets sourced via the APIs in this notebook, all of which are set out below, are licensed under the terms of the <a href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence (OGL) v3.0</a>. See <a href="https://github.com/OrdnanceSurvey/os-data-hub-api-tutorials/blob/master/LICENSE">LICENSE</a>.</p>
-<p>Contains OS data © Crown copyright and database right 2020.</p>
-<p>Contains National Statistics data © Crown copyright and database right 2020.</p>
-<p>Contains HM Land Registry data © Crown copyright and database right 2020.</p>
-<p><img src="http://www.nationalarchives.gov.uk/images/infoman/ogl-symbol-41px-retina-black.png"
-     alt="OGL Symbol"
-     align="left" /></p>
-<p><br>
-<br></p>
-<hr>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Data-Services">Data Services<a class="anchor-link" href="#Data-Services">&#182;</a></h2><p>This tutorial sources data from data services (APIs) only. In addition to the APIs made available by Ordnance Survey (OS) through the OS Data Hub, data is sourced from APIs published by HM Land Registry (LR) and the Office for National Statistics (ONS).</p>
+<h2 id="Tools-and-APIs">Tools and APIs<a class="anchor-link" href="#Tools-and-APIs">&#182;</a></h2><hr>
+<p>This tutorial sources data from data services (APIs) only. In addition to the APIs made available by Ordnance Survey (OS) through the OS Data Hub, data is sourced from APIs published by HM Land Registry (LR) and the Office for National Statistics (ONS).</p>
 <p><strong>The cells in this notebook that use the OS Data Hub APIs require an API key. Please sign up to the <a href="https://osdatahub.os.uk/">OS Data Hub</a> and acquire a project API key before attempting to run this notebook locally.</strong></p>
-<hr>
 <h3 id="Which-APIs-are-used-in-this-notebook?">Which APIs are used in this notebook?<a class="anchor-link" href="#Which-APIs-are-used-in-this-notebook?">&#182;</a></h3><h4 id="OS-Features-API">OS Features API<a class="anchor-link" href="#OS-Features-API">&#182;</a></h4><p>An Open Geospatial Consortium (OGC)-compliant web feature service (WFS) that allows users to query features within a number of OS's premium and open data products.</p>
 <h4 id="OS-Maps-API">OS Maps API<a class="anchor-link" href="#OS-Maps-API">&#182;</a></h4><p>A web map tile service (WMTS) that allows access to OS base mapping in a number of different styles and two projections, Web Mercator (EPSG: 3857) and British National Grid (EPSG:27700).</p>
 <h4 id="OS-Downloads-API">OS Downloads API<a class="anchor-link" href="#OS-Downloads-API">&#182;</a></h4><p>An API enabling users to bulk download OS open data products.</p>
@@ -13117,21 +13143,12 @@ div#notebook {
 <p>Please refer to the <a href="https://developers.arcgis.com/rest/services-reference/query-feature-service-layer-.htm">ESRI ArcGIS REST API documentation</a> for information regarding the ESRI specification.</p>
 <h4 id="HM-LR-Linked-Data-API">HM LR Linked Data API<a class="anchor-link" href="#HM-LR-Linked-Data-API">&#182;</a></h4><p>An API enabling users to query HM LR Price Paid Data, Transaction Data and the UK House Price Index.</p>
 <p>Please refer to the section <strong>Via the API</strong> within <strong>How to query the dataset</strong> at <a href="http://landregistry.data.gov.uk/app/root/doc/ppd">http://landregistry.data.gov.uk/app/root/doc/ppd</a> for information regarding access to the Price Paid Data through the Linked Data API.</p>
-<hr>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Python-Environment-Setup">Python Environment Setup<a class="anchor-link" href="#Python-Environment-Setup">&#182;</a></h2><ul>
-<li>The Python geospatial stack used in this tutorial requires the library <a href="http://geopandas.org/"><strong>GeoPandas</strong></a></li>
-<li>If using the <a href="https://www.anaconda.com/">conda</a> package manager to create and configure your Python envionment, the library <strong>GeoPandas</strong> and its dependencies can be installed via: <code>conda install -n &lt;environment-name&gt; -c conda-forge geopandas</code></li>
+<h3 id="Python-Environment-Setup">Python Environment Setup<a class="anchor-link" href="#Python-Environment-Setup">&#182;</a></h3><ul>
+<li>The Python geospatial stack used in this tutorial requires the library <a href="http://geopandas.org/"><strong>GeoPandas</strong></a>.</li>
 <li>The library <strong>fiona</strong> (Python wrapper around the OGR (vector) component of the <a href="https://gdal.org/">Geospatial Data Abstraction Library (GDAL)</a> is a dependency of GeoPandas.</li>
 <li>The libraries <strong>descartes</strong> and <strong>mapclassify</strong> are not hard GeoPandas dependencies or required imports but are both required for the GeoPandas plot functionality used in this notebook.</li>
+<li>If using the <a href="https://www.anaconda.com/">conda</a> package manager to create and configure your Python envionment, the libraries <strong>GeoPandas</strong>, <strong>descartes</strong> and <strong>mapclassify</strong> and their dependencies can be installed via: <code>conda install -n &lt;environment-name&gt; -c conda-forge geopandas descartes mapclassify</code></li>
 </ul>
-<hr>
 
 </div>
 </div>
@@ -13139,7 +13156,26 @@ div#notebook {
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Notebook-Steps">Notebook Steps<a class="anchor-link" href="#Notebook-Steps">&#182;</a></h2><ul>
+<h2 id="License">License<a class="anchor-link" href="#License">&#182;</a></h2><hr>
+<p>This notebook is licensed under the terms of the <a href="../LICENSE">MIT License</a>.</p>
+<p>The datasets sourced via the APIs in this notebook, all of which are set out below, are licensed under the terms of the <a href="http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/">Open Government Licence (OGL) v3.0</a>. See <a href="../LICENSE">LICENSE</a>.</p>
+<p>Contains OS data © Crown copyright and database right 2020.</p>
+<p>Contains National Statistics data © Crown copyright and database right 2020.</p>
+<p>Contains HM Land Registry data © Crown copyright and database right 2020.</p>
+<p><img src="http://www.nationalarchives.gov.uk/images/infoman/ogl-symbol-41px-retina-black.png"
+     alt="OGL Symbol"
+     align="left" /></p>
+<p><br>
+<br></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Tutorial">Tutorial<a class="anchor-link" href="#Tutorial">&#182;</a></h2><hr>
+<ul>
 <li>Step 1 ~ Import Python Libraries</li>
 <li>Step 2 ~ Request LAD boundary from the ONS Open Geography Portal WFS</li>
 <li>Step 3 ~ Construct a URL path for the OS Maps API</li>
@@ -13161,7 +13197,6 @@ div#notebook {
 <li>Step 19 ~ Visualise the spatial distribution in LSOA median price paid decile by 6 year time window</li>
 <li>Step 20 ~ Visualise the change in LSOA median price paid decile between 1995 - 2001 and 2013 - 2019 for LSOAs where the decile position has increased or decreased by two or more places</li>
 </ul>
-<hr>
 
 </div>
 </div>
@@ -13186,9 +13221,9 @@ div#notebook {
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
-<span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
-<span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="k">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="k">import</span> <span class="n">make_axes_locatable</span>
+<span class="kn">from</span> <span class="nn">zipfile</span> <span class="k">import</span> <span class="n">ZipFile</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;=&gt; Imported libraries&#39;</span><span class="p">)</span>
 </pre></div>
@@ -13353,7 +13388,7 @@ div#notebook {
 <h2 id="Step-3-~-Construct-a-URL-path-for-the-OS-Maps-API">Step 3 ~ Construct a URL path for the OS Maps API<a class="anchor-link" href="#Step-3-~-Construct-a-URL-path-for-the-OS-Maps-API">&#182;</a></h2><hr>
 <p>The OS Data Hub API base path is <strong><a href="https://osdatahubapi.os.uk">https://osdatahubapi.os.uk</a></strong></p>
 <p>The <a href="https://osdatahub.os.uk/docs/wmts/technicalSpecification">technical specification</a> for the OS Maps API outlines the response codes, content, and parameters of the WMTS.</p>
-<p>The example below constructs a URL path for the OS Data Hub WMTS providing OS base mapping designed for the Leaflet web mapping library. Note, this request will result in an <code>Execution of Construct-Backend-URL-WMTS failed</code> exception outside of a Leaflet application. The WMTS path specified below returns the <strong>Light</strong> style in a <strong>Web Mercator (EPSG: 3857)</strong> projection.</p>
+<p>The example below constructs a URL path for the OS Data Hub WMTS providing OS base mapping designed for the Leaflet web mapping library. Note, this request will result in an <code>Execution of Construct-Backend-URL-WMTS failed</code> exception outside of integration with a web mapping library. The WMTS path specified below returns the <strong>Light</strong> style in a <strong>Web Mercator (EPSG: 3857)</strong> projection.</p>
 <p>The z, y and x variables in the URL within Step 3 represent for an individual tile within the WMTS tile cache, the zoom level (z), tile row (y) and tile column (x) respectively.</p>
 <p>Leaflet is able to interpret the tiling scheme for the service and will trigger multiple requests with the required values for the z, y and x variables in order to get the collection of tiles necessary to fill the map extent.</p>
 
@@ -13439,9 +13474,10 @@ div#notebook {
 <p>The example below overlays the LAD boundary GeoJSON feature returned by the ONS Open Geography Portal WFS ontop of a Leaflet slippy map using Folium and OS base mapping returned via the OS Data Hub WMTS. The map is centred on the feature using the x and y coordinates of the LAD boundary centroid point geometry. <a href="https://python-visualization.github.io/folium/#">Folium</a> provides a Python wrapper around the Javascript web mapping library Leaflet.js.</p>
 <p>Further WMTS examples can be found at <a href="https://labs.os.uk/public/os-data-hub-examples/">https://labs.os.uk/public/os-data-hub-examples/</a></p>
 <p><br></p>
-<p><img src="images/os-data-hub-os-maps-api-1.png"
+<p><img width="700"
+     src="../media/os-data-hub-os-maps-api-1.png"
      alt="OS Maps API Image 1"
-     align="left" /></p>
+     align="centre" /></p>
 
 </div>
 </div>
@@ -14128,9 +14164,10 @@ doc/NHS_Codelist.xls
 <h2 id="Step-11-~-Plot-LSOA-boundaries-returned-by-the-ONS-Open-Geography-Portal-ESRI-ArcGIS-REST-API-on-an-OS-Maps-API-backed-slippy-map">Step 11 ~ Plot LSOA boundaries returned by the ONS Open Geography Portal ESRI ArcGIS REST API on an OS Maps API backed slippy map<a class="anchor-link" href="#Step-11-~-Plot-LSOA-boundaries-returned-by-the-ONS-Open-Geography-Portal-ESRI-ArcGIS-REST-API-on-an-OS-Maps-API-backed-slippy-map">&#182;</a></h2><hr>
 <p>The example below overlays the GeoJSON feature(s) returned by the ONS ESRI ArcGIS REST API ontop of a Leaflet slippy map using Folium and OS base mapping returned via the OS Data Hub WMTS. The map is centred on the feature using the x and y coordinates of the LAD boundary centroid point geometry. <a href="https://python-visualization.github.io/folium/#">Folium</a> provides a Python wrapper out the Javascript web mapping libraries Leaflet.js.</p>
 <p><br></p>
-<p><img src="images/os-data-hub-os-maps-api-2.png"
-     alt="OS Maps API Image 2"
-     align="left" /></p>
+<p><img width="700"
+     src="../media/os-data-hub-os-maps-api-2.png"
+     alt="OS Maps API Image 1"
+     align="centre" /></p>
 
 </div>
 </div>
