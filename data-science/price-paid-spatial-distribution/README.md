@@ -655,19 +655,6 @@ gdf_lsoa.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -719,8 +706,6 @@ gdf_lsoa.head()
 
 
 ## Step 11 ~ Plot LSOA boundaries returned by the ONS Open Geography Portal ESRI ArcGIS REST API on an OS Maps API backed slippy map
-
----
 
 The example below overlays the GeoJSON feature(s) returned by the ONS ESRI ArcGIS REST API ontop of a Leaflet slippy map using Folium and OS base mapping returned via the OS Data Hub WMTS. The map is centred on the feature using the x and y coordinates of the LAD boundary centroid point geometry. [Folium](https://python-visualization.github.io/folium/#) provides a Python wrapper out the Javascript web mapping libraries Leaflet.js.
 
@@ -778,8 +763,6 @@ m
 ```
 
 ## Step 12 ~ Spatially join postcode and LSOA GeoDataFrames
-
----
 
 Join the postcode GeoDataFrame to the LSOA GeoDataFrame where a postcode point geometry is contained by a LSOA polygon geometry.
 
@@ -867,9 +850,6 @@ gdf_lsoa_pcd.head()
 
 
 ## Step 13 ~ Transform the postcode strings such that each string has a single space between the outward and inward codes
-
----
-
 
 ```python
 # Define postcode format function
