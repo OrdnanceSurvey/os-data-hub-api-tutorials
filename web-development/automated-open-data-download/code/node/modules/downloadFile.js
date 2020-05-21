@@ -38,14 +38,14 @@ async function downloadFile(url, targetdir) {
 
         // Wait until the file is fully downloaded
         await download_file(url, targetfile);
+
+        // Now make the target directory, extract the zipped file into it, and delete the downloaded zipfile.
         await fs.mkdirSync(targetdir)
         await extract(targetfile, { dir: path.resolve(targetdir)})
         await fs.unlinkSync(targetfile);
 
         // Complete!
         clearInterval(interval);
-        console.log(`Downloaded file`)
-
         console.log('Completed downloading files')
     } catch (error) {
         console.error(error);

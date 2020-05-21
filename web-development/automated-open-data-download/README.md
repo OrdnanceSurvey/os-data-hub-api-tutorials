@@ -50,12 +50,15 @@ We'll be using the `fs` module to write data to the disk as it downloads via an 
 
 ~~~javascript
 const fs = require('fs');
+const path = require('path');
 const axios = require('axios');
+const extract = require('extract-zip')
 
 /* ============================================================
 Function: Uses Axios to download file as stream using Promise
 
-/downloadFile.js
+/downloadFiles.js
+============================================================ */
 const download_file = (url, filename) =>
     axios({
         url,
@@ -67,40 +70,47 @@ const download_file = (url, filename) =>
                     .pipe(fs.createWriteStream(filename))
                     .on('finish', () => resolve())
                     .on('error', e => reject(e));
-            });
+            })
     );
+
 ~~~
 
-This function will fetch the resource at the `url` passed in, and write the file returned to the local directory as `filename`. We will call it from the function we'll export, adding in some error handling and visual feedback so the user knows the file is downloading:
+This function will fetch the resource at the `url` passed in, and write the file returned to the local directory as `filename`. We will call it from the function we'll export, adding in some error handling and visual feedback so the user knows the file is downloading. We'll also unzip the downloaded file into the `targetdir`.
 
 
 ~~~javascript
-/* ============================================================
-Download File.
 
-/downloadFile.js
+/* ============================================================
+Download File
+
+/downloadFiles.js
 ============================================================ */
-async function downloadAllGB(url, targetdir) {
+async function downloadFile(url, targetdir) {
     try {
         
-        // Giving user feedback every 5 seconds in the terminal:
+        // Giving user ongoing feedback in the terminal:
         console.log('Download starting ...')
         let interval = setInterval(() => console.log('...'), 5000)
 
-        // Download the file, waiting until the promise is resolved
-        await download_file(url, `${targetdir}.zip`);
+        let targetfile = path.resolve(targetdir + '.zip');
+
+        // Wait until the file is fully downloaded
+        await download_file(url, targetfile);
+
+        // Now make the target directory, extract the zipped file into it, and delete the downloaded zipfile.
+        await fs.mkdirSync(targetdir)
+        await extract(targetfile, { dir: path.resolve(targetdir)})
+        await fs.unlinkSync(targetfile);
 
         // Complete!
         clearInterval(interval);
-        console.log(`Downloaded file ${download.area}`)
         console.log('Completed downloading files')
     } catch (error) {
         console.error(error);
     }
 }
 
-// And export the module so it is accessible when we import it elsewhere
-module.exports = downloadAllGB;
+module.exports = downloadFile;
 ~~~
 
 ### Recursive Unzip 
@@ -140,12 +150,6 @@ async function unzipAll(dir) {
             } catch (err) {
                 console.log(err)
               }
-        }
-
-        // Edge case: if the input parameter dir was a zipfile
-        let parsed = path.parse(dir);
-        if (parsed.ext === '.zip') {
-            dir = path.resolve(parsed.dir, parsed.name); // the now-extracted zipped directory
         }
 
         // If the extracted folders contained zipfiles, they'd be included here:
@@ -259,7 +263,7 @@ We now have a complete Node program and modules, which we can execute by running
 
 This may take a little time as the OS Terrain 50 dataset is 161MB. Once this is completed, there should be a new folder, `working_data/asc_skye` with the `.asc` files, ready to work with in QGIS.
 
-## Shaded Relief in QGIS
+# Shaded Relief in QGIS
 
 Now we've got a folder containing the OS Terrain 50 Digital Elevation Model raster tiles around the Isle of Skye. There are lots of uses for this data - we're going to create a shaded relief map showing the topography of the Inner Hebrides. 
 
