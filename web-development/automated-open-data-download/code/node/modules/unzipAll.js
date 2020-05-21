@@ -1,3 +1,4 @@
+
 const fs = require('fs')
 const path = require('path')
 const extract = require('extract-zip')
@@ -5,10 +6,12 @@ const getFilePaths = require('./getFilePaths.js')
 
 async function unzipAll(dir) {
 
+        
+
     dir = path.resolve(dir)
     
     // An array of all .zip file paths in the directory:
-    let filepaths = getFilePaths(dir)
+    filepaths = getFilePaths(dir)
     filepaths = filepaths.filter(filepath => path.extname(filepath) === '.zip')
     
     // Loop through filepaths, extracting and deleting each:

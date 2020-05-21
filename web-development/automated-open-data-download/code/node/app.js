@@ -1,8 +1,8 @@
 const fs = require('fs').promises;
 const path = require('path');
-const getFilePaths = require('./getFilePaths.js');
-const downloadAllGB = require('./downloadFile.js');
-const unzipAll = require('./unzipAll.js');
+const getFilePaths = require('./modules/getFilePaths.js');
+const downloadFile = require('./modules/downloadFile.js');
+const unzipAll = require('./modules/unzipAll.js');
 
 
 (async () => {
@@ -11,17 +11,14 @@ const unzipAll = require('./unzipAll.js');
     const targetDir = './working_data';
 
     // // Await download and unzip:
-    // await downloadFile(terrain50url, targetDir)
-    // await unzipAll(targetDir);
+    await downloadFile(terrain50url, targetDir)
+    await unzipAll(targetDir);
 
     // Now we have a directory with several subdirectories containing, among other files, .asc grids representing elevations of 50m raster cells.
     // Let's extract an array of all paths then filter .asc files in the NG grid square:
     let allPaths = getFilePaths(targetDir)
     let ascPaths = allPaths.filter((filepath) => ((path.parse(filepath).ext === '.asc') &&
                                                     filepath.includes('/ng/')))
-
-    console.log(ascPaths)
-
     // We'll create a directory to hold our .asc files
     let ascTarget = path.resolve(targetDir, 'asc_skye/')
     await fs.mkdir(ascTarget)

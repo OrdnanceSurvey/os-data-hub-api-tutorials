@@ -1,5 +1,7 @@
 const fs = require('fs');
+const path = require('path');
 const axios = require('axios');
+const extract = require('extract-zip')
 
 /* ============================================================
 Function: Uses Axios to download file as stream using Promise
@@ -32,8 +34,13 @@ async function downloadFile(url, targetdir) {
         console.log('Download starting ...')
         let interval = setInterval(() => console.log('...'), 5000)
 
+        let targetfile = path.resolve(targetdir + '.zip');
+
         // Wait until the file is fully downloaded
-        await download_file(url, `${targetdir}.zip`);
+        await download_file(url, targetfile);
+        await fs.mkdirSync(targetdir)
+        await extract(targetfile, { dir: path.resolve(targetdir)})
+        await fs.unlinkSync(targetfile);
 
         // Complete!
         clearInterval(interval);
