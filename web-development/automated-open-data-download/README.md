@@ -56,7 +56,6 @@ const axios = require('axios');
 Function: Uses Axios to download file as stream using Promise
 
 /downloadFile.js
-============================================================ */
 const download_file = (url, filename) =>
     axios({
         url,
@@ -423,3 +422,9 @@ module.exports = async function listProducts() {
 ~~~
 
 Each dataset available via the API 
+=======
+The languages, libraries, APIs and external data sources we'll use to complete this tutorial.
+
+## Tutorial
+
+Copy of the tutorial can go here.
