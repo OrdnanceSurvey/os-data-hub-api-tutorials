@@ -8,14 +8,14 @@ const unzipAll = require('./unzipAll.js');
 (async () => {
 
     const terrain50url = 'https://osdatahubapi.os.uk/downloads/v1/products/Terrain50/downloads?area=GB&format=ASCII+Grid+and+GML+%28Grid%29&redirect';
-    const targetDir = './new_dir';
+    const targetDir = './working_data';
 
     // // Await download and unzip:
     // await downloadFile(terrain50url, targetDir)
     // await unzipAll(targetDir);
 
     // Now we have a directory with several subdirectories containing, among other files, .asc grids representing elevations of 50m raster cells.
-    // Let's extract an array of all paths then filter .asc files:
+    // Let's extract an array of all paths then filter .asc files in the NG grid square:
     let allPaths = getFilePaths(targetDir)
     let ascPaths = allPaths.filter((filepath) => ((path.parse(filepath).ext === '.asc') &&
                                                     filepath.includes('/ng/')))
@@ -23,7 +23,7 @@ const unzipAll = require('./unzipAll.js');
     console.log(ascPaths)
 
     // We'll create a directory to hold our .asc files
-    let ascTarget = path.resolve(targetDir, 'asc-skye/')
+    let ascTarget = path.resolve(targetDir, 'asc_skye/')
     await fs.mkdir(ascTarget)
 
     // Then loop through and copy each file into this ./asc folder
