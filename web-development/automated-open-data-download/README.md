@@ -345,6 +345,13 @@ If you make a beautiful map using OS data - let us know!
 
 
 
+
+
+## More Resources / Acknowledgements
+
+[Stephanie from Open GIS Lab](https://opengislab.com/blog/2018/3/20/3d-dem-visualization-in-qgis-30)
+
+
 ---
 
 
