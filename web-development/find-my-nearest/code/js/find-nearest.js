@@ -5,11 +5,8 @@ const apiKey = 'FtAS7OR45lE3AR78KxrdGpfYq8uAAV6K';
 
 var coordsToFind = null;
 
+// 1. 
 // Initialize the map.
-    // @TIM I'd like to not make it load zoomed in on London as it is a GB-wide service. 
-    // But the map tiles don't extend much beyond the bounds of the UK. 
-    // Have you dealt with this in the past? Ideas? 
-
 var wmtsServiceUrl = 'https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1';
 var wfsServiceUrl = 'https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1';
 
@@ -17,7 +14,7 @@ var wfsServiceUrl = 'https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1';
 var mapOptions = {
     minZoom: 7,
     maxZoom: 20,
-    center: [ 54.425, -2.968 ],
+    center: [54.425, -2.968],
     zoom: 14,
     attributionControl: false,
     zoomControl: false
@@ -25,17 +22,16 @@ var mapOptions = {
 
 var map = new L.map('map', mapOptions);
 
-// Add scale control to the map.
-var ctrlScale = L.control.scale({ position: 'bottomright' }).addTo(map);
-
-
 // Load and display WMTS tile layer on the map.
 var basemapQueryString = generateQueryString();
 
 var basemap = L.tileLayer(
-        wmtsServiceUrl + "?" + basemapQueryString, 
-        { maxZoom: 20 }
-    ).addTo(map);
+    wmtsServiceUrl + "?" + basemapQueryString,
+    { maxZoom: 20 }
+).addTo(map);
+
+// Add scale control to the map.
+var ctrlScale = L.control.scale({ position: 'bottomright' }).addTo(map);
 
 
 // Define the layer styles.
@@ -49,13 +45,12 @@ var styles = {
         color: osColours.qualitative.lookup['3'],
         fillOpacity: 0.5,
         weight: 1
-    }, 
+    },
     "Zoomstack_LocalBuildings": {
         color: osColours.qualitative.lookup['4'],
         fillOpacity: 0.5,
         weight: 1
     }
-
 };
 
 
@@ -67,20 +62,19 @@ var coordsToFindGroup = new L.FeatureGroup().addTo(map);
 
 
 function fetchNearestFeatures(e) {
-    
+
     // Remove all the layers from the layer group.
     foundFeaturesGroup.clearLayers();
 
     // Get the centre point of the map window.
     if (!coordsToFind) {
-        updateCoordsToFind([ map.getCenter().lng, map.getCenter().lat ]);
+        updateCoordsToFind([map.getCenter().lng, map.getCenter().lat]);
     }
 
+    // From the dropdown selection
     let featureTypeToFind = $('#feature-type-select span').text();
     let typeName = getFeatureTypeToFind(featureTypeToFind);
 
-
-    
     // {Turf.js} Create a point from the centre position.
     var pointToFind = turf.point(coordsToFind);
 
@@ -93,21 +87,21 @@ function fetchNearestFeatures(e) {
 
     // Create an OGC XML filter parameter value which will select the Greenspace
     // features intersecting the circle polygon coordinates.
-        // *** ADD Functionality to filter by Type attribute based on dropdown input!
-    var xml = '<ogc:Filter>';
-    xml += '<ogc:Intersects>';
-    xml += '<ogc:PropertyName>SHAPE</ogc:PropertyName>';
-    xml += '<gml:Polygon srsName="urn:ogc:def:crs:EPSG::4326">';
-    xml += '<gml:outerBoundaryIs>';
-    xml += '<gml:LinearRing>';
-    xml += '<gml:coordinates>' + coords + '</gml:coordinates>';
-    xml += '</gml:LinearRing>';
-    xml += '</gml:outerBoundaryIs>';
-    xml += '</gml:Polygon>';
-    xml += '</ogc:Intersects>';
-    xml += '</ogc:Filter>';
+    // *** ADD Functionality to filter by Type attribute based on dropdown input!
+    var xml = `<ogc:Filter>
+        <ogc:Intersects>
+            <ogc:PropertyName>SHAPE</ogc:PropertyName>
+            <gml:Polygon srsName="urn:ogc:def:crs:EPSG::4326">
+                <gml:outerBoundaryIs>
+                    <gml:LinearRing>
+                        <gml:coordinates>${coords}</gml:coordinates>
+                    </gml:LinearRing>
+                </gml:outerBoundaryIs>
+            </gml:Polygon>
+        </ogc:Intersects>
+    </ogc:Filter>`
 
-    
+
     // Define parameters object.
     let wfsParams = {
         key: apiKey,
@@ -122,56 +116,104 @@ function fetchNearestFeatures(e) {
         startIndex: 0
     };
 
-    
+
     // Create an empty GeoJSON FeatureCollection.
     var geojson = {
         "type": "FeatureCollection",
         "features": []
     };
     geojson.features.length = 0;
-    
+
     var resultsRemain = true;
 
     fetchWhile(resultsRemain);
 
-    // Use fetch() method to request GeoJSON data from the OS Features API.
-    //
-    // If successful - remove everything from the layer group; then add a new GeoJSON
-    // layer (with the appended features).
-    //
-    // Calls will be made until the number of features returned is less than the
-    // requested count, at which point it can be assumed that all features for
-    // the query have been returned, and there is no need to request further pages.
+
+    /** Uses fetch() method to request GeoJSON data from the OS Features API. 
+     * If features are fetched, analyse to find nearest then add a new GeoJSON
+     * layer to the map.
+     * Calls will be made until the number of features returned is less than the
+     * requested count, at which point it can be assumed that all features for
+     * the query have been returned, and there is no need to request further pages.
+     * @param {boolean} resultsRemain - Indication to fetch the next page or move on
+    */
     function fetchWhile(resultsRemain) {
-        if ( resultsRemain ) {
+        if (resultsRemain) {
             fetch(getUrl(wfsParams))
                 .then(response => response.json())
                 .then((data) => {
 
-                    wfsParams.startIndex += wfsParams.count;
-
+                    // Add the newly fetched features to the holder geojson
                     geojson.features.push.apply(geojson.features, data.features);
 
+                    // Iterate to retrieve the next "page" of results
+                    wfsParams.startIndex += wfsParams.count;
+
+                    // Check if results remain
                     resultsRemain = data.features.length < wfsParams.count ? false : true;
 
+                    // Recursive function call - will call until resultsRemain == false
                     fetchWhile(resultsRemain);
                 })
-                .catch((err) => {console.error(err); });
+                .catch((err) => { console.error(err); });
         }
         else {
+            // When no results remain
             removeSpinner();
-            if( geojson.features.length ) {
+            if (geojson.features.length) {
+                // Call the function to analyse distance and find nearest 20 features
                 findNearestN(pointToFind, geojson, 20, typeName);
                 return;
             } else {
                 notification.show('error', "No features found");
             }
-                // document.getElementById('message').style.display = 'block';
         }
     }
+}
 
+/**
+ * Determines the nearest n features in a GeoJSON object.
+ * @param {object} point - GeoJSON point centroid.
+ * @param {object} features - GeoJSON FeatureCollection.
+ * @param {integer} n - max number of features to find
+ * @param {string} typeName - name of feature type (for styling)
+ */
+function findNearestN(point, featurecollection, n, typeName) {
 
+    // Calculate distances, add to properties of feature collection
+    var polygons = featurecollection.features
+    for (var i = 0; i < featurecollection.features.length; i++) {
+        polygons[i] = addDistanceFromPointToPolygon(point, polygons[i]);
+    }
+
+    // Sort by distance property
+    polygons = polygons.sort((a, b) => a.properties.distanceToPoint - b.properties.distanceToPoint);
+
+    // create FeatureCollection of 0-n features.
+    var nearestFeatures = {
+        type: "FeatureCollection",
+        features: polygons.slice(0, n)
+    }
+
+    // Add nearest features to the Leaflet map
+    foundFeaturesGroup.addLayer(new L.geoJson(nearestFeatures, {
+        style: styles[typeName]
+    }));
+
+    // Alert the user
+    notification.show('success', nearestFeatures.features.length + ' nearest features found!', false)
     
+    // And fit map bounds to the features we found:
+    map.fitBounds(foundFeaturesGroup.getBounds(), {
+        paddingTopLeft: [
+            $(".osel-sliding-side-panel").width() + 25,
+            25
+        ],
+        paddingBottomRight: [25,25]
+    });
+
+
+
 }
 
 
@@ -196,60 +238,28 @@ function getUrl(params) {
         .map(paramName => paramName + '=' + encodeURI(params[paramName]))
         .join('&');
 
-        return wfsServiceUrl + '?' + encodedParameters;
+    return wfsServiceUrl + '?' + encodedParameters;
 }
 
-// /**
-//  * Determines the nearest n features in a GeoJSON object.
-//  * @param {object} point - GeoJSON point centroid.
-//  * @param {object} features - GeoJSON FeatureCollection.
-//  * @param {integer} n - max number of features to find
-//  * @param {string} typeName - name of feature type (for styling)
-//  */
-function findNearestN(point, featurecollection, n, typeName) {
 
-    // Calculate distances, add to properties of feature collection
-    var polygons = featurecollection.features
-    for (var i = 0; i < featurecollection.features.length; i++) {
-        polygons[i] = addDistanceFromPointToPolygon(point, polygons[i]);
-    }
-
-    // Sort by distance property
-    polygons = polygons.sort((a,b) => a.properties.distanceToPoint - b.properties.distanceToPoint);
-    
-    // create FeatureCollection of 0-n features.
-    var nearestFeatures = {
-        type: "FeatureCollection",
-        features: polygons.slice(0, n)
-    }
-
-    foundFeaturesGroup.addLayer(createGeoJSONLayer(nearestFeatures, typeName));
-
-    notification.show('success', nearestFeatures.features.length + ' nearest features found!')
-    map.flyToBounds(foundFeaturesGroup.getBounds(), {
-        padding: [50,50],
-        maxZoom: 16
-    });
-
-}
 
 function addDistanceFromPointToPolygon(point, polygon) {
 
     var nearestDistance = 100;
 
-    if( turf.booleanWithin(point, polygon) ) {
+    if (turf.booleanWithin(point, polygon)) {
         polygon.properties.distanceToPoint = 0;
         return polygon;
     }
 
-     // {Turf.js} Iterate over coordinates in current greenspace feature.
-    turf.coordEach(polygon, function(currentCoord) {
+    // {Turf.js} Iterate over coordinates in current greenspace feature.
+    turf.coordEach(polygon, function (currentCoord) {
         // {Turf.js} Calculates the distance between two points in kilometres.
         var distance = turf.distance(point, turf.point(currentCoord));
         // console.log('distance', distance)
         // If the distance is less than that whch has previously been calculated
         // replace the nearest values with those from the current index.
-        if( distance <= nearestDistance ) {
+        if (distance <= nearestDistance) {
             nearestDistance = distance;
         }
     });
@@ -259,22 +269,22 @@ function addDistanceFromPointToPolygon(point, polygon) {
 
 }
 
-$("#map div.zoom-control [class^='zoom-']").not('disabled').click(function() {
+$("#map div.zoom-control [class^='zoom-']").not('disabled').click(function () {
     $(this).hasClass('zoom-in') ? map.zoomIn() : map.zoomOut();
 });
 
 map.on({
-    zoom: function() {
+    zoom: function () {
         $("#map div.zoom-control [class^='zoom-']").removeClass('disabled');
-        if( map.getZoom() == map.getMaxZoom() )
+        if (map.getZoom() == map.getMaxZoom())
             $("#map div.zoom-control .zoom-in").addClass('disabled');
-        if( map.getZoom() == map.getMinZoom() )
+        if (map.getZoom() == map.getMinZoom())
             $("#map div.zoom-control .zoom-out").addClass('disabled');
     },
-    move: function() {
+    move: function () {
         coordinates.update();
     },
-    click: function() {
+    click: function () {
         resetProperties();
     }
 });
@@ -290,14 +300,14 @@ function addLayer() {
         pane: 'foundFeatures',
         style: { color: '#666', weight: 2, fillOpacity: 0.3 }
     }),
-    mapFeatures = omnivore.geojson('data/sample/boundary.geojson', null, foundFeatures).on('ready', function() {
+        mapFeatures = omnivore.geojson('data/sample/boundary.geojson', null, foundFeatures).on('ready', function () {
             // this.eachLayer(bindPopup);
-    }).addTo(map); 
+        }).addTo(map);
 
 
 }
 
-$(".osel-sliding-side-panel.panel-left .layers .layer .layer-element[data-state='unchecked']").each(function() {
+$(".osel-sliding-side-panel.panel-left .layers .layer .layer-element[data-state='unchecked']").each(function () {
     var id = $(this).parent().data('id');
     $(map.getPane(id)).addClass('hidden');
 });
@@ -305,16 +315,16 @@ $(".osel-sliding-side-panel.panel-left .layers .layer .layer-element[data-state=
 // sortLayers();
 
 function onEachFeature(feature, layer) {
-    layer.on('click', function(e) {
+    layer.on('click', function (e) {
         L.DomEvent.stopPropagation(e);
 
         sliderRight.slideReveal("hide");
 
         var coord = e.latlng
-            offset = feature.geometry.type === 'Point' ? [ 0, -22 ] : [ 0, 8 ];
+        offset = feature.geometry.type === 'Point' ? [0, -22] : [0, 8];
 
         var str = '';
-        $.each(feature.properties, function(k, v) {
+        $.each(feature.properties, function (k, v) {
             var value = (v !== '') ? v : '&lt;null&gt;';
             str += '<div class="property"><div>' + k + '</div><div>' + value + '</div></div>';
         });
@@ -335,24 +345,8 @@ function onEachFeature(feature, layer) {
     });
 }
 
-// function bindPopup(layer) {
-//     var obj = layer.feature.properties,
-//         values = Object.keys(obj).map(function(e) { return obj[e] });
-//
-//     var popupContent = '\
-//         <div class="osel-popup-content">\
-//             <div class="osel-popup-heading">\
-//                 <div class="osel-popup-title">' + values[0] + '</div>\
-//             </div>\
-//             <div class="osel-popup-link">More details</div>\
-//         </div>\
-//     ';
-//
-//     layer.bindPopup(popupContent);
-// }
-
 function sortLayers() {
-    $("ul.layers .layer").reverse().each(function(index) {
+    $("ul.layers .layer").reverse().each(function (index) {
         var id = $(this).data('id');
         map.getPane(window[id].options.pane).style.zIndex = 650 + index;
     });
@@ -361,7 +355,7 @@ function sortLayers() {
 function toggleLayer(elem, type) {
     resetProperties();
 
-    var id  = elem.parent().data('id');
+    var id = elem.parent().data('id');
     $(map.getPane(window[id].options.pane)).toggleClass('hidden');
 }
 
@@ -391,7 +385,7 @@ function generateQueryString(style = defaults.basemapStyle) {
     };
 
     // Construct query string parameters from object.
-    return Object.keys(params).map(function(key) {
+    return Object.keys(params).map(function (key) {
         return key + '=' + params[key];
     }).join('&');
 
@@ -402,7 +396,7 @@ function switchBasemap(style) {
 
 function zoomToLayerExtent(lyr) {
     map.flyToBounds(window[lyr].getBounds(), {
-        padding: [50,50]
+        padding: [50, 50]
     });
 }
 
@@ -410,7 +404,7 @@ function setLayerOpacity(lyr, value) {
     map.getPane(window[lyr].options.pane).style.opacity = value;
 }
 
-function getTileServer(style = defaults.basemapStyle) {   
+function getTileServer(style = defaults.basemapStyle) {
     return wmtsServiceUrl + '/' + style + '_3857/{z}/{x}/{y}.png?key=' + config.apikey;
 }
 
@@ -429,8 +423,8 @@ function removeSpinner() {
 }
 
 function getFeatureTypeToFind(featureTypeToFind) {
-    
-    switch(featureTypeToFind) {
+
+    switch (featureTypeToFind) {
         // case "Green space (OS MasterMap Topo)":
         //     return "Greenspace_GreenspaceArea";
         //     break;
@@ -466,7 +460,7 @@ function toggleClickCoordsListener() {
         $('#map').removeClass('selecting');
         map.off('click');
     }
-    
+
 }
 
 function selectLocationOnMap(event) {
@@ -484,14 +478,14 @@ function selectLocationOnMap(event) {
 }
 
 function updateCoordsToFind(coords) {
-        
+
     coordsToFindGroup.clearLayers();
 
-    coordsToFind = coords;    
+    coordsToFind = coords;
     L.marker([coordsToFind[1], coordsToFind[0]])
         .addTo(coordsToFindGroup);
-    
-    map.flyTo([coordsToFind[1], coordsToFind[0]])
+
+    // map.flyTo([coordsToFind[1], coordsToFind[0]])
 
 }
 
@@ -508,9 +502,9 @@ function setUseMyLocation() {
                     position.coords.longitude,
                     position.coords.latitude
                 ]
-                updateCoordsToFind(coords) 
-                console.log('latitude:', position.coords.latitude, 
-                            'longitude:', position.coords.longitude);
+                updateCoordsToFind(coords)
+                console.log('latitude:', position.coords.latitude,
+                    'longitude:', position.coords.longitude);
             },
             function error(error_message) {
                 // for when getting location results in an error

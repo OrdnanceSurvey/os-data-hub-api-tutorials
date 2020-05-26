@@ -1,3 +1,4 @@
+
 var notification = {
     //
     init: function() {
