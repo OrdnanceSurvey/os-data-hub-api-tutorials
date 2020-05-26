@@ -11,7 +11,7 @@ See [./tutorial-01-proptech/os-data-hub-api-tutorial-01-proptech.ipynb](./tutori
 A Jupyter Notebook providing a data science pipeline in Python to leverage data insights through the integration of OS Data Hub APIs with other government data services from the Office for National Statistics and HM Land Registry.
 
 <p align="center">
-  <img width="700" src="./data-science/price-paid-spatial-distribution/media/southampton-local-authority-district-median-price-paid-deciles.png" alt="Southampton Local Authority District Median Price Paid Deciles">
+  <img width="700" border="1px solid grey"  src="./data-science/price-paid-spatial-distribution/media/southampton-local-authority-district-median-price-paid-deciles.png" alt="Southampton Local Authority District Median Price Paid Deciles">
 </p>
 
 
@@ -20,7 +20,7 @@ A Jupyter Notebook providing a data science pipeline in Python to leverage data 
 Building a web application that will let users find nearby parks, woodland areas or buildings represented in our OS  Open Zoomstack layer using Leaflet, Turf.js, the OS Maps API, the OS Features API, and other tools.  
 
 <p align="center">
-  <img width="700" src="./web-development/find-my-nearest/media/find-my-nearest.png" alt="Find My Nearest Web App Interface">
+  <img width="700" border="1px solid grey" src="./web-development/find-my-nearest/media/find-my-nearest.png" alt="Find My Nearest Web App Interface">
 </p> 
 
 See [./LICENSE](./LICENSE).
