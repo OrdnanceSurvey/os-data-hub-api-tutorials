@@ -6,7 +6,8 @@
 
 Visualising the spatial distribution of Lower Layer Super Output Area (LSOA) median price paid deciles for residential property sold between 1995 and 2019 for a local authority district (LAD) in England or Wales.
 
-See [./tutorial-01-proptech/os-data-hub-api-tutorial-01-proptech.ipynb](./tutorial-01-proptech/os-data-hub-api-tutorial-01-proptech.ipynb).
+
+See [Price Paid Spatial Distribution IPython Notebook](./data-science/price-paid-spatial-distribution/code/price-paid-spatial-distribution.ipynb).
 
 A Jupyter Notebook providing a data science pipeline in Python to leverage data insights through the integration of OS Data Hub APIs with other government data services from the Office for National Statistics and HM Land Registry.
 
@@ -17,7 +18,9 @@ A Jupyter Notebook providing a data science pipeline in Python to leverage data 
 
 ### Web Development - Find My Nearest
 
-Building a web application that will let users find nearby parks, woodland areas or buildings represented in our OS  Open Zoomstack layer using Leaflet, Turf.js, the OS Maps API, the OS Features API, and other tools.  
+Building a web application that will let users find nearby parks, woodland areas or buildings represented in our OS  Open Zoomstack layer using Leaflet, Turf.js, the OS Maps API, the OS Features API, and other tools. 
+
+See the [codebase](./web-development/find-my-nearest/code). 
 
 <p align="center">
   <img width="700" border="1px solid grey" src="./web-development/find-my-nearest/media/find-my-nearest.png" alt="Find My Nearest Web App Interface">
