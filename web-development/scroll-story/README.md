@@ -392,4 +392,4 @@ In this case we change element classes and call the `map.flyTo()` method to anim
 
 With that, we've created a scroll story of an autumn climb up Ben Nevis! We wrote our story in the `config` object literal, including information about how to position the map and which layers to show. We added custom GeoJSON layers that originally came from the OS Features API, and set up an instance of `scrollama` to update the map and content based on which chapter scrolled into view.
 
-If you 
+If you make a great scroll story - with or without OS data - share it with us! Tweet [@OrdnanceSurvey](https://twitter.com/ordnancesurvey) and tag [#OSDeveloper](https://twitter.com/hashtag/OSDeveloper)
