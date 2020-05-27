@@ -148,10 +148,10 @@ var config = {
             description: `Back to the car by 3pm, we set off to finish the drive to the Isle of Skye. We'd explored Ben Nevis, 
                             but the mountain remained, unconquered, towering above the Scottish Highlands.`,
             location: {
-                center: [-5.00362, 56.79767],
-                zoom: 13.0,
-                pitch: 0.00,
-                bearing: 0.00
+                center: { lon: -5.00157, lat: 56.79651 },
+                zoom: 12.58,
+                pitch: 60.00,
+                bearing: 2.59
             },
             onChapterEnter: [
                 {
