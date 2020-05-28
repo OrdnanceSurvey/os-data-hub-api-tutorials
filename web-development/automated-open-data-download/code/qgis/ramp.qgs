@@ -1,0 +1,1 @@
+<!DOCTYPE qgis_style><qgis_style version="1"><symbols/><colorramps><colorramp type="gradient" name="DEM_screen"><prop k="color1" v="0,132,53,255"/><prop k="color2" v="255,255,255,255"/><prop k="stops" v="0.1250;51,204,0,255:0.2500;244,240,113,255:0.5000;244,189,69,255:0.7500;153,100,43,255"/></colorramp></colorramps></qgis_style>
