@@ -16,9 +16,7 @@ const map = new mapboxgl.Map({
     pitch: config.chapters[0].location.pitch,
     scrollZoom: false,
     transformRequest: url => {
-        console.log(url)
         url += '&srs=3857';
-        console.log("new", url)
         return {
             url: url
         }
