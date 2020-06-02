@@ -9,19 +9,22 @@ const serviceUrl = 'https://osdatahubapi.os.uk/OSVectorTileAPI/vts/v1';
 // Initialize the map object.
 const map = new mapboxgl.Map({
     container: 'map',
-    style: serviceUrl + '/resources/styles',
+    style: serviceUrl + '/resources/styles?key=' + apiKey,
     center: config.chapters[0].location.center,
     zoom: config.chapters[0].location.zoom,
     bearing: config.chapters[0].location.bearing,
     pitch: config.chapters[0].location.pitch,
     scrollZoom: false,
     transformRequest: url => {
-        url += '?key=' + apiKey + '&srs=3857';
+        console.log(url)
+        url += '&srs=3857';
+        console.log("new", url)
         return {
             url: url
         }
     }
 });
+
 
 
 

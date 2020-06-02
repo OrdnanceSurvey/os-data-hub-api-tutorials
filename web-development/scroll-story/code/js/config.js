@@ -94,7 +94,7 @@ var config = {
                             cold and wind, enough to steel ourselves for the descent.`,
             location: {
                 center: [-5.00469, 56.79638],
-                zoom: 18.11,
+                zoom: 16.28,
                 pitch: 59.50,
                 bearing: 94.40
             },
