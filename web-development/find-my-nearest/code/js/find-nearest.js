@@ -126,6 +126,7 @@ function fetchNearestFeatures(e) {
 
     var resultsRemain = true;
 
+    console.log(getUrl(wfsParams))
     fetchWhile(resultsRemain);
 
 
