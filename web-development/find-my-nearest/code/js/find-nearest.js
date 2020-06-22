@@ -37,17 +37,17 @@ var ctrlScale = L.control.scale({ position: 'bottomright' }).addTo(map);
 // Define the layer styles.
 var styles = {
     'Zoomstack_Greenspace': {
-        color: osColours.qualitative.lookup['2'],
+        color: os.palette.qualitative.lookup['2'],
         fillOpacity: 0.5,
         weight: 1
     },
     "Zoomstack_Woodland": {
-        color: osColours.qualitative.lookup['3'],
+        color: os.palette.qualitative.lookup['3'],
         fillOpacity: 0.5,
         weight: 1
     },
     "Zoomstack_LocalBuildings": {
-        color: osColours.qualitative.lookup['4'],
+        color: os.palette.qualitative.lookup['4'],
         fillOpacity: 0.5,
         weight: 1
     }
@@ -165,7 +165,7 @@ function fetchNearestFeatures(e) {
                 findNearestN(pointToFind, geojson, 20, typeName);
                 return;
             } else {
-                notification.show('error', "No features found");
+                os.notification.show('error', "No features found");
             }
         }
     }
@@ -201,12 +201,12 @@ function findNearestN(point, featurecollection, n, typeName) {
     }));
 
     // Alert the user
-    notification.show('success', nearestFeatures.features.length + ' nearest features found!', false)
+    os.notification.show('success', nearestFeatures.features.length + ' nearest features found!', false)
     
     // And fit map bounds to the features we found:
     map.fitBounds(foundFeaturesGroup.getBounds(), {
         paddingTopLeft: [
-            $(".osel-sliding-side-panel").width() + 25,
+            os.main.viewportPaddingOptions().left + 25,
             25
         ],
         paddingBottomRight: [25,25]
@@ -282,7 +282,7 @@ map.on({
             $("#map div.zoom-control .zoom-out").addClass('disabled');
     },
     move: function () {
-        coordinates.update();
+        os.coordinates.update();
     },
     click: function () {
         resetProperties();
@@ -291,7 +291,6 @@ map.on({
 
 map.getPane('shadowPane').style.display = 'none'; // hide shadow pane
 
-// async? or promise ...
 function addLayer() {
     map.createPane('foundFeatures');
 
@@ -311,8 +310,6 @@ $(".osel-sliding-side-panel.panel-left .layers .layer .layer-element[data-state=
     var id = $(this).parent().data('id');
     $(map.getPane(id)).addClass('hidden');
 });
-
-// sortLayers();
 
 function onEachFeature(feature, layer) {
     layer.on('click', function (e) {
@@ -362,7 +359,7 @@ function toggleLayer(elem, type) {
 function resetProperties() {
     $(".osel-fixed-popup").remove();
     map.closePopup();
-    sliderRight.slideReveal("hide");
+    sliderRight.slideReveal("hide"); // <-- ??
 }
 
 function generateQueryString(style = defaults.basemapStyle) {
@@ -425,9 +422,6 @@ function removeSpinner() {
 function getFeatureTypeToFind(featureTypeToFind) {
 
     switch (featureTypeToFind) {
-        // case "Green space (OS MasterMap Topo)":
-        //     return "Greenspace_GreenspaceArea";
-        //     break;
         case "Greenspace":
             return "Zoomstack_Greenspace";
             break;
@@ -485,14 +479,11 @@ function updateCoordsToFind(coords) {
     L.marker([coordsToFind[1], coordsToFind[0]])
         .addTo(coordsToFindGroup);
 
-    // map.flyTo([coordsToFind[1], coordsToFind[0]])
-
 }
 
 function setUseMyLocation() {
 
-    // TEST IF THIS WORKS when deployed on web server
-    // From https://medium.com/better-programming/how-to-detect-the-location-of-your-websites-visitor-using-javascript-92f9e91c095f
+    // Adapted from https://medium.com/better-programming/how-to-detect-the-location-of-your-websites-visitor-using-javascript-92f9e91c095f
     if ("geolocation" in navigator) {
         // check if geolocation is supported/enabled on current browser
         navigator.geolocation.getCurrentPosition(
@@ -503,18 +494,16 @@ function setUseMyLocation() {
                     position.coords.latitude
                 ]
                 updateCoordsToFind(coords)
-                console.log('latitude:', position.coords.latitude,
-                    'longitude:', position.coords.longitude);
             },
             function error(error_message) {
-                // for when getting location results in an error
+                // Notify that location detection resulted in an error
+                os.notification.show('error', 'An error has occured while retrieving location:<br /><br/>' + error_message.message)
                 console.error('An error has occured while retrieving location', error_message)
             }
         );
     } else {
-        // geolocation is not supported
-        alert('Geolocation is not enabled on this browser. Please select on map.');
-        // Alert modal?
+        // Notify user that geolocation is not supported
+        os.notification.show('error', 'Geolocation is not enabled on this browser. Please select on map.');
     }
 }
 
