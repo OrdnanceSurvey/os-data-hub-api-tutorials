@@ -3,7 +3,7 @@ Maps that update based on user interaction can be incredibly useful. The Find My
 
 The webpage lets users select a location on a map, a feature type to visualize, then shows features of those type near their selected location. 
 
-<iframe src="/public/os-data-hub-tutorials/dist/web-development/find-my-nearest/" height="600" width="800" style="border:1px solid #eee"></iframe>
+<p><iframe style="width:100%;height:400px;max-width:1200px;border:1px solid #f5f5f5;" src="/public/os-data-hub-tutorials/dist/web-development/find-my-nearest/"></iframe></p>
 
 This tutorial will show how we used *[Leaflet](https://leafletjs.com/)*, *[Turf.js](https://osdatahub.os.uk)*  and the *[OS Maps](https://osdatahub.os.uk/docs/wmts/overview)* and *[OS Features](https://osdatahub.os.uk/docs/wfs/overview)* APIs to create an interactive web map. We'll only focus on key functionality here, but all code can be reviewed on Github.
 
