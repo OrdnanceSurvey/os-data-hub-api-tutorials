@@ -116,7 +116,7 @@ document
     rounded_area = Math.round(area * 100) / 100;
     
     if( rounded_area > 100000 ) {
-      notification.show("warning", 'Drawn polygon exceeds maximum size limit of 0.1 square km. Please try again.');
+      os.notification.show("warning", 'Drawn polygon exceeds maximum size limit of 0.1 square km. Please try again.');
       $("#loader").css({ visibility: "hidden" });
       draw.deleteAll()
       return; // <- break out of the callback
@@ -155,7 +155,7 @@ document
         type: "fill",
         layout: {},
         paint: {
-          "fill-color": colours.qualitative.lookup["2"],
+          "fill-color": os.colours.qualitative.lookup["2"],
           "fill-opacity": 0.3,
           "fill-outline-color": "black",
         },
@@ -167,7 +167,7 @@ document
         type: "line",
         layout: {},
         paint: {
-          "line-color": colours.qualitative.lookup["1"],
+          "line-color": os.colours.qualitative.lookup["1"],
           "line-width": 2,
         },
       });
@@ -183,7 +183,7 @@ document
     // zoom to geom with .osel-panel offset
     map.fitBounds(turf.bbox(buildings), {
       padding: {
-        left: $(".osel-sliding-side-panel").width() + 50,
+        left:  os.main.viewportPaddingOptions().left + 50,
         right: 50,
         bottom: 50,
         top: 50,
@@ -268,7 +268,7 @@ function activateFetch() {
 
   map.fitBounds(turf.bbox(draw.getAll()), {
     padding: {
-      left: $(".osel-sliding-side-panel").width() + 50,
+      left: os.main.viewportPaddingOptions().left + 50,
       right: 50,
       bottom: 50,
       top: 50,
@@ -324,7 +324,7 @@ function addSpinner() {
 
             </div>`;
 
-  notification.show("info", html, false);
+  os.notification.show("info", html, false);
   $(".fetching").show();
 }
 

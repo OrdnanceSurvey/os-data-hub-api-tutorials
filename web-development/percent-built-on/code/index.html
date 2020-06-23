@@ -13,10 +13,9 @@
     <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css"
         type="text/css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/5.1.5/turf.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.core.js"></script>
-    <link rel="stylesheet" href="./assets/css/style.css" />
-    <link rel="stylesheet" href="./assets/css/vendor.css" />
+    
+
+    <link rel="stylesheet" href="./assets/css/style.min.css" />
     <link rel="stylesheet" href="./css/tutorial.css" />
 </head>
 
@@ -66,16 +65,37 @@
             </div>
         </div>
     </div>
+    <div class="osel-sliding-side-panel panel-right">
+        <div class="panel-close"><i class="material-icons" aria-label="Close panel">close</i></div>
+        <div class="panel-header">Properties</div>
+        <div class="scroller-no-tabs">
+            <div class="osel-feature-properties"></div>
+        </div>
+    </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+
+
+    <!-- Core Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.7/jquery.autocomplete.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.5.0/proj4.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.1/rangeslider.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/slideReveal/1.1.2/jquery.slidereveal.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/add-clear@2.0.7/addclear.min.js"></script>
+
+
+    <!-- Mapping Library (+ Plugins & Dependencies) -->
     <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js"></script>
-    <script src="./assets/js/colours.js"></script>
-    <script src="./assets/js/notification.js"></script>
-    <script src="./assets/js/init.js"></script>
-    <script src="./assets/js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Turf.js/5.1.5/turf.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.core.js"></script>
+
+    <!-- OSEL Framework -->
+    <script src="./assets/js/bundle.min.js"></script>
+
+    <!-- Demo -->
     <script src="./js/config.js"></script>
     <script src="./js/tutorial.js"></script>
 

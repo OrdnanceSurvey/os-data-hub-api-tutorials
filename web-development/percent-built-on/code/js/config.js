@@ -26,7 +26,7 @@ const mbDrawConfig = {
                 "line-join": "round"
             },
             "paint": {
-                "line-color": colours.qualitative.lookup["1"],
+                "line-color": os.palette.qualitative.lookup["1"],
                 "line-dasharray": [0.2, 2],
                 "line-width": 2
             }
@@ -38,7 +38,7 @@ const mbDrawConfig = {
             "filter": ["all", ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
             "paint": {
                 "fill-color": "#D20C0C",
-                "fill-outline-color": colours.qualitative.lookup["1"],
+                "fill-outline-color": os.palette.qualitative.lookup["1"],
                 "fill-opacity": 0.1
             }
         },
@@ -53,7 +53,7 @@ const mbDrawConfig = {
                 "line-join": "round"
             },
             "paint": {
-                "line-color": colours.qualitative.lookup["1"],
+                "line-color": os.palette.qualitative.lookup["1"],
                 "line-dasharray": [0.2, 2],
                 "line-width": 2
             }
@@ -75,7 +75,7 @@ const mbDrawConfig = {
             "filter": ["all", ["==", "meta", "vertex"], ["==", "$type", "Point"], ["!=", "mode", "static"]],
             "paint": {
                 "circle-radius": 3,
-                "circle-color": colours.qualitative.lookup["1"],
+                "circle-color": os.palette.qualitative.lookup["1"],
             }
         },
 
