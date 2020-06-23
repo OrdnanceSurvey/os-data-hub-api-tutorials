@@ -1,6 +1,6 @@
 Spatial analysis is a powerful way to understand the world. The insights derived from analysis of points, lines, polygons and raster data can serve as the evidence to inform intelligent decision-making. Let's look at how to build a web interface capable of sophisticated spatial analytics.
 
-<iframe src="/public/os-data-hub-tutorials/dist/web-development/percent-built-on/" height="600" width="800" frameborder="0" style="border:1px solid #eee" allowfullscreen=""></iframe>
+<p><iframe style="width:100%;height:400px;max-width:1200px;border:1px solid #f5f5f5;" src="/public/os-data-hub-tutorials/dist/web-development/percent-built-on/"></iframe></p>
 
 ## The HTML
 
