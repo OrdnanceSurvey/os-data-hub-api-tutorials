@@ -1,7 +1,7 @@
 
 Maps help people work out where they are. In this tutorial, we'll build an interactive locator, to help users find features on a map. At Ordnance Survey we love helping people explore the natural beauty of Great Britain, so this project will help users location national parks - but it could just as easily be built to locate stores, offices, railway stations, hospitals and so on. 
 
-<iframe src="/public/os-data-hub-tutorials/dist/web-development/national-parks-locator/" height="600" width="800" style="border:1px solid #eee"></iframe>
+<p><iframe style="width:100%;height:400px;max-width:1200px;border:1px solid #f5f5f5;" src="/public/os-data-hub-tutorials/dist/web-development/national-parks-locator/"></iframe></p>
 
 ## A quick overview
 
