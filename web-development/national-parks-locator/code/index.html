@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:200,200i,300,300i,400,400i,600,600i,700,700i,900,900i" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.2/leaflet.css" />
-    <link rel="stylesheet" href="./assets/css/style.css" />
-    <link rel="stylesheet" href="./assets/css/vendor.css" />
+    <link rel="stylesheet" href="./assets/css/style.min.css" />
+
     <style>
 
         .panel-header {
@@ -107,19 +107,32 @@
             </div>
         </div>
     </div>
+    <div class="osel-sliding-side-panel panel-right">
+        <div class="panel-close"><i class="material-icons" aria-label="Close panel">close</i></div>
+        <div class="panel-header">Properties</div>
+        <div class="scroller-no-tabs">
+            <div class="osel-feature-properties"></div>
+        </div>
+    </div>
     <div id="map" class="osel-map" tabindex="0">
     
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/slideReveal/1.1.2/jquery.slidereveal.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.2/leaflet.js"></script>
-    <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
-    <script src="./assets/js/init.js"></script>
-    <script src="./assets/js/main.js"></script>
-    <script src="./assets/js/defaults.js"></script>
-    <script src="./assets/lib/os-colour.js"></script>
+     <!-- Core Libraries -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.devbridge-autocomplete/1.4.7/jquery.autocomplete.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.5.0/proj4.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/rangeslider.js/2.3.1/rangeslider.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/slideReveal/1.1.2/jquery.slidereveal.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/add-clear@2.0.7/addclear.min.js"></script>
+     <!-- Mapping Library (+ Plugins) -->
+     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-omnivore/0.3.4/leaflet-omnivore.min.js"></script>
+     <!-- OSEL Framework -->
+     <script src="./assets/js/bundle.min.js"></script>
+
     <script src="./js/tutorial.js"></script>
 </body>
 </html>

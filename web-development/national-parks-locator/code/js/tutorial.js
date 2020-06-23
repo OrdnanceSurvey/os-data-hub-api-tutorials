@@ -53,8 +53,8 @@ var basemap = L.tileLayer(
 // We'll pass this into the omnivore.geojson() method
 var parksLayer = L.geoJSON(null, {
         style: {
-            fillColor: osGreen[3],
-            color: osGreen[6],
+            fillColor: os.palette.sequential.s2[3],
+            color: os.palette.sequential.s2[6],
             fillOpacity: 0.3,
             weight: 1
         },
@@ -70,7 +70,7 @@ var parksLayer = L.geoJSON(null, {
                     unhighlightListElement(feature.properties.id);
                 }, 
                 'click': function (e) {
-                    flyToBoundsOffset(feature.properties.id, '.osel-sliding-side-panel')
+                    flyToBoundsOffset(feature.properties.id)
                 }
             });
 
@@ -103,7 +103,7 @@ var nationalParks = omnivore.geojson('./data/national-parks.json', null, parksLa
 
             $(element).find('span').on('click', function (e) {
                 e.preventDefault();
-                flyToBoundsOffset(nationalPark.properties.id, '.osel-sliding-side-panel')
+                flyToBoundsOffset(nationalPark.properties.id)
             });
     
             $(element).on('mouseenter', function () {
@@ -168,9 +168,9 @@ function unhighlightListElement(dataId) {
         .removeClass('highlight')
 }
 
-function flyToBoundsOffset(dataId, offsetElSelector, elPosition='left') {
+function flyToBoundsOffset(dataId, elPosition='left') {
 
-    let offset = $(offsetElSelector).width();
+    let offset = os.main.viewportPaddingOptions()[elPosition];
 
     let geojsonLayer = getFeatureById(dataId);
 
