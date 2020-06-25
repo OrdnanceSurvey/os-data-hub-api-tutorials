@@ -1,4 +1,3 @@
-const apiKey = "FtAS7OR45lE3AR78KxrdGpfYq8uAAV6K"//"YOUR_API_KEY";
 const endpoints = {
   maps: "https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1",
   features: "https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1",
@@ -9,7 +8,7 @@ const endpoints = {
 
 // Define parameters object.
 var params = {
-  key: apiKey,
+  key: config.apikey,
   service: "WMTS",
   request: "GetTile",
   version: "2.0.0",
@@ -108,22 +107,23 @@ map.on("style.load", function () {
 document
   .getElementById("fetch-and-calculate")
   .addEventListener("click", async function () {
-    
     let geom = draw.getAll();
-    
+
     // For this demo we will cap query geometry size to limit the number of API calls
     let area = turf.area(geom.features[0].geometry),
-    rounded_area = Math.round(area * 100) / 100;
-    
-    if( rounded_area > 100000 ) {
-      os.notification.show("warning", 'Drawn polygon exceeds maximum size limit of 0.1 square km. Please try again.');
+      rounded_area = Math.round(area * 100) / 100;
+
+    if (rounded_area > 100000) {
+      os.notification.show(
+        "warning",
+        "Drawn polygon exceeds maximum size limit of 0.1 square km. Please try again."
+      );
       $("#loader").css({ visibility: "hidden" });
-      draw.deleteAll()
+      draw.deleteAll();
       return; // <- break out of the callback
     }
-    
-    addSpinner();
 
+    addSpinner();
 
     let buildings = await getIntersectingFeatures(geom);
 
@@ -183,7 +183,7 @@ document
     // zoom to geom with .osel-panel offset
     map.fitBounds(turf.bbox(buildings), {
       padding: {
-        left:  os.main.viewportPaddingOptions().left + 50,
+        left: os.main.viewportPaddingOptions().left + 50,
         right: 50,
         bottom: 50,
         top: 50,
@@ -222,7 +222,7 @@ async function getIntersectingFeatures(polygon) {
 
   // Define parameters object.
   let wfsParams = {
-    key: apiKey,
+    key: config.apikey,
     service: "WFS",
     request: "GetFeature",
     version: "2.0.0",
