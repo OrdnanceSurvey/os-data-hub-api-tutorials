@@ -2,7 +2,7 @@
  * LEAFLET
  */
 .leaflet-container .leaflet-control-attribution {
-  font: 10px 'Source Sans Pro';
+  font: 10px "Source Sans Pro";
   height: 18px;
   line-height: 18px;
   background: rgba(245, 245, 245, 0.8);
@@ -32,7 +32,7 @@
  * MAPBOX GL
  */
 .mapboxgl-ctrl.mapboxgl-ctrl-attrib {
-  font: 10px 'Source Sans Pro';
+  font: 10px "Source Sans Pro";
   height: 18px;
   line-height: 18px;
   background: rgba(245, 245, 245, 0.8);
@@ -85,7 +85,7 @@
  * MATERIAL ICONS
  */
 .material-icons {
-  font-family: 'Material Icons';
+  font-family: "Material Icons";
   font-weight: normal;
   font-style: normal;
   font-size: 24px;
@@ -104,7 +104,7 @@
   /* Support for Firefox. */
   -moz-osx-font-smoothing: grayscale;
   /* Support for IE. */
-  font-feature-settings: 'liga';
+  font-feature-settings: "liga";
 }
 .material-icons {
   vertical-align: top;
@@ -176,7 +176,7 @@
   border: none;
   box-shadow: none;
   color: #2979af;
-  font: 16px 'Source Sans Pro';
+  font: 16px "Source Sans Pro";
   padding: 0;
   position: absolute;
   display: table;
