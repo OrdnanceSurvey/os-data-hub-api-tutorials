@@ -2,7 +2,7 @@
 
 In this tutorial, we'll learn how to use D3.js to add an overlay of geographic features to an interactive Mapbox GL map. Our goal is to create a smooth-panning and zooming user experience, and to gain access to the amazing capabilities of D3.
 
-<iframe src="/public/os-data-hub-tutorials/dist/web-development/d3-overlay/" height="600" width="800" frameborder="0" style="border:1px solid #eee" allowfullscreen=""></iframe>
+<p><iframe style="width:100%;height:400px;max-width:1200px;border:1px solid #f5f5f5;" src="/public/os-data-hub-tutorials/dist/web-development/d3-overlay/"></iframe></p>
 
 ## The HTML
 
