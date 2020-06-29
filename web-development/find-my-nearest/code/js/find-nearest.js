@@ -77,7 +77,6 @@ function fetchNearestFeatures(e) {
 
   // Create an OGC XML filter parameter value which will select the Greenspace
   // features intersecting the circle polygon coordinates.
-  // *** ADD Functionality to filter by Type attribute based on dropdown input!
   var xml = `<ogc:Filter>
         <ogc:Intersects>
             <ogc:PropertyName>SHAPE</ogc:PropertyName>

@@ -3,7 +3,7 @@
  */
 var config = {};
 
-config.apikey = "FtAS7OR45lE3AR78KxrdGpfYq8uAAV6K";
+config.apikey = "YOUR_KEY_HERE";
 
 config.defaultField = {
   mapLayer01: "PC",
