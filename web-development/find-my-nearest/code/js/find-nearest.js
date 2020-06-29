@@ -1,11 +1,12 @@
 var initLoad = true;
 var coordsToFind = null;
 
-// 1.
-// Initialize the map.
-var wmtsServiceUrl = "https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1";
-var wfsServiceUrl = "https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1";
+const endpoints = {
+  maps: "https://api.os.uk/maps/raster/v1/zxy",
+  features: "https://api.os.uk/features/v1/wfs"
+};
 
+// 1.
 // Initialize the map.
 var mapOptions = {
   minZoom: 7,
@@ -21,7 +22,7 @@ var map = new L.map("map", mapOptions);
 // Load and display WMTS tile layer on the map.
 var basemapQueryString = generateQueryString();
 
-var basemap = L.tileLayer(wmtsServiceUrl + "?" + basemapQueryString, {
+var basemap = L.tileLayer(endpoints.maps + "?" + basemapQueryString, {
   maxZoom: 20,
 }).addTo(map);
 
@@ -223,7 +224,7 @@ function getUrl(params) {
     .map((paramName) => paramName + "=" + encodeURI(params[paramName]))
     .join("&");
 
-  return wfsServiceUrl + "?" + encodedParameters;
+  return endpoints.features + "?" + encodedParameters;
 }
 
 function addDistanceFromPointToPolygon(point, polygon) {
@@ -386,7 +387,7 @@ function generateQueryString(style = defaults.basemapStyle) {
     .join("&");
 }
 function switchBasemap(style) {
-  basemap.setUrl(wmtsServiceUrl + "?" + generateQueryString(style));
+  basemap.setUrl(endpoints.maps + "?" + generateQueryString(style));
 }
 
 function zoomToLayerExtent(lyr) {
@@ -401,7 +402,7 @@ function setLayerOpacity(lyr, value) {
 
 function getTileServer(style = defaults.basemapStyle) {
   return (
-    wmtsServiceUrl + "/" + style + "_3857/{z}/{x}/{y}.png?key=" + config.apikey
+    endpoints.maps + "/" + style + "_3857/{z}/{x}/{y}.png?key=" + config.apikey
   );
 }
 

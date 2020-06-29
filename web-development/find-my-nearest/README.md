@@ -14,23 +14,30 @@ Maps that update based on user interaction can be incredibly useful. The Find My
 
 The webpage lets users select a location on a map, a feature type to visualize, then shows features of those type near their selected location.
 
-This tutorial will show how we used _[Leaflet](https://leafletjs.com/)_, _[Turf.js](https://osdatahub.os.uk)_ and the _[OS Maps](https://osdatahub.os.uk/docs/wmts/overview)_ and _[OS Features](https://osdatahub.os.uk/docs/wfs/overview)_ APIs to create an interactive web map. We'll only focus on key functionality here, but all code can be reviewed on Github.
+<p><iframe style="width:100%;height:400px;max-width:1200px;border:1px solid #f5f5f5;" src="/public/os-data-hub-tutorials/dist/web-development/find-my-nearest/"></iframe></p>
+
+This tutorial will show how we used _[Leaflet](https://leafletjs.com/)_, _[Turf.js](https://osdatahub.os.uk)_ and the _[OS Maps](https://osdatahub.os.uk/docs/zxy/overview)_ and _[OS Features](https://osdatahub.os.uk/docs/wfs/overview)_ APIs to create an interactive web map. We'll only focus on key functionality here, but all code can be reviewed on Github.
 
 ## Configuring the OS Maps API
 
 The Find My Nearest interface shows a large interactive map, created using Leaflet.
 
-Leaflet works by connecting to the OS Maps API, which is a [web map tile service](https://www.ogc.org/standards/wmts). As the user pans and zooms on the map, the browser fetches and renders .png images in the appropriate position. The library provides a large suite of methods enabling interaction and visualization, detailed in the documentation.
+Leaflet works by connecting to the OS Maps API, which has both a [web map tile service](https://www.ogc.org/standards/wmts) and a [ZXY](https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames) version. As the user pans and zooms on the map, the browser fetches and renders .png images in the appropriate position. The library provides a large suite of methods enabling interaction and visualization, detailed in the documentation.
 
 ### Sample raster tile, or image with tiles outlined.
 
 When the Leaflet library is imported, a global `L` object is declared. When we instantiate a new `L.map` object we provide the ID of a DOM `<div>` element, as well as a `mapOptions` object specifying where to set the initial view. We also add controls to the map.
 
 ```javascript
+var initLoad = true;
+var coordsToFind = null;
+
+// 1.
+// Initialize the map.
 var mapOptions = {
   minZoom: 7,
   maxZoom: 20,
-  center: [51.502, -0.126],
+  center: [54.425, -2.968],
   zoom: 14,
   attributionControl: false,
   zoomControl: false,
@@ -38,7 +45,7 @@ var mapOptions = {
 
 var map = new L.map("map", mapOptions);
 /*      'map' is the id of the 
-                    <div> in the HTML document  */
+          <div> in the HTML document  */
 
 var ctrlScale = L.control.scale({ position: "bottomright" }).addTo(map);
 ```
@@ -47,15 +54,16 @@ This alone does not give the browser any map data to visualize, though. For that
 
 ```javascript
 // Set API key
-const apiKey = "API_KEY_HERE";
+const config = { apikey: "API_KEY_HERE" };
 
 // Define URLs of API endpoints
-var wmtsServiceUrl = "https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1";
-wfsServiceUrl = "https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1";
+const endpoints = {
+  maps: "https://api.os.uk/maps/raster/v1/zxy",
+  features: "https://api.os.uk/features/v1/wfs"
+};
 
-// Load and display WMTS tile layer on the map.
-
-var basemap = L.tileLayer(wmtsServiceUrl + "?" + basemapQueryString, {
+// Load and display ZXY tile layer on the map.
+var basemap = L.tileLayer(endpoints.maps + "?" + basemapQueryString, {
   maxZoom: 20,
 }).addTo(map);
 ```
@@ -141,21 +149,21 @@ var coords = circle.geometry.coordinates[0].join(" ");
 
 // Create an OGC XML filter parameter value which will select the
 // features intersecting the circle polygon coordinates.
-var xml = "<ogc:Filter>";
-xml += "<ogc:Intersects>";
-xml += "<ogc:PropertyName>SHAPE</ogc:PropertyName>";
-xml += '<gml:Polygon srsName="urn:ogc:def:crs:EPSG::4326">';
-xml += "<gml:outerBoundaryIs>";
-xml += "<gml:LinearRing>";
-xml += "<gml:coordinates>" + coords + "</gml:coordinates>";
-xml += "</gml:LinearRing>";
-xml += "</gml:outerBoundaryIs>";
-xml += "</gml:Polygon>";
-xml += "</ogc:Intersects>";
-xml += "</ogc:Filter>";
+var xml = `<ogc:Filter>
+      <ogc:Intersects>
+          <ogc:PropertyName>SHAPE</ogc:PropertyName>
+          <gml:Polygon srsName="urn:ogc:def:crs:EPSG::4326">
+              <gml:outerBoundaryIs>
+                  <gml:LinearRing>
+                      <gml:coordinates>${coords}</gml:coordinates>
+                  </gml:LinearRing>
+              </gml:outerBoundaryIs>
+          </gml:Polygon>
+      </ogc:Intersects>
+  </ogc:Filter>`;
 
 let wfsParams = {
-  key: apiKey,
+  key: config.apikey,
   service: "WFS",
   request: "GetFeature",
   version: "2.0.0",
@@ -182,7 +190,7 @@ function getUrl(params) {
     .map((paramName) => paramName + "=" + encodeURI(params[paramName]))
     .join("&");
 
-  return wfsServiceUrl + "?" + encodedParameters;
+  return endpoints.features + "?" + encodedParameters;
 }
 // An example output of this function call would be:
 // https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1?key=INSERT_API_KEY&service=WFS&request=GetFeature&version=2.0.0&typeNames=Zoomstack_Greenspace&outputFormat=GEOJSON&srsName=urn:ogc:def:crs:EPSG::4326&filter=%3Cogc:Filter%3E%3Cogc:Intersects%3E%3Cogc:PropertyName%3ESHAPE%3C/ogc:PropertyName%3E%3Cgml:Polygon%20srsName=%22urn:ogc:def:crs:EPSG::4326%22%3E%3Cgml:outerBoundaryIs%3E%3Cgml:LinearRing%3E%3Cgml:coordinates%3E-0.136771,51.51367520363725%20-0.1405111456338577,51.513368708192694%20-0.14399626401253374,51.51247012090285%20-0.14698874577786938,51.51104071147652%20-0.149284620111411,51.50917793615162%20-0.15072746521541214,51.507008784324505%20-0.15121905792711335,51.50468111255005%20-0.15072603948008415,51.50235355967132%20-0.14928215066533848,51.500184732673425%20-0.1469858943070869,51.4983224010735%20-0.14399379456633463,51.49689343537215%20-0.1405097198984031,51.49599517291155%20-0.136771,51.49568879636275%20-0.13303228010159693,51.49599517291155%20-0.12954820543366538,51.49689343537215%20-0.12655610569291312,51.4983224010735%20-0.12425984933466153,51.500184732673425%20-0.12281596051991586,51.50235355967132%20-0.12232294207288667,51.50468111255005%20-0.12281453478458788,51.507008784324505%20-0.12425737988858902,51.50917793615162%20-0.12655325422213062,51.51104071147652%20-0.12954573598746627,51.51247012090285%20-0.13303085436614234,51.513368708192694%20-0.136771,51.51367520363725%3C/gml:coordinates%3E%3C/gml:LinearRing%3E%3C/gml:outerBoundaryIs%3E%3C/gml:Polygon%3E%3C/ogc:Intersects%3E%3C/ogc:Filter%3E&count=100&startIndex=0
