@@ -1,7 +1,8 @@
-const config = { apikey: "FtAS7OR45lE3AR78KxrdGpfYq8uAAV6K" };
+const config = { apikey: "YOUR_KEY_HERE" };
+
 const endpoints = {
-  vectorTile: "https://osdatahubapi.os.uk/OSVectorTileAPI/vts/v1",
-  features: "https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1",
+  vectorTile: "https://api.os.uk/maps/vector/v1/vts",
+  features: "https://api.os.uk/maps/features/v1/wfs",
 };
 
 // Instantiate a new mapboxgl.Map object.
@@ -80,7 +81,7 @@ map.on("load", async function () {
     .data(camden.features)
     .join("path")
     .attr("class", "camden")
-    .style("fill", osColours.qualitative.lookup[1])
+    .style("fill", os.palette.qualitative.lookup[1])
     .style("opacity", 0.2);
 
   // Now, an XML filter for our Features API calls
@@ -141,13 +142,13 @@ map.on("load", async function () {
     .style("fill", (d) => {
       switch (d.properties.Type) {
         case "Railway Station":
-          return osColours.qualitative.lookup[2];
+          return os.palette.qualitative.lookup[2];
           break;
         case "Railway Station And London Underground Station":
-          return osColours.qualitative.lookup[3];
+          return os.palette.qualitative.lookup[3];
           break;
         case "London Underground Station":
-          return osColours.qualitative.lookup[4];
+          return os.palette.qualitative.lookup[4];
           break;
         default:
           return "black";
