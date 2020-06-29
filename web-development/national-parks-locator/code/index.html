@@ -25,11 +25,14 @@
 
     <style>
       .panel-header {
-        height: 100px !important;
         line-height: unset;
       }
 
-      .np-arrow-green {
+      .panel-header h1 {
+        margin: 0px;
+      }
+
+      .np-arrow {
         height: 25px;
         margin-bottom: -5px;
         margin-right: 10px;
@@ -38,14 +41,9 @@
         transform: unset;
       }
 
-      .highlight .np-arrow-green {
+      .highlight .np-arrow {
         transition: transform 200ms;
         transform: rotate(23deg);
-      }
-
-      .np-logo-main {
-        height: 50px;
-        margin: 25px 0;
       }
 
       span.np-name {
@@ -97,7 +95,7 @@
       }
 
       .osel-sliding-side-panel .scroller-no-tabs {
-        top: 100px !important;
+        /* top: 100px !important; */
       }
     </style>
   </head>
@@ -108,7 +106,8 @@
       </div>
       <div class="panel-content">
         <div class="panel-header">
-          <img class="np-logo-main" src="./assets/img/NP-logo-wt.png" />
+          <h1>UK National Parks</h1>
+          <!-- <img class="np-logo-main" src="./assets/img/NP-logo-wt.png" /> -->
         </div>
         <div class="scroller-no-tabs">
           <ul class="layers"></ul>

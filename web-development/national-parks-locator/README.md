@@ -59,11 +59,11 @@ In [`tutorial.js`](./js/tutorial.js) the key logic of the locator app is defined
 
 ### Setting up the map
 
-First, a new Leaflet map object is instantiated and a basemap is added using the OS Maps API. (We'll connect to the Web Map Tile Service (WMTS) version of the API in this project.) This populates the `#map` div with an OS map.
+First, a new Leaflet map object is instantiated and a basemap is added using the OS Maps API. (We'll connect to the ZXY version of the API in this project.) This populates the `#map` div with an OS map.
 
 ```javascript
 // API key - required to fetch data from the OS Maps API
-var apiKey = "API_KEY_HERE";
+var config = { apikey: "YOUR_KEY_HERE" };
 
 // Define map options including where the map loads and zoom constraints
 var mapOptions = {
@@ -81,12 +81,14 @@ var map = new L.map("map", mapOptions);
 // Add scale control to the map.
 var ctrlScale = L.control.scale({ position: "bottomright" }).addTo(map);
 
-// Load and display WMTS tile layer on the map.
-var wmtsServiceUrl = "https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1";
+// Load and display ZXY tile layer on the map.
+const endpoints = {
+  maps: "https://api.os.uk/maps/raster/v1/zxy"
+}
 
 // Define parameters object.
 var wmtsParams = {
-  key: apiKey,
+  key: config.apikey,
   service: "WMTS",
   request: "GetTile",
   version: "2.0.0",
@@ -107,7 +109,7 @@ var basemapQueryString = Object.keys(wmtsParams)
   })
   .join("&");
 
-var basemap = L.tileLayer(wmtsServiceUrl + "?" + basemapQueryString, {
+var basemap = L.tileLayer(endpoints.maps + "?" + basemapQueryString, {
   maxZoom: 20,
 }).addTo(map);
 ```

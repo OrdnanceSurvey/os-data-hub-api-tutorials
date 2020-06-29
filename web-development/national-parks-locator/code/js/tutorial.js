@@ -1,5 +1,5 @@
 // First, set up the map
-const config = { apikey: "FtAS7OR45lE3AR78KxrdGpfYq8uAAV6K" };
+const config = { apikey: "YOUR_KEY_HERE" };
 
 // Define map options including where the map loads and zoom constraints
 var mapOptions = {
@@ -17,9 +17,10 @@ var map = new L.map("map", mapOptions);
 // Add scale control to the map.
 var ctrlScale = L.control.scale({ position: "bottomright" }).addTo(map);
 
-// Load and display WMTS tile layer on the map.
-
-var wmtsServiceUrl = "https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1";
+// Load and display ZXY tile layer on the map.
+const endpoints = {
+  maps: "https://api.os.uk/maps/raster/v1/zxy"
+}
 
 // Define parameters object.
 var wmtsParams = {
@@ -44,7 +45,7 @@ var basemapQueryString = Object.keys(wmtsParams)
   })
   .join("&");
 
-var basemap = L.tileLayer(wmtsServiceUrl + "?" + basemapQueryString, {
+var basemap = L.tileLayer(endpoints.map + "?" + basemapQueryString, {
   maxZoom: 20,
 }).addTo(map);
 
@@ -87,7 +88,7 @@ var nationalParks = omnivore
       let element = `<li class="layer" data-np-id="${nationalPark.properties.id}">
                                 <div class="layer-element icon" data-type="list-item" data-id="${nationalPark.properties.id}">
                                     <div class="label">
-                                        <img class='np-arrow-green' src='./assets/img/np-arrow-green.png' />
+                                        <img class='np-arrow' src='./assets/img/np-arrow.png' />
                                         <span class='np-name'>${nationalPark.properties.name}
                                             </span>
                                             <a href="${nationalPark.properties.url}" target="_blank">
