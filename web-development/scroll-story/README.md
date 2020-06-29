@@ -16,13 +16,15 @@ With this tutorial we will explore how to tell stories with maps. This is a patt
 
 The story will follow an October ascent of Ben Nevis, Great Britain's tallest mountain.
 
-### HTML & CSS
+<p><iframe style="width:100%;height:400px;max-width:1200px;border:1px solid #f5f5f5;" src="/public/os-data-hub-tutorials/dist/web-development/scroll-story"></iframe></p>
 
-The HTML and CSS for this tutorial is quite lightweight. In [`index.html`](./index.html), we load the Mapbox GL JS stylsheets and JavaScript library, along with [Scrollama](https://github.com/russellgoldenberg/scrollama) for detecting scroll events. We also load a local `style.css` stylesheet with a few styling rules.
+## HTML & CSS
+
+The HTML and CSS for this tutorial is quite lightweight. In [`index.html`](https://github.com/johnx25bd/os-data-hub-api-tutorials/blob/master/web-development/scroll-story/code/index.html), we load the Mapbox GL JS stylsheets and JavaScript library, along with [Scrollama](https://github.com/russellgoldenberg/scrollama) for detecting scroll events. We also load a local `style.css` stylesheet with a few styling rules.
 
 In the document `<body>`, we create two `<div>`s: `#map` and `#story`. We then load an execute scripts: `js/config.js` and `js/tutorial.js`. (We also create a few helper functions and variables in `js/helpers.js`) It is inside these JavaScipt files that the story content is written, the map is created, and the scroll story is set up.
 
-### `config.js`
+## `config.js`
 
 In the config file, a single global variable is declared: `config`. The assigned object literal has a number of properties that are accessed by the JavaScript code executed in `tutorial.js`. These include the story `title`, `subtitle`, and a `chapters` array, which will be displayed in `<div>` elements on the page.
 
@@ -58,7 +60,7 @@ Here's an example object in this `chapters` array - each property will be used i
 }
 ```
 
-#### The `chapters`
+### The `chapters`
 
 Just as in a book, the story is divided into chapters - represented as an array of objects. Eact `chapter` object has the following properties:
 
@@ -76,7 +78,7 @@ _(Note: this is slightly adapted from the Mapbox storytelling template, to enabl
 
 We'll be using all of these properties to create our scroll story. The `location` `object` deserves extra attention as this is where we declare the `center`, `zoom`, `pitch` and `bearing` values - which ultimately determine what is visible on the map that appears in the viewport. Mapbox provides a handy [Location Helper](https://demos.mapbox.com/location-helper/) interface to capture these values.
 
-### `tutorial.js`
+## `tutorial.js`
 
 The logic of the app is written in `tutorial.js`. We'll break up the process into a few steps. These rely on a `config.js` document that has the story chapters, as well as locations and layers to load on chapter enter and exit. It's easiest to adapt that once the entire app is working, so you can see the changes you're making to the story.
 
@@ -89,7 +91,7 @@ We'll follow these steps:
 
 Let's dive in.
 
-#### Our vector tile map
+### Our vector tile map
 
 This scroll story will use some advanced animations, including ones that change the camera's pitch. Vector tiles are particularly well-suited for slick, fast animated web maps, so we'll be using the OS Vector Tile API.
 
@@ -97,21 +99,22 @@ We'll be using Mapbox GL JS, so let's create a map and connect to the API:
 
 ```javascript
 // Set up Mapbox GL JS map with OS Vector Tile API
-const apiKey = "YOUR_KEY_HERE";
-var serviceUrl = "https://osdatahubapi.os.uk/OSVectorTileAPI/vts/v1";
+config.apikey = "YOUR_KEY_HERE";
+const endpoints = {
+  vectorTile = "https://api.os.uk/maps/vector/v1/vts"
+}
 
-// Initialize the map object and set
-// the view based on the first chapter
-var map = new mapboxgl.Map({
+// Initialize the map object.
+const map = new mapboxgl.Map({
   container: "map",
-  style: serviceUrl + "/resources/styles",
+  style: endpoints.vectorTile + "/resources/styles?key=" + config.apikey,
   center: config.chapters[0].location.center,
   zoom: config.chapters[0].location.zoom,
   bearing: config.chapters[0].location.bearing,
   pitch: config.chapters[0].location.pitch,
   scrollZoom: false,
   transformRequest: (url) => {
-    url += "?key=" + apiKey + "&srs=3857";
+    url += "&srs=3857";
     return {
       url: url,
     };
@@ -121,7 +124,7 @@ var map = new mapboxgl.Map({
 
 That's it! Now we've got a vector tile basemap. We'll be adding layers later on - for now let's move on to building our HTML document.
 
-#### Creating our HTML
+### Creating our HTML
 
 We have all the information we need for our story in the object assigned to the `config` variable. We essentially create a new HTML element for each of the relevant properties we have in the `config` object. This uses vanilla JavaScript. It's worth noting: this code is based on the [Mapbox storytelling template](https://github.com/mapbox/storytelling), so it may look familiar.
 
@@ -224,7 +227,7 @@ if (config.showMarkers) {
 
 Now we've got a vector tile basemap and HTML with header, chapters and a footer. We're ready to add our custom map layers.
 
-#### Custom map layers
+### Custom map layers
 
 For this demo we add three GeoJSON layers to our map - a point, line and polygon. These features represent the summit marker, the trail up the mountain and the building at the top of Ben Nevis - the goal is to show what is possible. Custom layers are often crucial to the story.
 
@@ -259,8 +262,10 @@ map.on("load", async function () {
     // from the vector tile:
     map.setLayoutProperty('OS Open Zoomstack - Road/local_buildings', 'visibility', 'none')
 
-    // First, we set up the geographic layers we will
-    // visualise in the scroll story
+    /*
+        First, we set up the geographic layers we will
+        visualise in the scroll story.
+     */
 
     // In this step we fetch GeoJSON and add them to each object
     // in the layers array:
@@ -337,7 +342,7 @@ layers.forEach((layer) => {
 
 Great, now the GeoJSON layers are added - a point, a line and a polygon. This opens the story maps up to the capabilities of Mapbox GL JS, which can work with [raster imagery](https://docs.mapbox.com/mapbox-gl-js/example/image-on-a-map/), [custom vector tiles](https://docs.mapbox.com/mapbox-gl-js/example/vector-source/), [heatmaps](https://docs.mapbox.com/mapbox-gl-js/example/heatmap-layer/), [3D graphics](https://docs.mapbox.com/mapbox-gl-js/example/3d-buildings/) and more.
 
-### Set up the `scroller`
+## Set up the `scroller`
 
 When a new chapter scrolls into view, the chapter map view needs to be triggered. Scrollama makes this easy by using [IntersectionObserver](https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API) to keep track of where elements are on the page.
 
@@ -384,5 +389,3 @@ In this case we change element classes and call the `map.flyTo()` method to anim
 ## Wrapping up
 
 With that, we've created a scroll story of an autumn climb up Ben Nevis! We wrote our story in the `config` object literal, including information about how to position the map and which layers to show. We added custom GeoJSON layers that originally came from the OS Features API, and set up an instance of `scrollama` to update the map and content based on which chapter scrolled into view.
-
-If you make a great scroll story - with or without OS data - share it with us! Tweet [@OrdnanceSurvey](https://twitter.com/ordnancesurvey) and tag [#OSDeveloper](https://twitter.com/hashtag/OSDeveloper)

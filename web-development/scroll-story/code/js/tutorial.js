@@ -2,13 +2,15 @@
 const scroller = scrollama();
 
 // Set up Mapbox GL JS map with OS Vector Tile API
-const apiKey = "FtAS7OR45lE3AR78KxrdGpfYq8uAAV6K";
-const serviceUrl = "https://osdatahubapi.os.uk/OSVectorTileAPI/vts/v1";
+config.apikey = "YOUR_KEY_HERE";
+const endpoints = {
+  vectorTile = "https://api.os.uk/maps/vector/v1/vts"
+}
 
 // Initialize the map object.
 const map = new mapboxgl.Map({
   container: "map",
-  style: serviceUrl + "/resources/styles?key=" + apiKey,
+  style: endpoints.vectorTile + "/resources/styles?key=" + config.apikey,
   center: config.chapters[0].location.center,
   zoom: config.chapters[0].location.zoom,
   bearing: config.chapters[0].location.bearing,

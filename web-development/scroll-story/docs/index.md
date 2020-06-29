@@ -87,21 +87,22 @@ We'll be using Mapbox GL JS, so let's create a map and connect to the API:
 
 ```javascript
 // Set up Mapbox GL JS map with OS Vector Tile API
-const apiKey = "YOUR_KEY_HERE";
-var serviceUrl = "https://osdatahubapi.os.uk/OSVectorTileAPI/vts/v1";
+config.apikey = "YOUR_KEY_HERE";
+const endpoints = {
+  vectorTile = "https://api.os.uk/maps/vector/v1/vts"
+}
 
-// Initialize the map object and set
-// the view based on the first chapter
-var map = new mapboxgl.Map({
+// Initialize the map object.
+const map = new mapboxgl.Map({
   container: "map",
-  style: serviceUrl + "/resources/styles",
+  style: endpoints.vectorTile + "/resources/styles?key=" + config.apikey,
   center: config.chapters[0].location.center,
   zoom: config.chapters[0].location.zoom,
   bearing: config.chapters[0].location.bearing,
   pitch: config.chapters[0].location.pitch,
   scrollZoom: false,
   transformRequest: (url) => {
-    url += "?key=" + apiKey + "&srs=3857";
+    url += "&srs=3857";
     return {
       url: url,
     };
