@@ -1,22 +1,22 @@
 # National Parks Locator
 
-Maps help people work out where they are. In this tutorial, we'll build an interactive locator, to help users find features on a map. At Ordnance Survey we love helping people explore the natural beauty of Great Britain, so this project will help users location national parks - but it could just as easily be built to locate stores, offices, railway stations, hospitals and so on. 
+Maps help people work out where they are. In this tutorial, we'll build an interactive locator, to help users find features on a map. At Ordnance Survey we love helping people explore the natural beauty of Great Britain, so this project will help users location national parks - but it could just as easily be built to locate stores, offices, railway stations, hospitals and so on.
 
 ![National Parks Locator interface](./media/national-parks-locator.png)
 
 ## Tools and APIs
 
-We use data the *[OS Maps](https://osdatahub.os.uk/docs/wmts/overview)* and *[OS Features](https://osdatahub.os.uk/docs/wfs/overview)* APIs , as well as *[Leaflet](https://leafletjs.com/)*, *[leaflet-omnivore](https://github.com/mapbox/leaflet-omnivore)* and *[jQuery](https://jquery.com/)* to build this interactive web interface. 
+We use data the _[OS Maps](https://osdatahub.os.uk/docs/wmts/overview)_ and _[OS Features](https://osdatahub.os.uk/docs/wfs/overview)_ APIs , as well as _[Leaflet](https://leafletjs.com/)_, _[leaflet-omnivore](https://github.com/mapbox/leaflet-omnivore)_ and _[jQuery](https://jquery.com/)_ to build this interactive web interface.
 
 ## Tutorial
 
-Our locator app will have two main areas of the interface: a list of features to locate in a panel, and a map with those features displayed. 
+Our locator app will have two main areas of the interface: a list of features to locate in a panel, and a map with those features displayed.
 
 To make things interesting we are going to connect the two representations of the map geometries - when the user hovers on a national park on the list, the corresponding geometry should highlight, and vice versa. We will also implement event handlers so when a user clicks on either the `<li>` or the polygon, the map zooms to that national park.
 
 ## The Data
 
-We created a lightweight JSON file, [`/data/national-parks.json`](./data/national-parks.json). The file contains a GeoJSON FeatureCollection. Each Feature in the collection represents a national park. Each Feature's `property` attribute contains the `name` and a `url` for the park, plus an `id`. 
+We created a lightweight JSON file, [`/data/national-parks.json`](./data/national-parks.json). The file contains a GeoJSON FeatureCollection. Each Feature in the collection represents a national park. Each Feature's `property` attribute contains the `name` and a `url` for the park, plus an `id`.
 
 ```javascript
 {
@@ -55,158 +55,147 @@ Crucially, the HTML includes a `<ul class="layers">` element, as well as a `<div
 
 ## The JavaScript
 
-In [`tutorial.js`](./js/tutorial.js) the key logic of the locator app is defined. Here we'll walk through line by line to explain how it works. 
+In [`tutorial.js`](./js/tutorial.js) the key logic of the locator app is defined. Here we'll walk through line by line to explain how it works.
 
 ### Setting up the map
 
-First, a new Leaflet map object is instantiated and a basemap is added using the OS Maps API. (We'll connect to the Web Map Tile Service (WMTS) version of the API in this project.) This populates the `#map` div with an OS map.
+First, a new Leaflet map object is instantiated and a basemap is added using the OS Maps API. (We'll connect to the ZXY version of the API in this project.) This populates the `#map` div with an OS map.
 
 ```javascript
-
 // API key - required to fetch data from the OS Maps API
-var apiKey = 'API_KEY_HERE';
+var config = { apikey: "YOUR_KEY_HERE" };
 
 // Define map options including where the map loads and zoom constraints
 var mapOptions = {
-    minZoom: 7,
-    maxZoom: 20,
-    center: [ 54.92240688263684, -5.84949016571045 ],
-    zoom: 7,
-    attributionControl: false,
-    zoomControl: false
+  minZoom: 7,
+  maxZoom: 20,
+  center: [54.92240688263684, -5.84949016571045],
+  zoom: 7,
+  attributionControl: false,
+  zoomControl: false,
 };
 
 // Instantiate a new L.map object
-var map = new L.map('map', mapOptions);
+var map = new L.map("map", mapOptions);
 
 // Add scale control to the map.
-var ctrlScale = L.control.scale({ position: 'bottomright' }).addTo(map);
+var ctrlScale = L.control.scale({ position: "bottomright" }).addTo(map);
 
-// Load and display WMTS tile layer on the map.
-var wmtsServiceUrl = 'https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1';
+// Load and display ZXY tile layer on the map.
+const endpoints = {
+  maps: "https://api.os.uk/maps/raster/v1/zxy"
+}
 
 // Define parameters object.
 var wmtsParams = {
-    key: apiKey,
-    service: 'WMTS',
-    request: 'GetTile',
-    version: '2.0.0',
-    height: 256,
-    width: 256,
-    outputFormat: 'image/png',
-    style: 'default',
-    layer: 'Outdoor_3857',
-    tileMatrixSet: 'EPSG:3857',
-    tileMatrix: '{z}',
-    tileRow: '{y}',
-    tileCol: '{x}'
+  key: config.apikey,
+  service: "WMTS",
+  request: "GetTile",
+  version: "2.0.0",
+  height: 256,
+  width: 256,
+  outputFormat: "image/png",
+  style: "default",
+  layer: "Outdoor_3857",
+  tileMatrixSet: "EPSG:3857",
+  tileMatrix: "{z}",
+  tileRow: "{y}",
+  tileCol: "{x}",
 };
 
-var basemapQueryString = Object.keys(wmtsParams).map(
-    function(key) {
-            return key + '=' + wmtsParams[key];
-        }).join('&');
+var basemapQueryString = Object.keys(wmtsParams)
+  .map(function (key) {
+    return key + "=" + wmtsParams[key];
+  })
+  .join("&");
 
-var basemap = L.tileLayer(
-        wmtsServiceUrl + "?" + basemapQueryString, 
-        { maxZoom: 20 }
-    ).addTo(map);
-
+var basemap = L.tileLayer(endpoints.maps + "?" + basemapQueryString, {
+  maxZoom: 20,
+}).addTo(map);
 ```
 
 With that our basemap is set up. Next we need to fetch and parse the GeoJSON in `national-parks.json`. We'll add the FeatureCollection as a layer to our map and attach event listeners to each Feature. We'll also loop through the array of Features and add a `<li>` customised for each national park.
 
 ### Event Callbacks
 
-Before we get to the fetch and parse logic though, let's define our event listeners. We'll write functions to highlight and unhighlight both of the visual elements we use to represent each national park: a `<li>` element and a GeoJSON Feature on the map. 
+Before we get to the fetch and parse logic though, let's define our event listeners. We'll write functions to highlight and unhighlight both of the visual elements we use to represent each national park: a `<li>` element and a GeoJSON Feature on the map.
 
 We included the `id` as one of each Feature's properties so we could have a unique reference to each national park. With this id we'll be able to select the right feature from the GeoJSON layer we add to the map, and select the right `<li>` (by a `data-np-id` attribute) with jQuery. We'll write all of our highlight/unhighlight functions based on this ID.
 
-We also wrote a function - `flyToBoundsOffset()` - to fly to a feature accounting for the lefthand panel that is covering part of the map div. 
+We also wrote a function - `flyToBoundsOffset()` - to fly to a feature accounting for the lefthand panel that is covering part of the map div.
 
 Looking at the code:
 
 ```javascript
-
-// A helper function to select the L.geoJSON Feature layer by its properties.id value. 
+// A helper function to select the L.geoJSON Feature layer by its properties.id value.
 // For those looking to adapt the code - this version will only work with unique properties ...
 function getFeatureById(dataId) {
-    
-    let filtered = Object.values(map._layers).filter((l) => {
-        if ('feature' in l) {
-            return l.feature.properties.id == dataId;
-        }
-    });
+  let filtered = Object.values(map._layers).filter((l) => {
+    if ("feature" in l) {
+      return l.feature.properties.id == dataId;
+    }
+  });
 
-    return filtered[0];
+  return filtered[0];
 }
 
 // Highlights a map feature by ID.
-function highlightGeojson( dataId) {
-
-    let geojson = getFeatureById(dataId);
-    geojson.setStyle({
-        fillOpacity: 0.6,
-        weight: 3
-    })
+function highlightGeojson(dataId) {
+  let geojson = getFeatureById(dataId);
+  geojson.setStyle({
+    fillOpacity: 0.6,
+    weight: 3,
+  });
 }
 
 // Unhighlights a map feature by ID.
-function unhighlightGeojson (dataId) {
-
-    let geojson = getFeatureById(dataId);
-    geojson.setStyle({
-        fillOpacity: 0.3,
-        weight: 1
-    })
-};
+function unhighlightGeojson(dataId) {
+  let geojson = getFeatureById(dataId);
+  geojson.setStyle({
+    fillOpacity: 0.3,
+    weight: 1,
+  });
+}
 
 // Highlights a li element by data-np-id=ID.
 function highlightListElement(dataId) {
-
-    $('[data-np-id="' + String(dataId) + '"]')
-        .addClass('highlight');
+  $('[data-np-id="' + String(dataId) + '"]').addClass("highlight");
 }
 
 // Unhighlights a li element by data-np-id=ID.
 function unhighlightListElement(dataId) {
-
-    $('[data-np-id="' + String(dataId) + '"]')
-        .removeClass('highlight')
+  $('[data-np-id="' + String(dataId) + '"]').removeClass("highlight");
 }
 
 // Animated map.flyToBounds() with padding to account for the panel covering part of the map.
-function flyToBoundsOffset(dataId, offsetElSelector, elPosition='left') {
+function flyToBoundsOffset(dataId, offsetElSelector, elPosition = "left") {
+  let offset = $(offsetElSelector).width();
 
-    let offset = $(offsetElSelector).width();
+  let geojsonLayer = getFeatureById(dataId);
 
-    let geojsonLayer = getFeatureById(dataId);
+  let paddingOptions;
 
-    let paddingOptions;
+  if (elPosition == "left") {
+    paddingOptions = {
+      paddingTopLeft: [offset, 50],
+      paddingBottomRight: [50, 50],
+    };
+  } else if (elPosition == "right") {
+    paddingOptions = {
+      paddingTopLeft: [50, 50],
+      paddingBottomRight: [offset, 50],
+    };
+  }
 
-    if (elPosition == "left") {
-        paddingOptions = {
-            paddingTopLeft: [offset, 50],
-            paddingBottomRight: [50,50]
-        }
-    } else if (elPosition == "right") {
-        paddingOptions = {
-            paddingTopLeft: [50, 50],
-            paddingBottomRight: [offset,50]
-        }
-    }
-
-    map.flyToBounds(geojsonLayer.getBounds(), paddingOptions)
+  map.flyToBounds(geojsonLayer.getBounds(), paddingOptions);
 }
-
 ```
-
 
 ### Now, the GeoJSON
 
-Because we're loading data from an external resource, we need to make sure that the data loads before we move on to subsequent lines. We will use a handy library called [leaflet-omnivore](https://github.com/mapbox/leaflet-omnivore) to fetch the GeoJSON file we've prepared and load it into a `L.geoJSON` object. 
+Because we're loading data from an external resource, we need to make sure that the data loads before we move on to subsequent lines. We will use a handy library called [leaflet-omnivore](https://github.com/mapbox/leaflet-omnivore) to fetch the GeoJSON file we've prepared and load it into a `L.geoJSON` object.
 
-When the `omnivore.geojson()` method has loaded the data, it fires a `'ready'` event. We'll place the code that relies on the GeoJSON inside this event handler so we can be sure that it 
+When the `omnivore.geojson()` method has loaded the data, it fires a `'ready'` event. We'll place the code that relies on the GeoJSON inside this event handler so we can be sure that it
 
 #### Creating a custom L.geoJSON object
 
@@ -215,33 +204,32 @@ Omnivore fetches GeoJSON and instantiates a L.geoJSON object. We want to customi
 This pattern lets us bind event listeners to each feature, using Leaflet's `onEachFeature` option. (Note: here with Leaflet `layer` refers to each Feature in the FeatureCollection.)
 
 ```javascript
-// Set up the Leaflet GeoJSON object. 
+// Set up the Leaflet GeoJSON object.
 // We'll pass this into the omnivore.geojson() method shortly
 var parksLayer = L.geoJSON(null, {
-        style: {
-            fillColor: osGreen[3],
-            color: osGreen[6],
-            fillOpacity: 0.3,
-            weight: 1
-        },
+  style: {
+    fillColor: osGreen[3],
+    color: osGreen[6],
+    fillOpacity: 0.3,
+    weight: 1,
+  },
 
-        // A function to be called for each Feature in the FeatureCollection
-        onEachFeature: function (feature, layer) {
-            layer.on({
-                'mouseover': function (e) {
-                    highlightGeojson(feature.properties.id);
-                    highlightListElement(feature.properties.id);                                    
-                },
-                'mouseout': function (e) {
-                    unhighlightGeojson(feature.properties.id);
-                    unhighlightListElement(feature.properties.id);
-                }, 
-                'click': function (e) {
-                    flyToBoundsOffset(feature.properties.id, '.osel-sliding-side-panel')
-                }
-            });
-
-        }
+  // A function to be called for each Feature in the FeatureCollection
+  onEachFeature: function (feature, layer) {
+    layer.on({
+      mouseover: function (e) {
+        highlightGeojson(feature.properties.id);
+        highlightListElement(feature.properties.id);
+      },
+      mouseout: function (e) {
+        unhighlightGeojson(feature.properties.id);
+        unhighlightListElement(feature.properties.id);
+      },
+      click: function (e) {
+        flyToBoundsOffset(feature.properties.id, ".osel-sliding-side-panel");
+      },
+    });
+  },
 });
 ```
 
@@ -249,7 +237,7 @@ var parksLayer = L.geoJSON(null, {
 
 Next we use Omnivore to fetch the external resource, parse the GeoJSON and add it to the custom `L.geoJSON` object we've defined (using the `L.geoJSON().addData()` method under the hood). Note that because this is an asynchronous operation, code reliant on the layer being loaded is placed inside the `.on('ready', function () { ... })` event handler callback.
 
-Inside the callback we loop through the Features in the GeoJSON FeatureCollection, adding a `<li>` to our lefthand panel `<ul>` element with park-specific data. 
+Inside the callback we loop through the Features in the GeoJSON FeatureCollection, adding a `<li>` to our lefthand panel `<ul>` element with park-specific data.
 
 After everything is said and done we take the layer we've created and `.addTo(map)`.
 
@@ -262,7 +250,7 @@ var nationalParks = omnivore.geojson('./data/national-parks.json', null, parksLa
 
 Alright, our geographic features are added to the `L.geoJSON` object with event handlers bound. Now let's set up the lefthand panel with `<li>` elements.
 
-#### Making a `<li>` 
+#### Making a `<li>`
 
 To make our list we loop through the array of features in the `L.geoJSON` object. In the loop, we will be creating a `<li>` element with park-specific data to place in the left panel. Then we'll attach event listeners and append it to the `<ul class="layers">` defined in `index.html`.
 
@@ -280,14 +268,14 @@ To make our list we loop through the array of features in the `L.geoJSON` object
                     <span class='np-name'>${ nationalPark.properties.name }
                         </span>
                         <a href="${ nationalPark.properties.url }" target="_blank">
-                            <i class="material-icons" 
-                                onClick="this.href='${ nationalPark.properties.url }'" 
+                            <i class="material-icons"
+                                onClick="this.href='${ nationalPark.properties.url }'"
                                 aria-label="">launch</i>
                         </a>
                 </div>
             </div>
         </li>`
-        
+
         element = $.parseHTML(element);
 
         // Set up event handlers for the <li> elements and children
@@ -302,7 +290,7 @@ To make our list we loop through the array of features in the `L.geoJSON` object
             highlightGeojson(nationalPark.properties.id)
             highlightListElement(nationalPark.properties.id)
         });
-        
+
         // ... and unhighlight on mouseleave
         $(element).on('mouseleave', function () {
             unhighlightGeojson(nationalPark.properties.id)
@@ -324,4 +312,4 @@ To make our list we loop through the array of features in the `L.geoJSON` object
 
 And that's it! Our app fetches the national parks geometries, loads them, adds them to an unordered list on the left panel, and attaches event handlers to highlight and fly to the appropriate park on click. We included an external link icon so users could visit the national park's official website. The perfect launchpad for exploring Great Britain's amazing national parks.
 
-Feel free to adapt this code to suit your needs. If you make anything cool with OS data - let us know! 
+Feel free to adapt this code to suit your needs. If you make anything cool with OS data - let us know!
