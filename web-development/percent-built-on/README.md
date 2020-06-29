@@ -31,8 +31,8 @@ First, head to [osdatahub.os.uk](https://osdatahub.os.uk/) and copy your API key
 ```javascript
 const apiKey = "YOUR_API_KEY";
 const endpoints = {
-  maps: "https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1",
-  features: "https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1",
+  maps: "https://api.os.uk/maps/raster/v1/zxy",
+  features: "https://api.os.uk/maps/raster/v1/wfs",
 };
 ```
 

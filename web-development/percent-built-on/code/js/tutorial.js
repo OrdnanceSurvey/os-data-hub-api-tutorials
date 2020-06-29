@@ -1,6 +1,6 @@
 const endpoints = {
-  maps: "https://osdatahubapi.os.uk/OSMapsAPI/wmts/v1",
-  features: "https://osdatahubapi.os.uk/OSFeaturesAPI/wfs/v1",
+  maps: "https://api.os.uk/maps/raster/v1/zxy",
+  features: "https://api.os.uk/maps/raster/v1/wfs",
 };
 
 // In the next steps we'll connect
