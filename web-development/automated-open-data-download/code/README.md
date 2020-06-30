@@ -1,6 +1,6 @@
 # Running
 
-~~~bash
+```bash
 npm install
 node app.js
-~~~
+```
