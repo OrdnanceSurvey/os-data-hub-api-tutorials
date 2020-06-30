@@ -19,7 +19,7 @@ const config = { apikey: "YOUR_KEY_HERE" };
 
 const endpoints = {
   vectorTile: "https://api.os.uk/maps/vector/v1/vts",
-  features: "https://api.os.uk/maps/features/v1/wfs",
+  features: "https://api.os.uk/maps/features/v1/wfs"
 };
 
 // Instantiate a new mapboxgl.Map object.
@@ -32,9 +32,9 @@ map = new mapboxgl.Map({
   transformRequest: (url) => {
     url += "?key=" + config.apikey + "&srs=3857";
     return {
-      url: url,
+      url: url
     };
-  },
+  }
 });
 ```
 
@@ -183,7 +183,7 @@ var params = {
   outputFormat: "GEOJSON",
   srsName: "urn:ogc:def:crs:EPSG::4326",
   count: 100,
-  startIndex: 0,
+  startIndex: 0
 };
 ```
 

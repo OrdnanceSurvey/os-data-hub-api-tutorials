@@ -1,8 +1,8 @@
-const config = { apikey: "YOUR_KEY_HERE" };
+const config = { apikey: "JydUr1HO7ejqBhw0YP19W3b1GonFwmzr" };
 
 const endpoints = {
   vectorTile: "https://api.os.uk/maps/vector/v1/vts",
-  features: "https://api.os.uk/maps/features/v1/wfs",
+  features: "https://api.os.uk/features/v1/wfs"
 };
 
 // Instantiate a new mapboxgl.Map object.
@@ -17,10 +17,10 @@ var map = new mapboxgl.Map({
       return { url: url + "&srs=3857" };
     } else {
       return {
-        url: url + "?key=" + config.apikey + "&srs=3857",
+        url: url + "?key=" + config.apikey + "&srs=3857"
       };
     }
-  },
+  }
 });
 
 // Configure map interaction controls
@@ -29,7 +29,7 @@ map.touchZoomRotate.disableRotation(); // Disable map rotation using touch rotat
 // Add navigation control (excluding compass button) to the map.
 map.addControl(
   new mapboxgl.NavigationControl({
-    showCompass: false,
+    showCompass: false
   })
 );
 
@@ -85,7 +85,7 @@ map.on("load", async function () {
     .style("opacity", 0.2);
 
   // Now, an XML filter for our Features API calls
-  let coordsString = camden.features[0].coordinates[0].join(" ");
+  let coordsString = turf.flip(camden.features[0]).coordinates[0].join(" ");
 
   let xmlFilter = `
         <ogc:Filter>
@@ -112,7 +112,7 @@ map.on("load", async function () {
     outputFormat: "GEOJSON",
     srsName: "urn:ogc:def:crs:EPSG::4326",
     count: 100,
-    startIndex: 0,
+    startIndex: 0
   };
 
   let resultsRemain = true;
@@ -121,6 +121,7 @@ map.on("load", async function () {
   while (resultsRemain) {
     // Fetch the GeoJSON
     let response = await fetch(getUrl(endpoints.features, params));
+    console.log(getUrl(endpoints.features, params));
     let data = await response.json();
 
     // Add result features to our holder GeoJSON features array
@@ -176,16 +177,12 @@ map.on("load", async function () {
 
 map.on("style.load", function () {
   // Remove the layer we are going to be adding the SVG overlay for
-  [
-    "OS Open Zoomstack - Road/railway_stations/Railway Station And London Underground Station",
-    "OS Open Zoomstack - Road/railway_stations/London Underground Station",
-    "OS Open Zoomstack - Road/railway_stations/Railway Station",
-    "OS Open Zoomstack - Road/railway_stations/Light Rapid Transit Station And Railway Station",
-    "OS Open Zoomstack - Road/railway_stations/Light Rapid Transit Station And London Underground Station",
-    "OS Open Zoomstack - Road/railway_stations/Light Rapid Transit Station",
-  ].map((layer) => {
-    map.setLayoutProperty(layer, "visibility", "none");
-  });
+  map
+    .getStyle()
+    .layers.filter((l) => l.id.includes("station"))
+    .map((layer) => {
+      map.setLayoutProperty(layer.id, "visibility", "none");
+    });
 });
 
 //Project any point to map's current state

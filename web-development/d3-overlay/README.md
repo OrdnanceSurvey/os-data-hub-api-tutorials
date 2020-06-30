@@ -29,7 +29,7 @@ const config = { apikey: "YOUR_KEY_HERE" };
 
 const endpoints = {
   vectorTile: "https://api.os.uk/maps/vector/v1/vts",
-  features: "https://api.os.uk/maps/features/v1/wfs",
+  features: "https://api.os.uk/maps/features/v1/wfs"
 };
 
 // Instantiate a new mapboxgl.Map object.
@@ -42,9 +42,9 @@ map = new mapboxgl.Map({
   transformRequest: (url) => {
     url += "?key=" + config.apikey + "&srs=3857";
     return {
-      url: url,
+      url: url
     };
-  },
+  }
 });
 ```
 
@@ -166,7 +166,7 @@ Now we construct a filter from the Camden borough geometry, and send a request t
 // Note: this is still inside the map.on('load') callback function body!
 
 // Now, an XML filter for our Features API calls
-let coordsString = camden.features[0].coordinates[0].join(" ");
+let coordsString = turf.flip(camden.features[0]).coordinates[0].join(" ");
 
 let xmlFilter = `
     <ogc:Filter>
@@ -193,7 +193,7 @@ var params = {
   outputFormat: "GEOJSON",
   srsName: "urn:ogc:def:crs:EPSG::4326",
   count: 100,
-  startIndex: 0,
+  startIndex: 0
 };
 ```
 
@@ -225,7 +225,7 @@ while (resultsRemain) {
 One of our last steps: joining the station features to our `stations` selection, and specifying the attributes of each element that is created by D3. We'll set each element's `class` to `station`, then set `fill` to a value dependent on the station type in the feature's `properties` object. We'll also set event listeners to update the position and content of the `div.tooltip` element we appended to the body earlier so the tooltip appears next to the station when we hover on it.
 
 And, finally, we call `update()` to update each `<path>`'s `d` attribute based on the position and zoom level of the basemap.
- 
+
 ```javascript
     // Now we can draw our station points as SVG <path> elements
     stations = stations.data(geojson.features)

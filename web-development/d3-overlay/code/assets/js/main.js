@@ -1,7 +1,7 @@
 $.fn.extend({
   toggleText: function (a, b) {
     return this.text(this.text() == b ? a : b);
-  },
+  }
 });
 
 $(function () {
@@ -91,7 +91,7 @@ var sliderProperties = function () {
   return {
     top: t,
     width: w,
-    height: h,
+    height: h
   };
 };
 
@@ -130,7 +130,7 @@ var sliderLeft = $(".osel-sliding-side-panel.panel-left").slideReveal({
     mapOffsetX = 38;
     if (typeof sliderLeftHiddenHandler === "function")
       sliderLeftHiddenHandler();
-  },
+  }
 });
 
 sliderLeft.height(sliderProperties().height).slideReveal("show");
@@ -157,7 +157,7 @@ var sliderRight = $(".osel-sliding-side-panel.panel-right").slideReveal({
   shown: function (obj) {
     obj.addClass("active");
     $(".osel-control-container.container-top.container-right").css({
-      right: sliderProperties().width,
+      right: sliderProperties().width
     });
   },
   hide: function () {
@@ -166,9 +166,9 @@ var sliderRight = $(".osel-sliding-side-panel.panel-right").slideReveal({
   hidden: function (obj) {
     obj.removeClass("active");
     $(".osel-control-container.container-top.container-right").css({
-      right: 0,
+      right: 0
     });
-  },
+  }
 });
 
 sliderRight.height(sliderProperties().height);
@@ -186,7 +186,7 @@ if ($.fn.sortable) {
     },
     stop: function () {
       sortLayers();
-    },
+    }
   });
 }
 
