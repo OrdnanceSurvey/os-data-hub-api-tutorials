@@ -18,8 +18,8 @@ One adjustment though: we want our basemap in greyscale, so we can distinguish t
 const config = { apikey: "YOUR_KEY_HERE" };
 
 const endpoints = {
-  vectorTile: "https://api.os.uk/maps/vector/v1/vts",
-  features: "https://api.os.uk/maps/features/v1/wfs"
+  vts: "https://api.os.uk/maps/vector/v1/vts",
+  wfs: "https://api.os.uk/maps/features/v1/wfs",
 };
 
 // Instantiate a new mapboxgl.Map object.
@@ -29,11 +29,14 @@ map = new mapboxgl.Map({
     "https://labs.os.uk/public/os-data-hub-examples/dist/os-vector-tile-api/styles/greyscale.json",
   center: [-0.13806, 51.55223],
   zoom: 9,
-  transformRequest: (url) => {
-    url += "?key=" + config.apikey + "&srs=3857";
-    return {
-      url: url
-    };
+   transformRequest: (url) => {
+    if (url.includes("?key=")) {
+      return { url: url + "&srs=3857" };
+    } else {
+      return {
+        url: url + "?key=" + config.apikey + "&srs=3857"
+      };
+    }
   }
 });
 ```
@@ -156,7 +159,7 @@ Now we construct a filter from the Camden borough geometry, and send a request t
 // Note: this is still inside the map.on('load') callback function body!
 
 // Now, an XML filter for our Features API calls
-let coordsString = camden.features[0].coordinates[0].join(" ");
+  let coordsString = turf.flip(camden.features[0]).coordinates[0].join(" ");
 
 let xmlFilter = `
     <ogc:Filter>
@@ -183,7 +186,7 @@ var params = {
   outputFormat: "GEOJSON",
   srsName: "urn:ogc:def:crs:EPSG::4326",
   count: 100,
-  startIndex: 0
+  startIndex: 0,
 };
 ```
 
@@ -195,7 +198,7 @@ let geojson = { type: "FeatureCollection", features: [] };
 
 while (resultsRemain) {
   // Fetch the GeoJSON
-  let response = await fetch(getUrl(endpoints.features, params));
+  let response = await fetch(getUrl(endpoints.wfs, params));
   let data = await response.json();
 
   // Add result features to our holder GeoJSON features array
