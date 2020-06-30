@@ -72,7 +72,7 @@ var mapOptions = {
   center: [54.92240688263684, -5.84949016571045],
   zoom: 7,
   attributionControl: false,
-  zoomControl: false,
+  zoomControl: false
 };
 
 // Instantiate a new L.map object
@@ -83,35 +83,15 @@ var ctrlScale = L.control.scale({ position: "bottomright" }).addTo(map);
 
 // Load and display ZXY tile layer on the map.
 const endpoints = {
-  maps: "https://api.os.uk/maps/raster/v1/zxy"
-}
-
-// Define parameters object.
-var wmtsParams = {
-  key: config.apikey,
-  service: "WMTS",
-  request: "GetTile",
-  version: "2.0.0",
-  height: 256,
-  width: 256,
-  outputFormat: "image/png",
-  style: "default",
-  layer: "Outdoor_3857",
-  tileMatrixSet: "EPSG:3857",
-  tileMatrix: "{z}",
-  tileRow: "{y}",
-  tileCol: "{x}",
+  zxy: "https://api.os.uk/maps/raster/v1/zxy"
 };
 
-var basemapQueryString = Object.keys(wmtsParams)
-  .map(function (key) {
-    return key + "=" + wmtsParams[key];
-  })
-  .join("&");
-
-var basemap = L.tileLayer(endpoints.maps + "?" + basemapQueryString, {
-  maxZoom: 20,
-}).addTo(map);
+var basemap = L.tileLayer(
+  endpoints.zxy + "/Outdoor_3857/{z}/{x}/{y}.png?key=" + config.apikey,
+  {
+    maxZoom: 20
+  }
+).addTo(map);
 ```
 
 With that our basemap is set up. Next we need to fetch and parse the GeoJSON in `national-parks.json`. We'll add the FeatureCollection as a layer to our map and attach event listeners to each Feature. We'll also loop through the array of Features and add a `<li>` customised for each national park.
@@ -144,7 +124,7 @@ function highlightGeojson(dataId) {
   let geojson = getFeatureById(dataId);
   geojson.setStyle({
     fillOpacity: 0.6,
-    weight: 3,
+    weight: 3
   });
 }
 
@@ -153,7 +133,7 @@ function unhighlightGeojson(dataId) {
   let geojson = getFeatureById(dataId);
   geojson.setStyle({
     fillOpacity: 0.3,
-    weight: 1,
+    weight: 1
   });
 }
 
@@ -178,12 +158,12 @@ function flyToBoundsOffset(dataId, offsetElSelector, elPosition = "left") {
   if (elPosition == "left") {
     paddingOptions = {
       paddingTopLeft: [offset, 50],
-      paddingBottomRight: [50, 50],
+      paddingBottomRight: [50, 50]
     };
   } else if (elPosition == "right") {
     paddingOptions = {
       paddingTopLeft: [50, 50],
-      paddingBottomRight: [offset, 50],
+      paddingBottomRight: [offset, 50]
     };
   }
 
@@ -211,7 +191,7 @@ var parksLayer = L.geoJSON(null, {
     fillColor: osGreen[3],
     color: osGreen[6],
     fillOpacity: 0.3,
-    weight: 1,
+    weight: 1
   },
 
   // A function to be called for each Feature in the FeatureCollection
@@ -227,9 +207,9 @@ var parksLayer = L.geoJSON(null, {
       },
       click: function (e) {
         flyToBoundsOffset(feature.properties.id, ".osel-sliding-side-panel");
-      },
+      }
     });
-  },
+  }
 });
 ```
 

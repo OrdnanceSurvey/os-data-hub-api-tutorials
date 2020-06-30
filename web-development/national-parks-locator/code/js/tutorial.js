@@ -1,5 +1,5 @@
 // First, set up the map
-const config = { apikey: "YOUR_KEY_HERE" };
+const config = { apikey: "JydUr1HO7ejqBhw0YP19W3b1GonFwmzr" };
 
 // Define map options including where the map loads and zoom constraints
 var mapOptions = {
@@ -8,7 +8,7 @@ var mapOptions = {
   center: [54.92240688263684, -5.84949016571045],
   zoom: 7,
   attributionControl: false,
-  zoomControl: false,
+  zoomControl: false
 };
 
 // Instantiate a new L.map object
@@ -19,35 +19,15 @@ var ctrlScale = L.control.scale({ position: "bottomright" }).addTo(map);
 
 // Load and display ZXY tile layer on the map.
 const endpoints = {
-  maps: "https://api.os.uk/maps/raster/v1/zxy"
-}
-
-// Define parameters object.
-var wmtsParams = {
-  key: config.apikey,
-  service: "WMTS",
-  request: "GetTile",
-  version: "2.0.0",
-  height: 256,
-  width: 256,
-  outputFormat: "image/png",
-  style: "default",
-  layer: "Outdoor_3857",
-  tileMatrixSet: "EPSG:3857",
-  tileMatrix: "{z}",
-  tileRow: "{y}",
-  tileCol: "{x}",
+  zxy: "https://api.os.uk/maps/raster/v1/zxy"
 };
 
-var basemapQueryString = Object.keys(wmtsParams)
-  .map(function (key) {
-    return key + "=" + wmtsParams[key];
-  })
-  .join("&");
-
-var basemap = L.tileLayer(endpoints.map + "?" + basemapQueryString, {
-  maxZoom: 20,
-}).addTo(map);
+var basemap = L.tileLayer(
+  endpoints.zxy + "/Outdoor_3857/{z}/{x}/{y}.png?key=" + config.apikey,
+  {
+    maxZoom: 20
+  }
+).addTo(map);
 
 // Set up the leaflet geojson layer.
 // We'll pass this into the omnivore.geojson() method
@@ -56,7 +36,7 @@ var parksLayer = L.geoJSON(null, {
     fillColor: os.palette.sequential.s2[3],
     color: os.palette.sequential.s2[6],
     fillOpacity: 0.3,
-    weight: 1,
+    weight: 1
   },
   onEachFeature: function (feature, layer) {
     layer.on({
@@ -70,9 +50,9 @@ var parksLayer = L.geoJSON(null, {
       },
       click: function (e) {
         flyToBoundsOffset(feature.properties.id);
-      },
+      }
     });
-  },
+  }
 });
 
 // Then fetch the geojson using Leaflet Omnivore, which returns a L.geoJSON object
@@ -140,7 +120,7 @@ function highlightGeojson(dataId) {
 
   geojson.setStyle({
     fillOpacity: 0.6,
-    weight: 3,
+    weight: 3
   });
 }
 
@@ -148,7 +128,7 @@ function unhighlightGeojson(dataId) {
   let geojson = getFeatureById(dataId);
   geojson.setStyle({
     fillOpacity: 0.3,
-    weight: 1,
+    weight: 1
   });
 }
 
@@ -170,12 +150,12 @@ function flyToBoundsOffset(dataId, elPosition = "left") {
   if (elPosition == "left") {
     paddingOptions = {
       paddingTopLeft: [offset, 50],
-      paddingBottomRight: [50, 50],
+      paddingBottomRight: [50, 50]
     };
   } else if (elPosition == "right") {
     paddingOptions = {
       paddingTopLeft: [50, 50],
-      paddingBottomRight: [offset, 50],
+      paddingBottomRight: [offset, 50]
     };
   }
 
