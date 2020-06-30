@@ -14,6 +14,8 @@ We'll also use [Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/overview/) as
 
 Spatial analysis is a powerful way to understand the world. The insights derived from analysis of points, lines, polygons and raster data can serve as the evidence to inform intelligent decision-making. Let's look at how to build a web interface capable of sophisticated spatial analytics.
 
+<p><iframe style="width:100%;height:400px;max-width:1200px;border:1px solid #f5f5f5;" src="/public/os-data-hub-tutorials/dist/web-development/percent-built-on/"></iframe></p>
+
 ## The HTML
 
 Most of this tutorial will focus on the JavaScript required to create this app, but we do need to set up our HTML page so we have the right libraries loaded, and elements with the appropriate classes and IDs.
@@ -31,12 +33,12 @@ First, head to [osdatahub.os.uk](https://osdatahub.os.uk/) and copy your API key
 ```javascript
 const apiKey = "YOUR_API_KEY";
 const endpoints = {
-  maps: "https://api.os.uk/maps/raster/v1/zxy",
-  features: "https://api.os.uk/maps/raster/v1/wfs",
+  zxy: "https://api.os.uk/maps/raster/v1/zxy",
+  wfs: "https://api.os.uk/maps/raster/v1/wfs",
 };
 ```
 
-We won't go over setting up the basemap in detail here - you can find code on how to connect a `mapboxgl.Map` instance to the OS Maps API on our [Examples page](https://labs.os.uk/public/os-data-hub-examples/os-maps-api/wmts-3857-basic-map). Since we'll be overlaying features, the Light cartographic style is a good choice.
+We won't go over setting up the basemap in detail here - you can find code on how to connect a `mapboxgl.Map` instance to the OS Maps API on our [Examples page](https://labs.os.uk/public/os-data-hub-examples/os-maps-api/zxy-3857-basic-map). Since we'll be overlaying features, the Light cartographic style is a good choice.
 
 ## `MapboxDraw`
 
@@ -180,7 +182,7 @@ Let's look closely at the `getIntersectingFeatures` function:
 ```javascript
 async function getIntersectingFeatures(polygon) {
   // Get the circle geometry coordinates and return a new space-delimited string.
-  var coords = polygon.features[0].geometry.coordinates[0].join(" ");
+  var coords = turf.flip(polygon.features[0]).geometry.coordinates[0].join(" ");
 
   // Create an OGC XML filter parameter value which will select the Greenspace
   // features intersecting the circle polygon coordinates.
@@ -297,7 +299,7 @@ if (intersections.features.length > 0) {
     type: "fill",
     layout: {},
     paint: {
-      "fill-color": colours.qualitative.lookup["2"],
+      "fill-color": os.palette.qualitative.lookup["2"],
       "fill-opacity": 0.3,
       "fill-outline-color": "black",
     },
@@ -310,7 +312,7 @@ if (intersections.features.length > 0) {
     type: "line",
     layout: {},
     paint: {
-      "line-color": colours.qualitative.lookup["1"],
+      "line-color": os.palette.qualitative.lookup["1"],
       "line-width": 2,
     },
   });

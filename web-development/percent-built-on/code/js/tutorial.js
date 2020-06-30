@@ -1,54 +1,29 @@
 const endpoints = {
-  maps: "https://api.os.uk/maps/raster/v1/zxy",
-  features: "https://api.os.uk/maps/raster/v1/wfs",
+  zxy: "https://api.os.uk/maps/raster/v1/zxy",
+  wfs: "https://api.os.uk/features/v1/wfs",
 };
 
 // In the next steps we'll connect
 // a mapboxgl.Map object to the OS Maps API:
 
-// Define parameters object.
-var params = {
-  key: config.apikey,
-  service: "WMTS",
-  request: "GetTile",
-  version: "2.0.0",
-  height: 256,
-  width: 256,
-  outputFormat: "image/png",
-  style: "default",
-  layer: "Light_3857", // <- Light style, since we're overlaying features
-  tileMatrixSet: "EPSG:3857",
-  tileMatrix: "{z}",
-  tileRow: "{y}",
-  tileCol: "{x}",
-};
+    // Create a map style object using the ZXY service.
+    var style = {
+      'version': 8,
+      'sources': {
+          'raster-tiles': {
+              'type': 'raster',
+              'tiles': [ endpoints.zxy + '/Light_3857/{z}/{x}/{y}.png?key=' + config.apikey ],
+              'tileSize': 256,
+              'maxzoom': 20
+          }
+      },
+      'layers': [{
+          'id': 'os-maps-zxy',
+          'type': 'raster',
+          'source': 'raster-tiles'
+      }]
+  };
 
-// Construct query string of parameters from params object.
-var queryString = Object.keys(params)
-  .map(function (key) {
-    return key + "=" + params[key];
-  })
-  .join("&");
-
-// Create a map style object using the WMTS service.
-var style = {
-  version: 8,
-  sources: {
-    "raster-tiles": {
-      type: "raster",
-      tiles: [endpoints.maps + "?" + queryString],
-      tileSize: 256,
-      maxzoom: 20,
-    },
-  },
-  layers: [
-    {
-      id: "os-maps-wmts",
-      type: "raster",
-      source: "raster-tiles",
-    },
-  ],
-};
 
 // Initialise the map object.
 var map = new mapboxgl.Map({
@@ -155,7 +130,7 @@ document
         type: "fill",
         layout: {},
         paint: {
-          "fill-color": os.colours.qualitative.lookup["2"],
+          "fill-color": os.palette.qualitative.lookup["2"],
           "fill-opacity": 0.3,
           "fill-outline-color": "black",
         },
@@ -167,7 +142,7 @@ document
         type: "line",
         layout: {},
         paint: {
-          "line-color": os.colours.qualitative.lookup["1"],
+          "line-color": os.palette.qualitative.lookup["1"],
           "line-width": 2,
         },
       });
@@ -196,8 +171,9 @@ document
 
 async function getIntersectingFeatures(polygon) {
   // Get the circle geometry coordinates and return a new space-delimited string.
-  var coords = polygon.features[0].geometry.coordinates[0].join(" ");
-
+  var coords = turf.flip(polygon.features[0]).geometry.coordinates[0].join(" ");
+  console.log(turf.flip(polygon.features[0]))
+  console.log(coords)
   // Create an OGC XML filter parameter value which will select the Greenspace
   // features intersecting the circle polygon coordinates.
   // *** ADD Functionality to filter by Type attribute based on dropdown input!
@@ -245,6 +221,7 @@ async function getIntersectingFeatures(polygon) {
   var resultsRemain = true;
 
   while (resultsRemain) {
+
     let response = await fetch(getUrl(wfsParams));
     let data = await response.json();
 
@@ -299,7 +276,7 @@ function getUrl(params) {
     .map((paramName) => paramName + "=" + encodeURI(params[paramName]))
     .join("&");
 
-  return endpoints.features + "?" + encodedParameters;
+  return endpoints.wfs + "?" + encodedParameters;
 }
 
 function addSpinner() {
