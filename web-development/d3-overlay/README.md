@@ -40,10 +40,13 @@ map = new mapboxgl.Map({
   center: [-0.13806, 51.55223],
   zoom: 9,
   transformRequest: (url) => {
-    url += "?key=" + config.apikey + "&srs=3857";
-    return {
-      url: url
-    };
+    if (url.includes("?key=")) {
+      return { url: url + "&srs=3857" };
+    } else {
+      return {
+        url: url + "?key=" + config.apikey + "&srs=3857"
+      };
+    }
   }
 });
 ```

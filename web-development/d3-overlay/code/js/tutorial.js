@@ -1,8 +1,8 @@
 const config = { apikey: "JydUr1HO7ejqBhw0YP19W3b1GonFwmzr" };
 
 const endpoints = {
-  vectorTile: "https://api.os.uk/maps/vector/v1/vts",
-  features: "https://api.os.uk/features/v1/wfs"
+  vts: "https://api.os.uk/maps/vector/v1/vts",
+  wfs: "https://api.os.uk/features/v1/wfs"
 };
 
 // Instantiate a new mapboxgl.Map object.
@@ -120,8 +120,8 @@ map.on("load", async function () {
 
   while (resultsRemain) {
     // Fetch the GeoJSON
-    let response = await fetch(getUrl(endpoints.features, params));
-    console.log(getUrl(endpoints.features, params));
+    let response = await fetch(getUrl(endpoints.wfs, params));
+
     let data = await response.json();
 
     // Add result features to our holder GeoJSON features array
