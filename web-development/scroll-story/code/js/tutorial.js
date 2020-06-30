@@ -4,13 +4,13 @@ const scroller = scrollama();
 // Set up Mapbox GL JS map with OS Vector Tile API
 config.apikey = "YOUR_KEY_HERE";
 const endpoints = {
-  vectorTile = "https://api.os.uk/maps/vector/v1/vts"
+  vts: "https://api.os.uk/maps/vector/v1/vts"
 }
 
 // Initialize the map object.
 const map = new mapboxgl.Map({
   container: "map",
-  style: endpoints.vectorTile + "/resources/styles?key=" + config.apikey,
+  style: endpoints.vts + "/resources/styles?key=" + config.apikey,
   center: config.chapters[0].location.center,
   zoom: config.chapters[0].location.zoom,
   bearing: config.chapters[0].location.bearing,
@@ -134,14 +134,6 @@ const layers = [
 ];
 
 map.on("load", async function () {
-  // We'll first remove a conflicting layer
-  // from the vector tile:
-  map.setLayoutProperty(
-    "OS Open Zoomstack - Road/local_buildings",
-    "visibility",
-    "none"
-  );
-
   // First, we set up the geographic layers we will
   // visualise in the scroll story
 
