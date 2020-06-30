@@ -4,11 +4,11 @@ config.apikey = "JydUr1HO7ejqBhw0YP19W3b1GonFwmzr";
 
 // mapbox-gl-draw modes to disable draggable drawn polygons
 const NewSimpleSelect = _.extend(MapboxDraw.modes.simple_select, {
-  dragMove() {},
+  dragMove() {}
 });
 
 const NewDirectSelect = _.extend(MapboxDraw.modes.direct_select, {
-  dragFeature() {},
+  dragFeature() {}
 });
 
 // Customise draw polygon to use OS colours
@@ -22,13 +22,13 @@ const mbDrawConfig = {
       filter: ["all", ["==", "$type", "LineString"], ["!=", "mode", "static"]],
       layout: {
         "line-cap": "round",
-        "line-join": "round",
+        "line-join": "round"
       },
       paint: {
         "line-color": os.palette.qualitative.lookup["1"],
         "line-dasharray": [0.2, 2],
-        "line-width": 2,
-      },
+        "line-width": 2
+      }
     },
     // polygon fill
     {
@@ -38,8 +38,8 @@ const mbDrawConfig = {
       paint: {
         "fill-color": "#D20C0C",
         "fill-outline-color": os.palette.qualitative.lookup["1"],
-        "fill-opacity": 0.1,
-      },
+        "fill-opacity": 0.1
+      }
     },
     // polygon outline stroke
     // This doesn't style the first edge of the polygon, which uses the line stroke styling instead
@@ -49,13 +49,13 @@ const mbDrawConfig = {
       filter: ["all", ["==", "$type", "Polygon"], ["!=", "mode", "static"]],
       layout: {
         "line-cap": "round",
-        "line-join": "round",
+        "line-join": "round"
       },
       paint: {
         "line-color": os.palette.qualitative.lookup["1"],
         "line-dasharray": [0.2, 2],
-        "line-width": 2,
-      },
+        "line-width": 2
+      }
     },
     // vertex point halos
     {
@@ -65,12 +65,12 @@ const mbDrawConfig = {
         "all",
         ["==", "meta", "vertex"],
         ["==", "$type", "Point"],
-        ["!=", "mode", "static"],
+        ["!=", "mode", "static"]
       ],
       paint: {
         "circle-radius": 5,
-        "circle-color": "#FFF",
-      },
+        "circle-color": "#FFF"
+      }
     },
     // vertex points
     {
@@ -80,12 +80,12 @@ const mbDrawConfig = {
         "all",
         ["==", "meta", "vertex"],
         ["==", "$type", "Point"],
-        ["!=", "mode", "static"],
+        ["!=", "mode", "static"]
       ],
       paint: {
         "circle-radius": 3,
-        "circle-color": os.palette.qualitative.lookup["1"],
-      },
+        "circle-color": os.palette.qualitative.lookup["1"]
+      }
     },
 
     // INACTIVE (static, already drawn)
@@ -96,12 +96,12 @@ const mbDrawConfig = {
       filter: ["all", ["==", "$type", "LineString"], ["==", "mode", "static"]],
       layout: {
         "line-cap": "round",
-        "line-join": "round",
+        "line-join": "round"
       },
       paint: {
         "line-color": "#000",
-        "line-width": 3,
-      },
+        "line-width": 3
+      }
     },
     // polygon fill
     {
@@ -111,8 +111,8 @@ const mbDrawConfig = {
       paint: {
         "fill-color": "#000",
         "fill-outline-color": "#000",
-        "fill-opacity": 0.1,
-      },
+        "fill-opacity": 0.1
+      }
     },
     // polygon outline
     {
@@ -121,12 +121,12 @@ const mbDrawConfig = {
       filter: ["all", ["==", "$type", "Polygon"], ["==", "mode", "static"]],
       layout: {
         "line-cap": "round",
-        "line-join": "round",
+        "line-join": "round"
       },
       paint: {
         "line-color": "#000",
-        "line-width": 3,
-      },
-    },
-  ],
+        "line-width": 3
+      }
+    }
+  ]
 };

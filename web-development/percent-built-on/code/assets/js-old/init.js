@@ -6,7 +6,7 @@ var defaults = {
   copyrightStatement:
     "Contains OS data &copy; Crown copyright and database rights " +
     new Date().getFullYear(),
-  fixedPopupMinimumWidth: 768,
+  fixedPopupMinimumWidth: 768
 };
 
 var isLeaflet = typeof L !== "undefined" ? true : false,

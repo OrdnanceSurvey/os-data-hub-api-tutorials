@@ -42,7 +42,7 @@ var notification = {
   //
   remove: function () {
     $(".osel-toast-notification").remove();
-  },
+  }
 };
 
 notification.init();

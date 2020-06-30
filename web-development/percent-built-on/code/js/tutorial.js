@@ -1,29 +1,32 @@
 const endpoints = {
   zxy: "https://api.os.uk/maps/raster/v1/zxy",
-  wfs: "https://api.os.uk/features/v1/wfs",
+  wfs: "https://api.os.uk/features/v1/wfs"
 };
 
 // In the next steps we'll connect
 // a mapboxgl.Map object to the OS Maps API:
 
-    // Create a map style object using the ZXY service.
-    var style = {
-      'version': 8,
-      'sources': {
-          'raster-tiles': {
-              'type': 'raster',
-              'tiles': [ endpoints.zxy + '/Light_3857/{z}/{x}/{y}.png?key=' + config.apikey ],
-              'tileSize': 256,
-              'maxzoom': 20
-          }
-      },
-      'layers': [{
-          'id': 'os-maps-zxy',
-          'type': 'raster',
-          'source': 'raster-tiles'
-      }]
-  };
-
+// Create a map style object using the ZXY service.
+var style = {
+  version: 8,
+  sources: {
+    "raster-tiles": {
+      type: "raster",
+      tiles: [
+        endpoints.zxy + "/Light_3857/{z}/{x}/{y}.png?key=" + config.apikey
+      ],
+      tileSize: 256,
+      maxzoom: 20
+    }
+  },
+  layers: [
+    {
+      id: "os-maps-zxy",
+      type: "raster",
+      source: "raster-tiles"
+    }
+  ]
+};
 
 // Initialise the map object.
 var map = new mapboxgl.Map({
@@ -32,7 +35,7 @@ var map = new mapboxgl.Map({
   maxZoom: 20,
   style: style,
   center: { lng: -2.2499467257034667, lat: 53.47800737015962 },
-  zoom: 15.53,
+  zoom: 15.53
 });
 
 // Configure and initialise controls
@@ -42,7 +45,7 @@ map.touchZoomRotate.disableRotation();
 // Add navigation control (excluding compass button) to the map.
 map.addControl(
   new mapboxgl.NavigationControl({
-    showCompass: false,
+    showCompass: false
   })
 );
 
@@ -52,13 +55,13 @@ var draw = new MapboxDraw({
   displayControlsDefault: false,
   controls: {
     polygon: true,
-    trash: true,
+    trash: true
   },
   modes: {
     ...MapboxDraw.modes,
     simple_select: NewSimpleSelect, // Interaction modes, also defined in ./config.js
-    direct_select: NewDirectSelect,
-  },
+    direct_select: NewDirectSelect
+  }
 });
 
 // Add to map and add event listeners
@@ -70,12 +73,12 @@ map.on("draw.delete", disactivateFetch);
 map.on("style.load", function () {
   map.addSource("buildings", {
     type: "geojson",
-    data: null,
+    data: null
   });
 
   map.addSource("buildings-intersection", {
     type: "geojson",
-    data: null,
+    data: null
   });
 });
 
@@ -105,7 +108,7 @@ document
     // Initialise a FeatureCollection with an empty features array
     let intersections = {
       type: "FeatureCollection",
-      features: [],
+      features: []
     };
 
     turf.featureEach(buildings, function (currentFeature) {
@@ -132,8 +135,8 @@ document
         paint: {
           "fill-color": os.palette.qualitative.lookup["2"],
           "fill-opacity": 0.3,
-          "fill-outline-color": "black",
-        },
+          "fill-outline-color": "black"
+        }
       });
 
       map.addLayer({
@@ -143,8 +146,8 @@ document
         layout: {},
         paint: {
           "line-color": os.palette.qualitative.lookup["1"],
-          "line-width": 2,
-        },
+          "line-width": 2
+        }
       });
     } else {
       percent = 0;
@@ -161,8 +164,8 @@ document
         left: os.main.viewportPaddingOptions().left + 50,
         right: 50,
         bottom: 50,
-        top: 50,
-      },
+        top: 50
+      }
     });
     removeSpinner();
 
@@ -172,8 +175,8 @@ document
 async function getIntersectingFeatures(polygon) {
   // Get the circle geometry coordinates and return a new space-delimited string.
   var coords = turf.flip(polygon.features[0]).geometry.coordinates[0].join(" ");
-  console.log(turf.flip(polygon.features[0]))
-  console.log(coords)
+  console.log(turf.flip(polygon.features[0]));
+  console.log(coords);
   // Create an OGC XML filter parameter value which will select the Greenspace
   // features intersecting the circle polygon coordinates.
   // *** ADD Functionality to filter by Type attribute based on dropdown input!
@@ -207,13 +210,13 @@ async function getIntersectingFeatures(polygon) {
     srsName: "urn:ogc:def:crs:EPSG::4326",
     filter: xml,
     count: 100,
-    startIndex: 0,
+    startIndex: 0
   };
 
   // Create an empty GeoJSON FeatureCollection.
   let geojson = {
     type: "FeatureCollection",
-    features: [],
+    features: []
   };
 
   geojson.features.length = 0;
@@ -221,7 +224,6 @@ async function getIntersectingFeatures(polygon) {
   var resultsRemain = true;
 
   while (resultsRemain) {
-
     let response = await fetch(getUrl(wfsParams));
     let data = await response.json();
 
@@ -248,8 +250,8 @@ function activateFetch() {
       left: os.main.viewportPaddingOptions().left + 50,
       right: 50,
       bottom: 50,
-      top: 50,
-    },
+      top: 50
+    }
   });
 }
 

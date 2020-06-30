@@ -20,7 +20,7 @@ First, head to [osdatahub.os.uk](https://osdatahub.os.uk/) and copy your API key
 const apiKey = "YOUR_API_KEY";
 const endpoints = {
   zxy: "https://api.os.uk/maps/raster/v1/zxy",
-  wfs: "https://api.os.uk/maps/raster/v1/wfs",
+  wfs: "https://api.os.uk/maps/raster/v1/wfs"
 };
 ```
 
@@ -37,13 +37,13 @@ var draw = new MapboxDraw({
   displayControlsDefault: false,
   controls: {
     polygon: true,
-    trash: true,
+    trash: true
   },
   modes: {
     ...MapboxDraw.modes,
     simple_select: NewSimpleSelect, // Interaction modes, also defined in ./config.js
-    direct_select: NewDirectSelect,
-  },
+    direct_select: NewDirectSelect
+  }
 });
 
 // Add to map and add event listeners
@@ -71,8 +71,8 @@ function activateFetch() {
       left: $(".osel-sliding-side-panel").width() + 50,
       right: 50,
       bottom: 50,
-      top: 50,
-    },
+      top: 50
+    }
   });
 }
 
@@ -103,12 +103,12 @@ Until we have a query to analyse we will just add the sources to the map:
 map.on("style.load", function () {
   map.addSource("buildings", {
     type: "geojson",
-    data: null,
+    data: null
   });
 
   map.addSource("buildings-intersection", {
     type: "geojson",
-    data: null,
+    data: null
   });
 });
 ```
@@ -203,13 +203,13 @@ async function getIntersectingFeatures(polygon) {
     srsName: "urn:ogc:def:crs:EPSG::4326",
     filter: xml,
     count: 100,
-    startIndex: 0,
+    startIndex: 0
   };
 
   // Create an empty GeoJSON FeatureCollection.
   let geojson = {
     type: "FeatureCollection",
-    features: [],
+    features: []
   };
 
   geojson.features.length = 0;
@@ -246,7 +246,7 @@ We'll use a few functions in the Turf.js library for spatial analysis.
 // Initialise a FeatureCollection with an empty features array
 let intersections = {
   type: "FeatureCollection",
-  features: [],
+  features: []
 };
 
 // Loop through each building feature
@@ -287,8 +287,8 @@ if (intersections.features.length > 0) {
     paint: {
       "fill-color": os.palette.qualitative.lookup["2"],
       "fill-opacity": 0.3,
-      "fill-outline-color": "black",
-    },
+      "fill-outline-color": "black"
+    }
   });
 
   // And strong outlines in the vivid OS magenta / pink for intersecting footprints
@@ -299,8 +299,8 @@ if (intersections.features.length > 0) {
     layout: {},
     paint: {
       "line-color": os.palette.qualitative.lookup["1"],
-      "line-width": 2,
-    },
+      "line-width": 2
+    }
   });
 } else {
   // Logic for if the user drew an area with no buildings
@@ -323,8 +323,8 @@ map.fitBounds(turf.bbox(geojson), {
     left: $(".osel-sliding-side-panel").width() + 50,
     right: 50,
     bottom: 50,
-    top: 50,
-  },
+    top: 50
+  }
 });
 removeSpinner();
 ```
