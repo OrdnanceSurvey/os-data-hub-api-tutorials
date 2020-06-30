@@ -1,4 +1,4 @@
-const config = { apikey: "JydUr1HO7ejqBhw0YP19W3b1GonFwmzr" };
+const config = { apikey: "YOUR_KEY_HERE" };
 
 const endpoints = {
   vts: "https://api.os.uk/maps/vector/v1/vts",
