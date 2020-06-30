@@ -1,5 +1,5 @@
 // First, set up the map
-const config = { apikey: "JydUr1HO7ejqBhw0YP19W3b1GonFwmzr" };
+const config = { apikey: "YOUR_KEY_HERE" };
 
 // Define map options including where the map loads and zoom constraints
 var mapOptions = {
