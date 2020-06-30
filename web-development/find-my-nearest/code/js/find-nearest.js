@@ -2,8 +2,8 @@ var initLoad = true;
 var coordsToFind = null;
 
 const endpoints = {
-  maps: "https://api.os.uk/maps/raster/v1/zxy",
-  features: "https://api.os.uk/features/v1/wfs"
+  zxy: "https://api.os.uk/maps/raster/v1/zxy",
+  wfs: "https://api.os.uk/features/v1/wfs"
 };
 
 // 1.
@@ -13,18 +13,17 @@ var mapOptions = {
   maxZoom: 20,
   center: [54.425, -2.968],
   zoom: 14,
-  attributionControl: false,
-  zoomControl: false,
+  attributionControl: false
 };
 
 var map = new L.map("map", mapOptions);
 
-// Load and display WMTS tile layer on the map.
-var basemapQueryString = generateQueryString();
-
-var basemap = L.tileLayer(endpoints.maps + "?" + basemapQueryString, {
-  maxZoom: 20,
-}).addTo(map);
+var basemap = L.tileLayer(
+  endpoints.zxy + "/Light_3857/{z}/{x}/{y}.png?key=" + config.apikey,
+  {
+    maxZoom: 20
+  }
+).addTo(map);
 
 // Add scale control to the map.
 var ctrlScale = L.control.scale({ position: "bottomright" }).addTo(map);
@@ -34,18 +33,18 @@ var styles = {
   Zoomstack_Greenspace: {
     color: os.palette.qualitative.lookup["2"],
     fillOpacity: 0.5,
-    weight: 1,
+    weight: 1
   },
   Zoomstack_Woodland: {
     color: os.palette.qualitative.lookup["3"],
     fillOpacity: 0.5,
-    weight: 1,
+    weight: 1
   },
   Zoomstack_LocalBuildings: {
     color: os.palette.qualitative.lookup["4"],
     fillOpacity: 0.5,
-    weight: 1,
-  },
+    weight: 1
+  }
 };
 
 // Add layer group to make it easier to add or remove layers from the map.
@@ -71,8 +70,10 @@ function fetchNearestFeatures(e) {
   // {Turf.js} Takes the centre point coordinates and calculates a circular polygon
   // of the given a radius in kilometers; and steps for precision.
   var circle = turf.circle(coordsToFind, 1, { steps: 24, units: "kilometers" });
+  circle = turf.flip(circle); // GML spatial filters accept coordinates as y,x (lat, lon),
+  // so we flip the GeoJSON coordinate pairs, then ...
 
-  // Get the circle geometry coordinates and return a new space-delimited string.
+  // Get the circle geometry coordinates and return a space-delimited string.
   var coords = circle.geometry.coordinates[0].join(" ");
 
   // Create an OGC XML filter parameter value which will select the Greenspace
@@ -101,13 +102,13 @@ function fetchNearestFeatures(e) {
     srsName: "urn:ogc:def:crs:EPSG::4326",
     filter: xml,
     count: 100,
-    startIndex: 0,
+    startIndex: 0
   };
 
   // Create an empty GeoJSON FeatureCollection.
   var geojson = {
     type: "FeatureCollection",
-    features: [],
+    features: []
   };
   geojson.features.length = 0;
 
@@ -179,27 +180,26 @@ function findNearestN(point, featurecollection, n, typeName) {
   // create FeatureCollection of 0-n features.
   var nearestFeatures = {
     type: "FeatureCollection",
-    features: polygons.slice(0, n),
+    features: polygons.slice(0, n)
   };
 
   // Add nearest features to the Leaflet map
   foundFeaturesGroup.addLayer(
     new L.geoJson(nearestFeatures, {
-      style: styles[typeName],
+      style: styles[typeName]
     })
   );
 
   // Alert the user
   os.notification.show(
     "success",
-    nearestFeatures.features.length + " nearest features found!",
-    false
+    nearestFeatures.features.length + " nearest features found!"
   );
 
   // And fit map bounds to the features we found:
   map.fitBounds(foundFeaturesGroup.getBounds(), {
     paddingTopLeft: [os.main.viewportPaddingOptions().left + 25, 25],
-    paddingBottomRight: [25, 25],
+    paddingBottomRight: [25, 25]
   });
 }
 
@@ -210,7 +210,7 @@ function findNearestN(point, featurecollection, n, typeName) {
  */
 function createGeoJSONLayer(obj, style) {
   return new L.geoJson(obj, {
-    style: styles[style],
+    style: styles[style]
   });
 }
 
@@ -223,7 +223,7 @@ function getUrl(params) {
     .map((paramName) => paramName + "=" + encodeURI(params[paramName]))
     .join("&");
 
-  return endpoints.features + "?" + encodedParameters;
+  return endpoints.wfs + "?" + encodedParameters;
 }
 
 function addDistanceFromPointToPolygon(point, polygon) {
@@ -269,7 +269,7 @@ map.on({
   },
   click: function () {
     resetProperties();
-  },
+  }
 });
 
 map.getPane("shadowPane").style.display = "none"; // hide shadow pane
@@ -280,7 +280,7 @@ function addLayer() {
   var foundFeatures = L.geoJson(null, {
       onEachFeature: onEachFeature,
       pane: "foundFeatures",
-      style: { color: "#666", weight: 2, fillOpacity: 0.3 },
+      style: { color: "#666", weight: 2, fillOpacity: 0.3 }
     }),
     mapFeatures = omnivore
       .geojson("data/sample/boundary.geojson", null, foundFeatures)
@@ -375,7 +375,7 @@ function generateQueryString(style = defaults.basemapStyle) {
     tileMatrixSet: "EPSG:3857",
     tileMatrix: "{z}",
     tileRow: "{y}",
-    tileCol: "{x}",
+    tileCol: "{x}"
   };
 
   // Construct query string parameters from object.
@@ -386,12 +386,12 @@ function generateQueryString(style = defaults.basemapStyle) {
     .join("&");
 }
 function switchBasemap(style) {
-  basemap.setUrl(endpoints.maps + "?" + generateQueryString(style));
+  basemap.setUrl(endpoints.zxy + "?" + generateQueryString(style));
 }
 
 function zoomToLayerExtent(lyr) {
   map.flyToBounds(window[lyr].getBounds(), {
-    padding: [50, 50],
+    padding: [50, 50]
   });
 }
 
@@ -401,7 +401,7 @@ function setLayerOpacity(lyr, value) {
 
 function getTileServer(style = defaults.basemapStyle) {
   return (
-    endpoints.maps + "/" + style + "_3857/{z}/{x}/{y}.png?key=" + config.apikey
+    endpoints.zxy + "/" + style + "_3857/{z}/{x}/{y}.png?key=" + config.apikey
   );
 }
 

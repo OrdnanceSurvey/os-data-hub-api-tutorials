@@ -40,7 +40,7 @@ var mapOptions = {
   center: [54.425, -2.968],
   zoom: 14,
   attributionControl: false,
-  zoomControl: false,
+  zoomControl: false
 };
 
 var map = new L.map("map", mapOptions);
@@ -63,9 +63,12 @@ const endpoints = {
 };
 
 // Load and display ZXY tile layer on the map.
-var basemap = L.tileLayer(endpoints.maps + "?" + basemapQueryString, {
-  maxZoom: 20,
-}).addTo(map);
+var basemap = L.tileLayer(
+  endpoints.zxy + "/Light_3857/{z}/{x}/{y}.png?key=" + config.apikey,
+  {
+    maxZoom: 20
+  }
+).addTo(map);
 ```
 
 With that we've created a Leaflet map and connected to the OS Maps API. The result: a pannable, zoomable map that shows the right level of detail for the zoom level. 🗺️
@@ -143,6 +146,7 @@ let typeName = getFeatureTypeToFind(featureTypeToFind);
 // {Turf.js} Takes the centre point coordinates and calculates a circular polygon
 // of the given a radius in kilometers; and steps for precision. Returns GeoJSON Feature object.
 var circle = turf.circle(coordsToFind, 1, { steps: 24, units: "kilometers" });
+circle = turf.flip(circle); // GML spatial filters accept coordinates as y,x (lat, lon),
 
 // Get the circle geometry coordinates and return a new space-delimited string - required based on the OGC standard.
 var coords = circle.geometry.coordinates[0].join(" ");
@@ -172,7 +176,7 @@ let wfsParams = {
   srsName: "urn:ogc:def:crs:EPSG::4326",
   filter: xml,
   count: 100,
-  startIndex: 0,
+  startIndex: 0
 };
 ```
 
@@ -253,12 +257,18 @@ function findNearestN(point, featurecollection, n, typeName) {
   // create GeoJSON FeatureCollection of 0-n features.
   var nearestFeatures = {
     type: "FeatureCollection",
-    features: polygons.slice(0, n),
+    features: polygons.slice(0, n)
   };
 
   // Add the FeatureCollection
   foundFeaturesGroup.addLayer(createGeoJSONLayer(nearestFeatures, typeName));
   // createGeoJSONLayer() returns a new L.geoJson object
+
+  // Alert the user
+  os.notification.show(
+    "success",
+    nearestFeatures.features.length + " nearest features found!"
+  );
 
   // Pan / zoom the map to the query result
   map.fitBounds(foundFeaturesGroup.getBounds());
@@ -297,7 +307,7 @@ Now all we need to do is set up a few holder variables that are referenced in th
 // Create an empty GeoJSON FeatureCollection.
 var geojson = {
   type: "FeatureCollection",
-  features: [],
+  features: []
 };
 geojson.features.length = 0;
 

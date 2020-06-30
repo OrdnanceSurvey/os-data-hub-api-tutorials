@@ -24,21 +24,25 @@ var notification = {
             </div>\
         ';
 
-		var parent = $('.osel-notification-holder').length ? $('.osel-notification-holder') : $(document.body);
-		parent.append(notification);
+    var parent = $(".osel-notification-holder").length
+      ? $(".osel-notification-holder")
+      : $(document.body);
+    parent.append(notification);
 
-		if (fadeOut) {
-			setTimeout(function () {
-				$(".osel-toast-notification[data-id='" + id + "']").fadeOut(function () {
-					$(this).remove();
-				});
-			}, 3000);
-		}
-	},
-	//
-	remove: function () {
-		$(".osel-toast-notification").remove();
-	}
-}
+    if (fadeOut) {
+      setTimeout(function () {
+        $(".osel-toast-notification[data-id='" + id + "']").fadeOut(
+          function () {
+            $(this).remove();
+          }
+        );
+      }, 3000);
+    }
+  },
+  //
+  remove: function () {
+    $(".osel-toast-notification").remove();
+  }
+};
 
 notification.init();
