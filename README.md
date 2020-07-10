@@ -1,3 +1,7 @@
+# Deprecation
+
+This project is deprecated. We now maintain all OS Data Hub tutorials using the repo: [https://github.com/OrdnanceSurvey/os-data-hub-tutorials](https://github.com/OrdnanceSurvey/os-data-hub-tutorials)
+
 # OS Data Hub API Tutorials
 
 ## Tutorials
