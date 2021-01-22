@@ -7,4 +7,6 @@
  
 Could potentially extend it further by pulling in more info using the UPRN or postcode as a hook to 3rd party APIs (if there are any!) Could also show more local features e.g. greenspaces
  
- via @charley_glynn :D 
+via @charley_glynn :D 
+
+Javascript type-ahead type searches. 
