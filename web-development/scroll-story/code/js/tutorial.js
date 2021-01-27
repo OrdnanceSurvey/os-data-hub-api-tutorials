@@ -2,7 +2,7 @@
 const scroller = scrollama();
 
 // Set up Mapbox GL JS map with OS Vector Tile API
-config.apikey = "YOUR_KEY_HERE";
+config.apikey = "API KEY HERE";
 const endpoints = {
   vts: "https://api.os.uk/maps/vector/v1/vts"
 }
