@@ -10,7 +10,7 @@ var placeServiceUrl = 'https://api.os.uk/search/places/v1',
 var map = new mapboxgl.Map({
     container: 'map',
     minZoom: 6,
-    maxZoom: 18,
+    // maxZoom: 18,
     style: serviceUrl + '/resources/styles?key=' + config.apikey,
     center: [-2.968, 54.425],
     zoom: 13,
@@ -53,40 +53,48 @@ async function fetchAddressFromPlaces(address) {
 }
 
 async function flyToCoords(coords) {
-    map.addSource('points-' + JSON.stringify(coords), {
-        'type': 'geojson',
-        'data': {
-            // feature for Mapbox DC
-            'type': 'Feature',
-            'geometry': {
-                'type': 'Point',
-                'coordinates': coords
-            },
-            'properties': {
-                'title': 'Mapbox DC'
-            }
-        }
+    // map.addSource('points-' + JSON.stringify(coords), {
+    //     'type': 'geojson',
+    //     'data': {
 
+    //         'type': 'Feature',
+    //         'geometry': {
+    //             'type': 'Point',
+    //             'coordinates': coords
+    //         },
+    //         'properties': {
+    //             'title': 'Mapbox DC'
+    //         }
+    //     }
+
+    // });
+
+    // map.addLayer({
+    //     "id": "points-" + JSON.stringify(coords),
+    //     "type": "circle",
+    //     "source": "points-" + JSON.stringify(coords),
+    //     "layout": {
+    //         "visibility": "visible"
+    //     },
+    //     "paint": {
+    //         "circle-radius": 10,
+    //         "circle-color": "#5b94c6",
+    //         "circle-opacity": 0.5
+    //     }
+    // });
+
+    map.once('moveend', function(){
+        console.log('moveend logging');
+        map.rotateTo(90.0, {duration: 5000});
     });
-
-    map.addLayer({
-        "id": "points-" + JSON.stringify(coords),
-        "type": "circle",
-        "source": "points-" + JSON.stringify(coords),
-        "layout": {
-            "visibility": "visible"
-        },
-        "paint": {
-            "circle-radius": 10,
-            "circle-color": "#5b94c6",
-            "circle-opacity": 0.6
-        }
-    })
+    
     map.flyTo({
         center: coords,
-        zoom: 18,
-        pitch: 65
+        zoom: 17.5,
+        pitch: 75
     })
+
+ 
 }
 
 function highlightTOID(toidArray) {
@@ -113,8 +121,8 @@ function highlightTOID(toidArray) {
         "minzoom": 16,
         "layout": {},
         "paint": {
-            "fill-extrusion-color": "green",
-            "fill-extrusion-opacity": 0.5,
+            "fill-extrusion-color": "#FF1F5B",
+            "fill-extrusion-opacity": 1,
             "fill-extrusion-height": [
                 "interpolate",
                 [ "linear" ],
@@ -175,8 +183,8 @@ map.on("style.load", function () {
                 0,
                 16.05,
                 [ "get", "RelHMax" ]
-            ],
-            "fill-extrusion-opacity": 0.9
+            ]
+            // "fill-extrusion-opacity": 0.9
         }
     })
 })
