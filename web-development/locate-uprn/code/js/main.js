@@ -1,6 +1,6 @@
 
 var config = {
-    apikey: prompt("Input API key")
+    apikey: "SrUGRuBNJ9UgRoI6cdJ0WIzbYJ8n1P91"
 };
 
 var placeServiceUrl = 'https://api.os.uk/search/places/v1',
@@ -21,13 +21,8 @@ var map = new mapboxgl.Map({
     }
 });
 
-map.dragRotate.disable(); // Disable map rotation using right click + drag.
-map.touchZoomRotate.disableRotation(); // Disable map rotation using touch rotation gesture.
-
 // Add navigation control (excluding compass button) to the map.
-map.addControl(new mapboxgl.NavigationControl({
-    showCompass: false
-}));
+map.addControl(new mapboxgl.NavigationControl());
 
 
 
@@ -37,8 +32,10 @@ async function lookUpAddress(e) {
     let address = document.getElementById('address-text').value
 
     let res = await fetchAddressFromPlaces(address);
+    console.log(res)
     let coords = [res.results[0].DPA.LNG, res.results[0].DPA.LAT];
     flyToCoords(coords);
+    highlightTOID(res.results[0].DPA.TOPOGRAPHY_LAYER_TOID)
 
 }
 
@@ -73,9 +70,9 @@ async function flyToCoords(coords) {
     });
 
     map.addLayer({
-        "id": "points-"  + JSON.stringify(coords),
+        "id": "points-" + JSON.stringify(coords),
         "type": "circle",
-        "source": "points-"  + JSON.stringify(coords),
+        "source": "points-" + JSON.stringify(coords),
         "layout": {
             "visibility": "visible"
         },
@@ -86,10 +83,174 @@ async function flyToCoords(coords) {
         }
     })
     map.flyTo({
-        center: coords
+        center: coords,
+        zoom: 18,
+        pitch: 65
     })
 }
 
-function highlightTOID() {
+function highlightTOID(toidArray) {
+    console.log(toidArray)
 
+    var filter = ["in", "TOID"];
+    for (var i in toidArray) {
+        filter.push(toidArray[i]);
+    }
+
+    var ftArray = map.queryRenderedFeatures({ filter: filter });
+    console.log(ftArray);
+
+    map.addLayer({
+        "id": "OS/TopographicArea_1/Building/1_3D-2",
+        "type": "fill-extrusion",
+        "source": "esri",
+        "source-layer": "TopographicArea_1",
+        "filter": [
+            "==",
+            "TOID",
+            toidArray
+        ],
+        "minzoom": 16,
+        "layout": {},
+        "paint": {
+            "fill-extrusion-color": "green",
+            "fill-extrusion-opacity": 0.5,
+            "fill-extrusion-height": [
+                "interpolate",
+                [ "linear" ],
+                [ "zoom" ],
+                16,
+                0,
+                16.05,
+                [ "get", "RelHMax" ]
+            ],
+        }
+    })
 }
+
+
+
+var qryLayers = [
+    'OS/TopographicArea_1/Building/1',
+    'OS/TopographicArea_1/Multi Surface'
+];
+
+var toidArray = [];
+
+map.on("style.load", function () {
+    map.getStyle().layers.forEach(function(val, i) {
+        if(! val['source-layer'] )
+            return;
+
+        if( val['source-layer'] === 'CartographicText' ) {
+            map.setLayoutProperty(val.id, 'text-rotation-alignment', 'map');
+        }
+        else if( val['source-layer'] === 'CartographicSymbol' || val['source-layer'] === 'TopographicPoint' ) {
+            map.setLayoutProperty(val.id, 'icon-rotation-alignment', 'map');
+        }
+    });
+
+    // Duplicate 'OS/TopographicArea_1/Building/1' layer to extrude the buildings
+    // in 3D using the Building Height Attribute (RelHMax) value.
+    map.addLayer({
+        "id": "OS/TopographicArea_1/Building/1_3D",
+        "type": "fill-extrusion",
+        "source": "esri",
+        "source-layer": "TopographicArea_1",
+        "filter": [
+            "==",
+            "_symbol",
+            33
+        ],
+        "minzoom": 16,
+        "layout": {},
+        "paint": {
+            "fill-extrusion-color": "#DCD7C6",
+            "fill-extrusion-opacity": 0.5,
+            "fill-extrusion-height": [
+                "interpolate",
+                [ "linear" ],
+                [ "zoom" ],
+                16,
+                0,
+                16.05,
+                [ "get", "RelHMax" ]
+            ],
+            "fill-extrusion-opacity": 0.9
+        }
+    })
+})
+
+map.on('load', function () {
+
+
+    map.on('click', function (e) {
+        var features = map.queryRenderedFeatures(e.point, { layers: qryLayers });
+        if (!features.length)
+            return;
+
+
+        toidArray = [];
+        
+        for (var i = 0; i < features.length; i++) {
+            var toid = features[i].properties.TOID,
+                j = toidArray.indexOf(toid);
+
+            if (j === -1)
+                toidArray.push(toid);
+            else
+                toidArray.splice(j, 1);
+
+            break;
+        }
+        
+        highlightTOID(toidArray)
+
+        
+
+        var filter = ["in", "TOID"];
+        for (var i in toidArray) {
+            filter.push(toidArray[i]);
+        }
+
+        var ftArray = map.queryRenderedFeatures({ filter: filter });
+
+        if (!ftArray.length) {
+            reset();
+        }
+        else {
+            geojson = turf.getType(ftArray[0].geometry) === 'Polygon' ?
+                turf.polygon(ftArray[0].geometry.coordinates) :
+                turf.multiPolygon(ftArray[0].geometry.coordinates);
+
+            geojson = turf.flatten(geojson);
+
+            for (var i in ftArray) {
+                var _geojson = turf.getType(ftArray[i].geometry) === 'Polygon' ?
+                    turf.polygon(ftArray[i].geometry.coordinates) :
+                    turf.multiPolygon(ftArray[i].geometry.coordinates);
+
+                for (var j = 0; j < turf.flatten(_geojson).features.length; j++) {
+                    geojson.features.push(turf.flatten(_geojson).features[j]);
+                }
+            }
+
+            geojson = turf.buffer(turf.combine(geojson), 0);
+
+            var _uuid = uuid();
+
+            geojson.features[0].properties = {
+                id: _uuid,
+                refToTopo: toidArray,
+                calcArea: turf.area(geojson)
+            };
+
+            // document.getElementsByTagName("pre")[0].innerText = JSON.stringify(geojson, null, 2);
+            document.getElementById("download-link").innerHTML = `<a href="data:${"text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(geojson))}" download="${_uuid}.geojson">Download GeoJSON</a>`;
+        }
+
+        // console.log(geojson);
+
+        map.getSource("combine").setData(geojson);
+    });
+})
