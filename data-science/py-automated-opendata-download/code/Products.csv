@@ -1,0 +1,19 @@
+id,user_version,user_format,user_area
+250kScaleColourRaster ,YYYY-MM,TIFF-LZW,GB
+BoundaryLine,YYYY-MM,GeoPackage,GB
+CodePointOpen,YYYY-MM,CSV,GB
+GBOverviewMaps,YYYY-MM,GeoTIFF,GB
+LIDS,YYYY-MM,CSV,GB
+MiniScale,YYYY-MM,"Zip file (containing EPS, Illustrator and TIFF-LZW)",GB
+OpenNames,YYYY-MM,GeoPackage,GB
+OpenRivers,YYYY-MM,ESRI® Shapefile,GB
+OpenRoads,YYYY-MM,GML,GB
+OpenUPRN,YYYY-MM,GeoPackage,GB
+OpenUSRN,YYYY-MM,GeoPackage,GB
+OpenZoomstack,YYYY-MM,Vector Tiles,GB
+Strategi,YYYY-MM,DXF,GB
+Terrain50,YYYY-MM,ASCII Grid and GML (Grid),GB
+VectorMapDistrict,YYYY-MM,GeoPackage,"HT,HP"
+OpenGreenspace,YYYY-MM,GeoPackage,"HT,HP"
+OpenMapLocal,YYYY-MM,GeoPackage,"HT,HP"
+OpenTOID,YYYY-MM,CSV,"HT,HP"
