@@ -1,6 +1,6 @@
 // API Key in config object
 var config = {
-    apikey: prompt("Please input key", "<KEY HERE>")
+    apikey: prompt("Add OS Data Hub Project API Key with access to the OS Vector Tile API and OS Places API.\n* Requires Public Sector or Premium plan")
 };
 
 // Endpoints
@@ -10,7 +10,7 @@ const endpoints = {
 };
 
 // Initialise the map object.
-var map = new mapboxgl.Map({
+var map = new maplibregl.Map({
     container: 'map',
     minZoom: 6,
     // maxZoom: 18,
@@ -25,7 +25,7 @@ var map = new mapboxgl.Map({
 });
 
 // Add navigation control (excluding compass button) to the map.
-map.addControl(new mapboxgl.NavigationControl());
+map.addControl(new maplibregl.NavigationControl());
 
 map.on("style.load", function () {
 
@@ -56,25 +56,70 @@ map.on("style.load", function () {
                 ["get", "RelHMax"]
             ]
         }
-    })
+    });
+
+    // Here we add the highlighted layer, with all buildings filtered out. 
+    // We'll set the filter to our searched buildings when we actually
+    // call the OS Places API and  have a TOID to highlight.
+    map.addLayer({
+        "id": "OS/TopographicArea_1/Building/1_3D-highlighted",
+        "type": "fill-extrusion",
+        "source": "esri",
+        "source-layer": "TopographicArea_1",
+        "filter": ["in", "TOID", ""],
+        "minzoom": 16,
+        "layout": {},
+        "paint": {
+            "fill-extrusion-color": "#FF1F5B",
+            "fill-extrusion-opacity": 1,
+            "fill-extrusion-height": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                16,
+                0,
+                16.05,
+                ["get", "RelHMax"]
+            ],
+        }
+    });
 });
 
-// 2. Querying the OS Places API
+// Querying the OS Places API
 var form = document.getElementById("the-form");
 form.addEventListener('submit', lookUpAddress);
 
 async function lookUpAddress(e) {
     e.preventDefault();
 
+    // Clear out existing data
     clearInfoBox();
+    map.setFilter("OS/TopographicArea_1/Building/1_3D-highlighted", ["in", "TOID", ""]);
     showSpinner();
 
     let queryAddress = document.getElementById('address-text').value
-    let addresses = await fetchAddressFromPlaces(queryAddress);
 
+    // Check to make sure the user has actually input a value
+    if (queryAddress == "") {
+        alert('Please input an address to search!');
+        hideSpinner()
+        return;
+    }
+
+    // Fetch addresses from the OS Places API
+    let addresses = await fetchAddressFromPlaces(queryAddress);
     hideSpinner()
+
+    // Confirm their query had a matched address
+    if (addresses.header.totalresults < 1) {
+        alert("No addresses found - please try again.")
+        return;
+    }
+
+    // Update the info box
     updateInfoBox(addresses);
 
+    // And animate the fly to / highlight the building by TOID
     let coords = [addresses.results[0].DPA.LNG, addresses.results[0].DPA.LAT];
     flyToCoords(coords);
     console.log(addresses)
@@ -84,7 +129,7 @@ async function lookUpAddress(e) {
 
 async function fetchAddressFromPlaces(address) {
 
-    let url = endpoints.places + `/find?query=${encodeURIComponent(address)}&output_srs=EPSG:4326&key=${config.apikey}`;
+    let url = endpoints.places + `/find?query=${encodeURIComponent(address)}&maxresults=1&output_srs=EPSG:4326&key=${config.apikey}`;
 
     let res = await fetch(url);
     let json = await res.json()
@@ -138,28 +183,8 @@ async function flyToCoords(coords) {
 function highlightTOID(toid) {
 
     let filter = ["in", "TOID", toid];
-    map.addLayer({
-        "id": "OS/TopographicArea_1/Building/1_3D-2",
-        "type": "fill-extrusion",
-        "source": "esri",
-        "source-layer": "TopographicArea_1",
-        "filter": filter,
-        "minzoom": 16,
-        "layout": {},
-        "paint": {
-            "fill-extrusion-color": "#FF1F5B",
-            "fill-extrusion-opacity": 1,
-            "fill-extrusion-height": [
-                "interpolate",
-                ["linear"],
-                ["zoom"],
-                16,
-                0,
-                16.05,
-                ["get", "RelHMax"]
-            ],
-        }
-    });
+    map.setFilter("OS/TopographicArea_1/Building/1_3D-highlighted", filter);
+
 }
 
 

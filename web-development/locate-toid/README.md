@@ -2,7 +2,7 @@
 
 Many web forms we use online require us to provide an address - for billing or shipping details, routing, to get a ride and so on. It can be quite tricky for developers to create web forms that capture this address accurately. What happens if a road name is misspelled, or in all lowercase? What if there is another road with the same name in a nearby town? Capturing and verifying addresses is a difficult problem to solve. 
 
-The OS Places API is a solution to that problem. With the API, developers get on-demand access to AddressBase Premium, OS's premiere addressing dataset. A variety of query options enable devs to match and cleanse addresses based on text, postcode, UPRN and location. 
+The OS Places API is a solution to that problem. With the API, developers get on-demand access to AddressBase Premium, OS's flagship address database. A variety of query options enable devs to match and cleanse addresses based on text, postcode, UPRN and location. 
 
 In this tutorial we let a user type in an address to look up, query the OS Places API, and fly to the location using the Vector Tile API and Mapbox GL JS. We'll describe key code snippets here - to follow along download the directory here, or clone the os-data-hub-tutorials repository. 
 
@@ -65,7 +65,9 @@ var map = new mapboxgl.Map({
 map.addControl(new mapboxgl.NavigationControl());
 ```
 
-For the last bit of map setup we duplicate the buildings layer. This will let us extrude the footprints based on the `RelHMax`, which represents building height. We will be working with this duplicated layer later when we highlight the address we've fetched in pink. 
+For the last bit of map setup we duplicate the buildings layer. This will let us extrude the footprints based on the `RelHMax`, which represents building height.
+
+We also add a layer highlighted in vivid pink. When we retrieve an address from the OS Places API, the response will have a TOID - we'll use this identifier to filter the highlighted overlay so only the relevant building appears pink. This is possible because the vector building features provided by the Vector Tile API include the TOID.
 
 We have to execute this in response to a `map.on('style.load', function () {...` callback function - otherwise the program will try to duplicate a layer that doesn't exist yet.
 
@@ -99,7 +101,33 @@ map.on("style.load", function () {
                 ["get", "RelHMax"]
             ]
         }
-    })
+    });
+
+    // Here we add the highlighted layer, with all buildings filtered out. 
+    // We'll set the filter to our searched buildings when we actually
+    // call the OS Places API and  have a TOID to highlight.
+    map.addLayer({
+        "id": "OS/TopographicArea_1/Building/1_3D-highlighted",
+        "type": "fill-extrusion",
+        "source": "esri",
+        "source-layer": "TopographicArea_1",
+        "filter": ["in", "TOID", ""],
+        "minzoom": 16,
+        "layout": {},
+        "paint": {
+            "fill-extrusion-color": "#FF1F5B",
+            "fill-extrusion-opacity": 1,
+            "fill-extrusion-height": [
+                "interpolate",
+                ["linear"],
+                ["zoom"],
+                16,
+                0,
+                16.05,
+                ["get", "RelHMax"]
+            ],
+        }
+    });
 });
 ```
 
@@ -119,7 +147,7 @@ form.addEventListener('submit', lookUpAddress);
 ```
 
 So what happens in `lookUpAddress();`? Great question. 
-1. We start a spinner in the interface. This is important so users know something is happening in the background, and don't get impatient or worried that the code isn't working. We also clear out any existing results.
+1. We start a spinner in the interface. This is important so users know something is happening in the background, and don't get impatient or worried that the code isn't working. We also clear out any existing data.
 2. We grab the text value provided from the `'address-text'` element - i.e. the text input form field.
 3. We'll then call `fetchAddressFromPlaces(placesResponse);`, which will call the OS Places API and return the parsed JSON response. 
 4. With the result in hand, we'll update the info box, stop the spinner, trigger an animation to fly to the address location, and highlight the building represented in the address as referenced by the Topographic Identifier, or TOID. 
@@ -128,12 +156,14 @@ This is a nice way to think of it on an abstract, high level - but we want to go
 
 #### `fetchAddressFromPlaces()`
 
-This function accepts the `address` string retrieved from the form input field - with this we construct a URL with `query`, our desired reference system (`output_srs`) and the API key as parameters. We then use the JavaScript `fetch` API to retrive an HTTP request, and parse the response with the `.json()` method. The function simply returns the parsed JSON exactly as received from the API endpoint.
+This function accepts the `address` string retrieved from the form input field - with this we construct a URL with `query`, our desired reference system (`output_srs`), a `maxresults` limit of 1 and the API `key` as parameters. 
+
+We then use the JavaScript `fetch` API to send an HTTP request, and parse the response with the `.json()` method. The function simply returns the parsed JSON exactly as received from the API endpoint.
 
 ```javascript
 async function fetchAddressFromPlaces(address) {
 
-    let url = endpoints.places + `/find?query=${encodeURIComponent(address)}&output_srs=EPSG:4326&key=${config.apikey}`;
+    let url = endpoints.places + `/find?query=${encodeURIComponent(address)}&maxresults=1&output_srs=EPSG:4326&key=${config.apikey}`;
 
     let res = await fetch(url);
     let json = await res.json()
@@ -142,9 +172,10 @@ async function fetchAddressFromPlaces(address) {
 }
 ```
 
+> NOTE: Here we're simply fetching the first item the OS Places API matches with the query string. In production it might require a bit more user input or other analysis to make sure you actually do have the right address. 
 #### Update info box
 
-We'll place values from the retrieved JSON in the information box included in the HTML structure. This is as simple as finding the relevant attributes in the JSON response and setting the `innerText` of the respective HTML elements. Here we're simply visualising the first item in the response array - the responses are ordered by relevance. In production it might require a bit more user input or other analysis to make sure you actually do have the right address. 
+We'll place values from the retrieved JSON in the information box included in the HTML structure. This is as simple as finding the relevant attributes in the JSON response and setting the `innerText` of the respective HTML elements. 
 
 ```javascript
 function updateInfoBox(placesResponse) {
@@ -190,37 +221,17 @@ async function flyToCoords(coords) {
 
 Our last bit of functionality is to visually highlight the 3D building at the address we've looked up. Our response from the OS Places API includes the Topographic Identifier, or TOID, of the building located at the address. TOIDs also are included with each vector feature provided by the Vector Tile API. This means we can easily apply styling to individual features. 
 
-To do this we create another duplicate layer of our 3D buildings, and filter out all the TOIDs besides the one we want to highlight. All other styling parameters are the same, so the highlighted building will behave like the rest of them - it will just be `#FF1F5B` - a reddish magenta. 
+To do this we create another duplicate layer of our 3D buildings, and filter out all the TOIDs besides the one we want to highlight. All other styling parameters are the same, so the highlighted building will behave like the rest of them - it will just be `#FF1F5B` - a vivid pink. 
 
 ```javascript
 function highlightTOID(toid) {
 
     let filter = ["in", "TOID", toid];
-    map.addLayer({
-        "id": "OS/TopographicArea_1/Building/1_3D-2",
-        "type": "fill-extrusion",
-        "source": "esri",
-        "source-layer": "TopographicArea_1",
-        "filter": filter,
-        "minzoom": 16,
-        "layout": {},
-        "paint": {
-            "fill-extrusion-color": "#FF1F5B",
-            "fill-extrusion-opacity": 1,
-            "fill-extrusion-height": [
-                "interpolate",
-                ["linear"],
-                ["zoom"],
-                16,
-                0,
-                16.05,
-                ["get", "RelHMax"]
-            ],
-        }
-    });
+    map.setFilter("OS/TopographicArea_1/Building/1_3D-highlighted", filter);
+
 }
 ```
 
 ### Conclusion
 
-And that's it! We've built a simple interface with a vector tile map and a form element, queried the OS Places API, and visualised the result on a map. Feel free to adapt this code as you like - one idea is to give users visual validation of their addresses, as it is a best practice to confirm that the right address has be input at the point of capture. 
+And that's it! We've built a simple interface with a vector tile map and a form element, queried the OS Places API, and visualised the result on a map. Feel free to adapt this code as you like - one idea is to give users visual validation of their addresses, as it is a best practice to confirm that the right address has been input at the point of capture. 
