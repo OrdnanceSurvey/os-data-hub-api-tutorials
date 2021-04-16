@@ -2,13 +2,13 @@ Many web forms we use online require us to provide an address - for billing or s
 
 The OS Places API is a solution to that problem. With the API, developers get on-demand access to AddressBase Premium, OS's flagship address database. A variety of query options enable devs to match and cleanse addresses based on text, postcode, UPRN and location. 
 
-In this tutorial we let a user type in an address to look up, query the OS Places API, and fly to the location using the Vector Tile API and Mapbox GL JS. We'll describe key code snippets here - to follow along download the directory here, or clone the os-data-hub-tutorials repository. 
+In this tutorial we let a user type in an address to look up, query the OS Places API, and fly to the location using the Vector Tile API and MapLibre GL JS. We'll describe key code snippets here - to follow along download the directory here, or clone the os-data-hub-tutorials repository. 
 
-<p><iframe style="width:100%;height:400px;max-width:1200px;border:1px solid #f5f5f5;" src="/public/os-data-hub-tutorials/dist/web-development/locate-toid/"></iframe></p>
+<p><iframe style="width:100%;height:400px;max-width:1200px;border:1px solid #f5f5f5;" src="/public/os-data-hub-tutorials/dist/web-development/locate-address/"></iframe></p>
 
 ## Tools and APIs
 
-We use data from the [OS Places API](https://osdatahub.os.uk/docs/places/overview) and the [OS Vector Tile API](https://osdatahub.os.uk/docs/vts/overview). We also use [MapLibre GL JS](https://github.com/maplibre/maplibre-gl-js), a community-led open source fork of Mapbox GL JS v1.13.
+We use data from the [OS Places API](https://osdatahub.os.uk/docs/places/overview) and the [OS Vector Tile API](https://osdatahub.os.uk/docs/vts/overview). We also use [MapLibre GL JS](https://github.com/maplibre/maplibre-gl-js), a community-led open source fork of MapLibre GL JS v1.13.
 
 ## The HTML and CSS
 
@@ -47,11 +47,11 @@ const endpoints = {
 
 ```
 
-We then initialise the `map` object with the `mapboxgl.Map` constructor, passing in an object literal with our configuration parameters. We'll define the id of the `container` div (`map`, from the HTML), `minZoom` (i.e. how far out the user can zoom), the `style` endpoint with key, the `zoom` and `center` of the viewport and a transformation to apply to the URL, which adds the `srs` so we fetch tiles from the right Spatial Reference System. We also add navigation controls.
+We then initialise the `map` object with the `maplibregl.Map` constructor, passing in an object literal with our configuration parameters. We'll define the id of the `container` div (`map`, from the HTML), `minZoom` (i.e. how far out the user can zoom), the `style` endpoint with key, the `zoom` and `center` of the viewport and a transformation to apply to the URL, which adds the `srs` so we fetch tiles from the right Spatial Reference System. We also add navigation controls.
 
 ```javascript
 // Initialise the map object.
-var map = new mapboxgl.Map({
+var map = new maplibregl.Map({
     container: 'map',
     minZoom: 6,
     // maxZoom: 18,
@@ -66,7 +66,7 @@ var map = new mapboxgl.Map({
 });
 
 // Add navigation control (excluding compass button) to the map.
-map.addControl(new mapboxgl.NavigationControl());
+map.addControl(new maplibregl.NavigationControl());
 ```
 
 For the last bit of map setup we duplicate the buildings layer. This will let us extrude the footprints based on the `RelHMax`, which represents building height.
