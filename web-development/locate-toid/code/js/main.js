@@ -122,7 +122,7 @@ async function lookUpAddress(e) {
     // And animate the fly to / highlight the building by TOID
     let coords = [addresses.results[0].DPA.LNG, addresses.results[0].DPA.LAT];
     flyToCoords(coords);
-    console.log(addresses)
+    console.log("Data returned:", addresses)
     highlightTOID(addresses.results[0].DPA.TOPOGRAPHY_LAYER_TOID)
 
 }

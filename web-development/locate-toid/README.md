@@ -6,13 +6,19 @@ The OS Places API is a solution to that problem. With the API, developers get on
 
 In this tutorial we let a user type in an address to look up, query the OS Places API, and fly to the location using the Vector Tile API and Mapbox GL JS. We'll describe key code snippets here - to follow along download the directory here, or clone the os-data-hub-tutorials repository. 
 
+![Locate TOID interface](./media/locate-toid-image.png)
+
+## Tools and APIs
+
+We use data from the [OS Places API](https://osdatahub.os.uk/docs/places/overview) and the [OS Vector Tile API](https://osdatahub.os.uk/docs/vts/overview). We also use [MapLibre GL JS](https://github.com/maplibre/maplibre-gl-js), a community-led open source fork of Mapbox GL JS v1.13.
+
 ## The HTML and CSS
 
 Overall our HTML document is quite simple. We have a `<div>` element with `id="map"` - this will occupy the entire window and hold our rendered vector tile map. We also have a `<div class="map-overlay">` element, which contains some helper text, our simple form and submit button, and a table where we will visualise the metadata associated with a particular address. 
 
 The CSS sets widths, colors and positions, and styles an animated spinner we'll use as visual feedback while the API request is being processed. 
 
-We also load JavaScript files including an OS branding script and [MapLibre GL](https://github.com/maplibre/maplibre-gl-js), a community-led open source fork of Mapbox GL JS v1.13.
+We also load JavaScript files including an OS branding script and MapLibre GL.
 
 ## The JavaScript
 
